@@ -57,6 +57,13 @@ include '../includes/header.php';
     <?php if (!empty($message)): ?>
         <div class="alert <?= $message_type === 'success' ? 'alert-success' : 'alert-error' ?>">
             <?= htmlspecialchars($message) ?>
+            <?php if ($message_type === 'success' && isset($account_number)): ?>
+                <div class="account-number-display">
+                    <strong>Nomor Rekening Anda:</strong><br>
+                    <span class="account-number"><?= htmlspecialchars($account_number) ?></span>
+                    <p class="account-note">Simpan nomor rekening ini dengan aman!</p>
+                </div>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
     <form class="auth-card" method="POST" action="">

@@ -1,0 +1,10 @@
+{"ewallet":"Bank FTI","rekening":"+62 301891895488","amount":"25000","save":"1"}
+{"ewallet":"DANA","rekening":"+62 301891895488","amount":"50000","save":"1"}
+{"ewallet":"Bank FTI","rekening":"+62 301891895488","amount":"100000","save":"1"}
+{"ewallet":"Bank FTI","rekening":"+62 301521902942","amount":"15000"}
+{"ewallet":"Bank FTI","rekening":"+62 301521902942","amount":"10000"}
+{"ewallet":"Bank FTI","rekening":"+62 301521902942","amount":"10000"}
+{"ewallet":"Bank FTI","rekening":"+62 301521902942","amount":"1000"}
+{"ewallet":"DANA","rekening":"+62 301521902942","amount":"1000"}
+{"ewallet":"GO-PAY","rekening":"+62 301521902942","amount":"1000"}
+{"ewallet":"Bank FTI","rekening":"+62 301891895488","amount":"10000"}

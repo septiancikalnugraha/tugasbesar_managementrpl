@@ -7,7 +7,6 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['owner', 'tell
 
 $name = $_SESSION['user_name'];
 $role = ucfirst($_SESSION['role']);
-include '../includes/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">

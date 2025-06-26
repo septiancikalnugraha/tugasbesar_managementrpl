@@ -58,13 +58,20 @@ class Auth {
             if (!password_verify($password, $user['password'])) {
                 return ['success' => false, 'message' => 'Password salah.'];
             }
+            // Update last_login
+            $updateLogin = $this->db->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+            $updateLogin->execute([$user['id']]);
+            // Ambil last_login terbaru
+            $stmt2 = $this->db->prepare("SELECT last_login FROM users WHERE id = ?");
+            $stmt2->execute([$user['id']]);
+            $last_login = $stmt2->fetchColumn();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['full_name'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['account_number'] = $user['account_number'];
             $_SESSION['balance'] = $user['balance'];
             $_SESSION['role'] = $user['role'];
-            
+            $_SESSION['last_login'] = $last_login;
             return ['success' => true, 'message' => 'Login berhasil'];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
@@ -81,8 +88,9 @@ class Auth {
     }
     
     private function generateAccountNumber() {
-        // Generate account number with format: FTI + 10 digits
-        return 'FTI' . str_pad(mt_rand(1, 9999999999), 10, '0', STR_PAD_LEFT);
+        // Generate account number with format: +62 301 + 9 random digits (total 12 digits)
+        $random_digits = str_pad(mt_rand(1, 999999999), 9, '0', STR_PAD_LEFT);
+        return '+62 301' . $random_digits;
     }
     
     public function getUserData($user_id) {
