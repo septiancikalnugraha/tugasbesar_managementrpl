@@ -887,3 +887,42 @@ html {
 .btn-logout {
     display: none !important;
 }
+
+/* Footer Styles */
+.footer {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.2rem 0 1rem 0;
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.03);
+}
+.footer-note {
+    margin-top: 0.2rem;
+    font-size: 0.95rem;
+    color: #888;
+}
+.footer-note .fa-heart {
+    color: #e74c3c;
+}
+
+.dashboard-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    z-index: 100;
+    background: rgba(255,255,255,0.97);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.03);
+    border-top: 1px solid #e3e7ed;
+    padding: 1rem 0 0.7rem 0;
+    text-align: center;
+}
+@media (min-width: 900px) {
+    .dashboard-footer {
+        left: 230px;
+        width: calc(100vw - 230px);
+    }
+}

@@ -37,8 +37,8 @@ include '../includes/header.php';
             </div>
         </div>
         <ul>
-            <li><a href="#" class="active"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="#"><i class="fa fa-user"></i> Profil</a></li>
+            <li><a href="#" class="active"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="#"><i class="fa fa-users"></i> Data Nasabah</a></li>
             <li><a href="#"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <?php if ($_SESSION['role'] === 'owner'): ?>
@@ -67,5 +67,14 @@ include '../includes/header.php';
         </div>
     </main>
 </div>
+<footer class="footer dashboard-footer">
+    <div class="container">
+        <p>&copy; <?php echo date('Y'); ?> Bank FTI. Semua hak dilindungi undang-undang.</p>
+        <p class="footer-note">
+            Dibuat dengan <i class="fas fa-heart"></i> untuk Fakultas Teknologi Informasi
+        </p>
+    </div>
+</footer>
+<script src="<?php echo $base_url; ?>assets/js/main.js"></script>
 </body>
 </html>
