@@ -8,3 +8,6 @@
 {"ewallet":"DANA","rekening":"+62 301521902942","amount":"1000"}
 {"ewallet":"GO-PAY","rekening":"+62 301521902942","amount":"1000"}
 {"ewallet":"Bank FTI","rekening":"+62 301891895488","amount":"10000"}
+{"ewallet":"LinkAja","rekening":"+62 301891895488","amount":"1000"}
+{"ewallet":"ShopeePay","rekening":"+62 301891895488","amount":"2000"}
+{"ewallet":"GO-PAY","rekening":"+62 301891895488","amount":"11000"}

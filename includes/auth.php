@@ -2,10 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 class Auth {
-    private $db;
+    public $db;
     
     public function __construct() {
         $database = new Database();
@@ -99,6 +99,17 @@ class Auth {
             $stmt->execute([$user_id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    // Tambahkan method ini ke dalam class Auth di file includes/auth.php
+    public function updateProfilePhoto($user_id, $photo_path) {
+        try {
+            $stmt = $this->db->prepare("UPDATE users SET profile_photo = ? WHERE id = ?");
+            return $stmt->execute([$photo_path, $user_id]);
+        } catch (PDOException $e) {
+            error_log("Error updating profile photo: " . $e->getMessage());
             return false;
         }
     }

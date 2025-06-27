@@ -42,7 +42,7 @@ if (isset($_POST['review']) && isset($_POST['transfer_id'])) {
 $receiver_id = intval($_POST['receiver_id'] ?? 0);
 $amount = intval($_POST['amount'] ?? 0);
 $note = trim($_POST['note'] ?? '');
-$date = $_POST['date'] ?? date('Y-m-d');
+$date = date('Y-m-d H:i:s');
 $rating = intval($_POST['rating'] ?? 0);
 $review = trim($_POST['review'] ?? '');
 if ($receiver_id <= 0 || $amount < 1000) {

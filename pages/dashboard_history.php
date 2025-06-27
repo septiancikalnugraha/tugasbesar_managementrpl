@@ -124,8 +124,8 @@ $role = 'Nasabah';
             </div>
         </div>
         <ul>
+            <li><a href="dashboard_profil.php"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="#" class="active"><i class="fa fa-history"></i> Riwayat</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>

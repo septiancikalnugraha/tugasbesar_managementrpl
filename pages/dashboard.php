@@ -530,8 +530,8 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             </div>
         </div>
         <ul>
+            <li><a href="dashboard_profil.php"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="#" class="active"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
@@ -642,11 +642,6 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                     </div>
                     <div class="menu-label">Saldo Google Play</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon green"><i class="fa fa-globe"></i></div>
-                    <span class="menu-badge">Baru</span>
-                    <div class="menu-label">Roaming</div>
-                </div>
             </div>
         </div>
         <!-- Menu Tagihan -->
@@ -672,22 +667,6 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                 <div class="menu-item" onclick="showComingSoon()">
                     <div class="menu-icon blue"><i class="fa fa-tint"></i></div>
                     <div class="menu-label">PDAM</div>
-                </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon orange"><i class="fa fa-calendar-alt"></i></div>
-                    <div class="menu-label">Angsuran Kredit</div>
-                </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-home"></i></div>
-                    <div class="menu-label">PBB</div>
-                </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-phone"></i></div>
-                    <div class="menu-label">Telkom</div>
-                </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-gas-pump"></i></div>
-                    <div class="menu-label">Pascabayar</div>
                 </div>
                 <div class="menu-item" onclick="showComingSoon()">
                     <div class="menu-icon blue"><i class="fa fa-graduation-cap"></i></div>
