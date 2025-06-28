@@ -17,7 +17,31 @@ $phone = $user_data['phone'] ?? '';
 $account_number = $user_data['account_number'] ?? '';
 $role = $user_data['role'] ?? '';
 $balance = $user_data['balance'] ?? 0;
+$gender = $user_data['gender'] ?? '';
+$birth_date = $user_data['birth_date'] ?? '';
+$provinsi = $user_data['provinsi'] ?? '';
+$kota = $user_data['kota'] ?? '';
 $formatted_balance = number_format($balance, 0, ',', '.');
+
+// Format tanggal lahir
+$formatted_birth_date = '';
+if (!empty($birth_date)) {
+    $date = new DateTime($birth_date);
+    $formatted_birth_date = $date->format('d F Y');
+}
+
+$profile_photo_path = !empty($user_data['profile_photo'])
+    ? (strpos($user_data['profile_photo'], 'uploads/profile_photos/') === 0 ? '../' . htmlspecialchars($user_data['profile_photo']) : '../image/default_avatar.png')
+    : '../image/default_avatar.png';
+
+function getInitials($name) {
+    $words = preg_split('/\s+/', trim($name));
+    if (count($words) >= 2) {
+        return strtoupper(mb_substr($words[0],0,1) . mb_substr($words[1],0,1));
+    } else {
+        return strtoupper(mb_substr($name,0,2));
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -250,10 +274,10 @@ $formatted_balance = number_format($balance, 0, ',', '.');
     <aside class="sidebar">
         <div class="sidebar-profile">
             <div class="sidebar-avatar" style="width:110px;height:110px;font-size:2.5rem;box-shadow:0 4px 18px rgba(25,118,210,0.10);background:#f4f6f8;">
-                <?php if (!empty($user_data['profile_photo']) && file_exists($user_data['profile_photo'])): ?>
-                    <img src="<?= $user_data['profile_photo'] ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                <?php if (!empty($user_data['profile_photo'])): ?>
+                    <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                 <?php else: ?>
-                    <?= strtoupper(substr($name,0,1)) ?>
+                    <?= getInitials($name) ?>
                 <?php endif; ?>
             </div>
             <div>
@@ -274,15 +298,21 @@ $formatted_balance = number_format($balance, 0, ',', '.');
         <div class="dashboard-section" style="width:100%;max-width:900px;margin:0 0 2.5rem 0;padding:0;box-shadow:0 4px 24px rgba(25,118,210,0.08);background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:0.7rem;padding:2.5rem 2.5rem 2.5rem 0;">
             <div style="flex-shrink:0;margin-left:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-width:140px;">
                 <div class="sidebar-avatar profile-avatar-large" id="profile-avatar-preview" style="width:130px;height:130px;font-size:3rem;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:#f4f6f8;border:4px solid #1976d2;">
-                    <?php if (!empty($user_data['profile_photo']) && file_exists($user_data['profile_photo'])): ?>
-                        <img src="<?= $user_data['profile_photo'] ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php if (!empty($user_data['profile_photo'])): ?>
+                        <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                     <?php else: ?>
-                        <?= strtoupper(substr($name,0,1)) ?>
+                        <?= getInitials($name) ?>
                     <?php endif; ?>
                 </div>
                 <form id="upload-photo-form" style="margin-top:0.7rem;text-align:center;">
                     <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
-                    <button type="button" class="btn btn-lanjut" style="padding:0.7rem 2.2rem;font-size:1.1rem;min-width:unset;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;border-radius:8px;box-shadow:0 2px 8px rgba(25,118,210,0.10);margin-bottom:0.7rem;" onclick="document.getElementById('profile-photo-input').click()">Ubah Foto</button>
+                    <button type="button" class="btn btn-lanjut" style="padding:0.7rem 2.2rem;font-size:1.1rem;min-width:unset;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;border-radius:8px;box-shadow:0 2px 8px rgba(25,118,210,0.10);margin-bottom:0.7rem;" onclick="document.getElementById('profile-photo-input').click()">
+                        <?php if (!empty($user_data['profile_photo'])): ?>
+                            Ubah Foto
+                        <?php else: ?>
+                            Tambah Foto
+                        <?php endif; ?>
+                    </button>
                     <div id="upload-feedback" style="margin-top:0.5rem;font-size:0.98rem;color:#1976d2;"></div>
                 </form>
             </div>
@@ -292,7 +322,11 @@ $formatted_balance = number_format($balance, 0, ',', '.');
                     <div style="color:#1976d2;font-size:1rem;font-weight:600;">Nama Lengkap</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($name) ?></div>
                     <div style="color:#1976d2;font-size:1rem;font-weight:600;">Email</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($email) ?></div>
                     <div style="color:#1976d2;font-size:1rem;font-weight:600;">No. Handphone</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($phone) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Nomor Rekening</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($account_number) ?></div>
+                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Jenis Kelamin</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($gender) ?></div>
+                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Tanggal Lahir</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($formatted_birth_date) ?></div>
+                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Provinsi</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($provinsi) ?></div>
+                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Kota/Kabupaten</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($kota) ?></div>
+                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Nomor Rekening</div><div style="font-size:1.08rem;font-weight:700;color:#222;display:flex;align-items:center;gap:8px;"><span id="profil-account-number" style="user-select:all;"><?= htmlspecialchars($account_number) ?></span><button id="profil-copy-btn" title="Salin Nomor Rekening" style="background:none;border:none;cursor:pointer;outline:none;padding:0;"><i class="fa fa-copy" id="profil-copy-icon" style="color:#555;font-size:1.1em;"></i></button><span id="profil-copy-toast" style="display:none;margin-left:8px;color:#ff9800;font-size:0.98em;font-weight:600;vertical-align:middle;">Nomor rekening disalin!</span></div>
                     <div style="color:#1976d2;font-size:1rem;font-weight:600;">Role</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($role) ?></div>
                     <div style="color:#1976d2;font-size:1rem;font-weight:600;">Saldo</div><div style="font-size:1.08rem;font-weight:700;color:#222;">Rp <?= $formatted_balance ?></div>
                 </div>
@@ -322,9 +356,28 @@ input.addEventListener('change', function(e) {
                 if (previewSidebar) previewSidebar.innerHTML = imgTag;
                 feedback.style.color = '#388e3c';
                 feedback.textContent = 'Foto profil berhasil diubah!';
+                setTimeout(function() {
+                    window.location.reload();
+                }, 800);
             } else {
                 feedback.style.color = '#d32f2f';
-                feedback.textContent = data.message || 'Gagal upload foto';
+                let msg = data.message || 'Gagal upload foto';
+                if (data.errorInfo) {
+                  msg += ' [errorInfo: ' + (Array.isArray(data.errorInfo) ? data.errorInfo.join(' | ') : data.errorInfo) + ']';
+                }
+                if (data.user_id !== undefined) {
+                  msg += ' [user_id: ' + data.user_id + ']';
+                }
+                if (data.upload_path !== undefined) {
+                  msg += ' [upload_path: ' + data.upload_path + ']';
+                }
+                if (data.db_path !== undefined) {
+                  msg += ' [db_path: ' + data.db_path + ']';
+                }
+                if (data.unlink_error !== undefined && data.unlink_error) {
+                  msg += ' [unlink_error: ' + data.unlink_error + ']';
+                }
+                feedback.textContent = msg;
             }
         })
         .catch((err) => {
@@ -332,6 +385,29 @@ input.addEventListener('change', function(e) {
             feedback.textContent = 'Gagal upload foto: ' + err;
         });
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var copyBtn = document.getElementById('profil-copy-btn');
+  var copyIcon = document.getElementById('profil-copy-icon');
+  var toast = document.getElementById('profil-copy-toast');
+  if (copyBtn) {
+    copyBtn.onclick = function() {
+      var accNum = document.getElementById('profil-account-number').textContent.trim();
+      navigator.clipboard.writeText(accNum).then(function() {
+        if (copyIcon) copyIcon.style.color = '#ff9800';
+        if (toast) {
+          toast.style.display = 'inline';
+          setTimeout(function(){
+            toast.style.display = 'none';
+            if (copyIcon) copyIcon.style.color = '#555';
+          }, 1500);
+        }
+      }, function() {
+        alert('Gagal menyalin nomor rekening');
+      });
+    };
+  }
 });
 </script>
 </body>

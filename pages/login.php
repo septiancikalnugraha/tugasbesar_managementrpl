@@ -19,12 +19,11 @@ $message = '';
 $message_type = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = trim($_POST['email']);
+    $emailOrAccount = trim($_POST['email']);
     $password = $_POST['password'];
-    $role = $_POST['role'];
     
     $auth = new Auth();
-    $result = $auth->login($email, $password, $role);
+    $result = $auth->login($emailOrAccount, $password);
     
     if ($result['success']) {
         if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller') {
@@ -52,8 +51,10 @@ include '../includes/header.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-<div class="auth-container">
-    <form class="auth-card" method="POST" action="">
+<div class="register-bg">
+  <div class="register-card-wrapper">
+    <div class="auth-card">
+      <form class="register-form" method="POST" action="">
         <?php if (!empty($message)): ?>
             <div class="alert <?= $message_type === 'success' ? 'alert-success' : 'alert-error' ?>">
                 <?= htmlspecialchars($message) ?>
@@ -65,19 +66,8 @@ include '../includes/header.php';
         <h2>Login Mobile Banking</h2>
         <div class="form-group">
             <div class="input-icon">
-                <i class="fa fa-user-tag"></i>
-                <select class="form-control" name="role" id="role" required>
-                    <option value="">Pilih Role</option>
-                    <option value="owner">Owner</option>
-                    <option value="teller">Teller</option>
-                    <option value="nasabah">Nasabah</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-icon">
                 <i class="fa fa-envelope"></i>
-                <input class="form-control" type="email" name="email" id="email" placeholder="Email" required>
+                <input class="form-control" type="text" name="email" id="email" placeholder="Email atau Nomor Rekening" required>
             </div>
         </div>
         <div class="form-group">
@@ -88,7 +78,9 @@ include '../includes/header.php';
         </div>
         <button class="btn btn-primary" type="submit">Masuk</button>
         <p class="auth-link">Belum punya akun? <a href="register.php">Daftar</a></p>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>
 </body>
 </html>
@@ -115,5 +107,3 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     btn.disabled = true;
 });
 </script>
-
-<?php include '../includes/footer.php'; ?>

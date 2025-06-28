@@ -56,6 +56,7 @@ try {
     $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $new_filename = 'profile_' . $user_id . '_' . time() . '.' . $file_extension;
     $upload_path = $upload_dir . $new_filename;
+    $relative_path = 'uploads/profile_photos/' . $new_filename;
 
     // Upload file
     if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
@@ -68,16 +69,24 @@ try {
     $auth = new Auth();
     // Hapus foto lama jika ada
     $old_user_data = $auth->getUserData($user_id);
-    if ($old_user_data && !empty($old_user_data['profile_photo']) && file_exists($old_user_data['profile_photo'])) {
-        unlink($old_user_data['profile_photo']);
+    $unlink_error = null;
+    if ($old_user_data && !empty($old_user_data['profile_photo']) && file_exists('../' . $old_user_data['profile_photo'])) {
+        if (!unlink('../' . $old_user_data['profile_photo'])) {
+            $unlink_error = 'Gagal menghapus foto lama: ' . '../' . $old_user_data['profile_photo'];
+        }
     }
-    // Update path foto di database
-    $success = $auth->updateProfilePhoto($user_id, $upload_path);
-    if ($success) {
+    // Update path foto di database (pakai path relatif)
+    $success = $auth->updateProfilePhoto($user_id, $relative_path);
+    if ($success || $auth->db->errorCode() === '00000') {
+        $updated_user = $auth->getUserData($user_id);
         echo json_encode([
             'success' => true, 
             'message' => 'Profile photo updated successfully',
-            'photo' => $upload_path
+            'photo' => $relative_path,
+            'unlink_error' => $unlink_error,
+            'upload_path' => $upload_path,
+            'db_path' => $relative_path,
+            'db_profile_photo' => $updated_user['profile_photo'] ?? null
         ]);
     } else {
         // Hapus file yang sudah diupload jika gagal update database
@@ -86,7 +95,12 @@ try {
         echo json_encode([
             'success' => false,
             'message' => 'Failed to update database',
-            'errorInfo' => $errorInfo
+            'errorInfo' => $errorInfo,
+            'user_id' => $user_id,
+            'unlink_error' => $unlink_error,
+            'upload_path' => $upload_path,
+            'db_path' => $relative_path,
+            'db_profile_photo' => $auth->getUserData($user_id)['profile_photo'] ?? null
         ]);
     }
 } catch (Throwable $e) {

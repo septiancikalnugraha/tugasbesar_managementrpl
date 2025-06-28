@@ -82,11 +82,11 @@ body {
 
 .auth-card {
     width: 100%;
-    max-width: 370px;
+    max-width: 520px;
     background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 22px;
+    box-shadow: 0 8px 32px rgba(25, 118, 210, 0.13), 0 1.5px 8px rgba(0,0,0,0.04);
+    padding: 1.7rem 2.3rem 1.5rem 2.3rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -107,39 +107,50 @@ body {
 
 .auth-card h2 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
     font-weight: 700;
     color: #1a237e;
     letter-spacing: 0.5px;
 }
 
 .form-group {
-    margin-bottom: 1.3rem;
+    margin-bottom: 0.85rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
 }
 
 .input-icon {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 .input-icon i {
     position: absolute;
-    left: 14px;
+    left: 18px;
     color: #1976d2;
-    font-size: 1.1rem;
+    font-size: 1.18rem;
 }
 .input-icon .form-control {
-    padding-left: 2.2rem;
+    padding-left: 2.7rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 0.8rem;
-    border-radius: 8px;
+    padding: 0.95rem 1.1rem 0.95rem 2.7rem;
+    border-radius: 9px;
     border: 1.5px solid #e3e7ed;
-    font-size: 1rem;
+    font-size: 1.08rem;
     background: #f8fafc;
     transition: border-color 0.2s, box-shadow 0.2s;
+    height: 52px;
+    box-sizing: border-box;
 }
 .form-control:focus {
     border-color: #1976d2;
@@ -147,6 +158,77 @@ body {
     background: #fff;
     box-shadow: 0 0 0 2px #1976d220;
 }
+
+/* Radio Group Styles */
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border: 1.5px solid #e3e7ed;
+    border-radius: 8px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.radio-label:hover {
+    border-color: #1976d2;
+    background: #fff;
+}
+
+.radio-label input[type="radio"] {
+    margin-right: 0.5rem;
+    accent-color: #1976d2;
+}
+
+.radio-label input[type="radio"]:checked + .radio-text {
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.radio-text {
+    font-size: 0.95rem;
+    color: #333;
+    transition: color 0.2s ease;
+}
+
+/* Date Input with Calendar Icon */
+.input-icon input[type="date"] {
+    padding-left: 2.7rem;
+    font-size: 1.08rem;
+    border-radius: 9px;
+    border: 1.5px solid #e3e7ed;
+    background: #f8fafc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    height: 52px;
+    box-sizing: border-box;
+}
+.input-icon input[type="date"]:focus {
+    border-color: #1976d2;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 2px #1976d220;
+}
+.input-icon .fa-calendar {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1976d2;
+    font-size: 1.18rem;
+}
+
+/* Remove old date-group and date-select styles if not used anymore */
+.date-group, .date-select { display: none !important; }
 
 .btn {
     margin-top: 1.2rem;
@@ -463,15 +545,16 @@ body {
 
 @media (max-width: 480px) {
     .auth-card {
-        padding: 1.2rem 0.7rem;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
     }
     
     .btn {
-        padding: 0.875rem 1.5rem;
+        padding: 0.8rem;
+        font-size: 1rem;
     }
     
     .balance-amount {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
     
     .quick-actions {
@@ -480,19 +563,47 @@ body {
     
     .card-header {
         flex-direction: column;
-        text-align: center;
         gap: 0.5rem;
+        align-items: flex-start;
     }
     
     .card-icon {
-        margin-right: 0;
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    /* Responsive styles for gender and date fields */
+    .radio-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .date-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .date-select {
+        font-size: 1rem;
+        padding: 0.8rem;
     }
 }
 
 @media (max-width: 600px) {
     .auth-card {
+        max-width: 100vw;
         padding: 1.2rem 0.7rem;
-        max-width: 98vw;
+        border-radius: 0;
+    }
+    .form-control, .input-icon input[type="date"] {
+        font-size: 1rem;
+        height: 44px;
+        padding-left: 2.2rem;
+    }
+    .input-icon i, .input-icon .fa-calendar {
+        left: 12px;
+        font-size: 1rem;
     }
 }
 
@@ -1276,4 +1387,39 @@ html {
     .menu-icon { width: 26px !important; height: 26px !important; font-size: 0.9rem !important; }
     .menu-label { font-size: 0.7rem !important; }
     .menu-badge { font-size: 0.55rem !important; padding: 0.05rem 0.22rem !important; }
+}
+
+/* Registration Card Background and Centering - Always Centered */
+.register-bg {
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #e3f0ff 0%, #f8fafc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-card-wrapper {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 600px) {
+    .register-bg, .register-card-wrapper {
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+    .auth-card {
+        max-width: 100vw;
+        padding: 1.2rem 0.7rem;
+        border-radius: 0;
+        margin: 0 auto;
+    }
 }

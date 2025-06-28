@@ -15,7 +15,7 @@ class Auth {
         }
     }
     
-    public function register($full_name, $email, $phone, $password) {
+    public function register($full_name, $email, $phone, $password, $gender, $birth_date, $provinsi = null, $kota = null) {
         try {
             // Check if email already exists
             $stmt = $this->db->prepare("SELECT email FROM users WHERE email = ?");
@@ -32,8 +32,8 @@ class Auth {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert new user, role default 'nasabah'
-            $stmt = $this->db->prepare("INSERT INTO users (full_name, email, phone, password, account_number, role) VALUES (?, ?, ?, ?, ?, 'nasabah')");
-            $result = $stmt->execute([$full_name, $email, $phone, $hashed_password, $account_number]);
+            $stmt = $this->db->prepare("INSERT INTO users (full_name, email, phone, password, account_number, role, gender, birth_date, provinsi, kota) VALUES (?, ?, ?, ?, ?, 'nasabah', ?, ?, ?, ?)");
+            $result = $stmt->execute([$full_name, $email, $phone, $hashed_password, $account_number, $gender, $birth_date, $provinsi, $kota]);
             
             if ($result) {
                 return ['success' => true, 'message' => 'Registrasi berhasil', 'account_number' => $account_number];
@@ -46,14 +46,21 @@ class Auth {
         }
     }
     
-    public function login($email, $password, $role) {
+    public function login($emailOrAccount, $password) {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? AND role = ?");
-            $stmt->execute([$email, $role]);
+            // Cek apakah input adalah email atau nomor rekening
+            $isEmail = strpos($emailOrAccount, '@') !== false;
+            if ($isEmail) {
+                $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+                $stmt->execute([$emailOrAccount]);
+            } else {
+                $stmt = $this->db->prepare("SELECT * FROM users WHERE account_number = ?");
+                $stmt->execute([$emailOrAccount]);
+            }
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if (!$user) {
-                return ['success' => false, 'message' => 'User tidak ditemukan. Cek email dan role.'];
+                return ['success' => false, 'message' => 'User tidak ditemukan. Cek email atau nomor rekening.'];
             }
             if (!password_verify($password, $user['password'])) {
                 return ['success' => false, 'message' => 'Password salah.'];

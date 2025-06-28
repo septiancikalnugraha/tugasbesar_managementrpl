@@ -192,6 +192,11 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             color: #fff;
             font-size: 1.25rem;
         }
+        .action-btn-title, .action-btn-desc {
+            text-align: left !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+        }
         .action-btn-title {
             font-size: 1.08rem;
             font-weight: 700;
@@ -508,6 +513,22 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
           cursor: pointer;
         }
         #qr-action-popup button:hover { background: #1565c0; }
+        .action-btn-horizontal {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            text-align: left !important;
+            gap: 1.2rem;
+        }
+        .action-btn-horizontal .action-btn-icon {
+            margin-bottom: 0 !important;
+        }
+        .action-btn-horizontal .action-btn-text-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -561,7 +582,9 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                         </div>
                         <div class="account-item">
                             <span class="account-label">Nomor Rekening:</span>
-                            <span class="account-value"><?= htmlspecialchars($account_number) ?></span>
+                            <span class="account-value" id="account-number-value" style="user-select:all;"><?= htmlspecialchars($account_number) ?></span>
+                            <button id="copy-account-btn" title="Salin Nomor Rekening" style="background:none;border:none;cursor:pointer;margin-left:8px;vertical-align:middle;outline:none;"><i class="fa fa-copy" id="copy-account-icon" style="color:#555;font-size:1.15em;"></i></button>
+                            <span id="copy-toast" style="display:none;margin-left:10px;color:#ff9800;font-size:0.98em;font-weight:600;vertical-align:middle;">Nomor rekening disalin!</span>
                         </div>
                         <div class="account-item">
                             <span class="account-label">Saldo Aktif:</span>
@@ -587,19 +610,23 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
         <!-- Quick Actions -->
         <div class="dashboard-section">
             <div class="action-buttons">
-                <button class="action-btn" onclick="showComingSoon()">
+                <button class="action-btn action-btn-horizontal" onclick="showTransferPopup()">
                     <div class="action-btn-icon">
                         <i class="fa fa-exchange-alt"></i>
                     </div>
-                    <div class="action-btn-title">Transfer Saldo</div>
-                    <div class="action-btn-desc">Kirim uang ke rekening lain dengan cepat dan aman</div>
+                    <div class="action-btn-text-group">
+                        <div class="action-btn-title">Transfer Saldo</div>
+                        <div class="action-btn-desc">Kirim uang ke rekening lain dengan cepat dan aman</div>
+                    </div>
                 </button>
-                <button class="action-btn" onclick="showEwalletPopup(event)">
+                <button class="action-btn action-btn-horizontal" onclick="showEwalletPopup(event)">
                     <div class="action-btn-icon">
                         <i class="fa fa-wallet"></i>
                     </div>
-                    <div class="action-btn-title">Top-up Saldo</div>
-                    <div class="action-btn-desc">Tambah saldo ke rekening Anda dengan mudah</div>
+                    <div class="action-btn-text-group">
+                        <div class="action-btn-title">Top-up Saldo</div>
+                        <div class="action-btn-desc">Tambah saldo ke rekening Anda dengan mudah</div>
+                    </div>
                 </button>
                 <button class="action-btn qr-scan-btn" onclick="showQrScanPopup()">
                   <div class="qr-scan-icon"><i class="fa fa-qrcode"></i></div>
@@ -651,10 +678,6 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                 <div class="menu-item" onclick="showComingSoon()">
                     <div class="menu-icon orange"><i class="fa fa-bolt"></i></div>
                     <div class="menu-label">PLN</div>
-                </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon orange"><i class="fa fa-credit-card"></i></div>
-                    <div class="menu-label">Kartu Kredit</div>
                 </div>
                 <div class="menu-item" onclick="showComingSoon()">
                     <div class="menu-icon blue"><i class="fa fa-satellite-dish"></i></div>
@@ -950,8 +973,8 @@ window.addEventListener('load', function() {
         }, 400 + (index * 150));
     });
     
-    // Animate other sections
-    const sections = document.querySelectorAll('.account-info-card, .recent-activity');
+    // Animate other sections (recent-activity only, NOT account-info-card)
+    const sections = document.querySelectorAll('.recent-activity');
     sections.forEach((section, index) => {
         section.style.opacity = '0';
         section.style.transform = 'translateY(40px)';
@@ -1213,8 +1236,28 @@ function loadReceivers() {
         data.forEach(function(item) {
           var div = document.createElement('div');
           div.className = 'receiver-item';
-          div.style = 'padding:0.7rem 0.5rem;border-bottom:1px solid #e3e7ed;cursor:pointer;display:flex;align-items:center;gap:1rem;';
-          div.innerHTML = '<span style="font-weight:600;">' + item.name + '</span><span style="color:#1976d2;">' + item.account_number + '</span>';
+          div.style = 'padding:0.7rem 0.5rem;border-bottom:1px solid #e3e7ed;display:flex;align-items:center;gap:1rem;';
+          div.innerHTML = '<span style="font-weight:600;">' + item.name + '</span>' +
+                          '<span style="color:#1976d2;">' + item.account_number + '</span>' +
+                          '<button class="btn-delete-receiver" title="Hapus" style="margin-left:auto;background:none;border:none;color:#e53935;font-size:1.1rem;cursor:pointer;"><i class="fa fa-trash"></i></button>';
+          // Hapus hanya jika klik icon hapus
+          div.querySelector('.btn-delete-receiver').onclick = function(e) {
+            e.stopPropagation();
+            if (confirm('Hapus penerima ini?')) {
+              var xhrDel = new XMLHttpRequest();
+              xhrDel.open('POST', '../delete_receiver.php', true);
+              xhrDel.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+              xhrDel.onload = function() {
+                try {
+                  var res = JSON.parse(xhrDel.responseText);
+                  if (res.success) loadReceivers();
+                  else alert(res.message || 'Gagal menghapus penerima');
+                } catch (e) { alert('Gagal menghapus penerima'); }
+              };
+              xhrDel.onerror = function() { alert('Gagal menghapus penerima'); };
+              xhrDel.send('id=' + encodeURIComponent(item.id));
+            }
+          };
           div.onclick = function() { showTransferForm(item); };
           list.appendChild(div);
         });
@@ -1629,6 +1672,31 @@ document.getElementById('btn-tagihan-qr').onclick = function() {
 };
 // Panggil showQrActionButtonsIfValid setiap kali hasil scan berubah
 ['input','change'].forEach(ev=>document.getElementById('qr-result').addEventListener(ev, showQrActionButtonsIfValid));
+
+document.addEventListener('DOMContentLoaded', function() {
+  var copyBtn = document.getElementById('copy-account-btn');
+  var copyIcon = document.getElementById('copy-account-icon');
+  var toast = document.getElementById('copy-toast');
+  if (copyBtn) {
+    copyBtn.onclick = function() {
+      var accNum = document.getElementById('account-number-value').textContent.trim();
+      navigator.clipboard.writeText(accNum).then(function() {
+        if (copyIcon) copyIcon.style.color = '#ff9800';
+        if (toast) {
+          toast.style.display = 'inline';
+          toast.style.color = '#ff9800';
+          setTimeout(function(){
+            toast.style.display = 'none';
+            if (copyIcon) copyIcon.style.color = '#555';
+            toast.style.color = '#ff9800';
+          }, 1500);
+        }
+      }, function() {
+        alert('Gagal menyalin nomor rekening');
+      });
+    };
+  }
+});
 </script>
 
 </body>

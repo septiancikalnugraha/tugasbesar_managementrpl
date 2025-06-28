@@ -74,14 +74,20 @@ $role = 'Nasabah';
         .history-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 1.5rem;
+            table-layout: fixed;
         }
         .history-table th, .history-table td {
             padding: 1rem 0.7rem;
             border-bottom: 1px solid #e3e7ed;
-            text-align: left;
+            text-align: center;
             font-size: 1rem;
+            vertical-align: middle;
         }
+        .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 20%; }
+        .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 25%; }
+        .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 25%; }
+        .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 15%; }
+        .history-table th:nth-child(5), .history-table td:nth-child(5) { width: 15%; }
         .history-table th {
             background: #f4f6f8;
             color: #1976d2;
@@ -103,6 +109,75 @@ $role = 'Nasabah';
             .history-tabs { gap: 0.5rem; }
             .history-tab { font-size: 0.95rem; padding: 0.7rem 0; }
             .history-table th, .history-table td { font-size: 0.92rem; padding: 0.7rem 0.3rem; }
+        }
+        @media print {
+            body, html {
+                background: #fff !important;
+                color: #000 !important;
+            }
+            .main-navbar, .sidebar, .sidebar-profile, .sidebar-logout, .sidebar ul, .sidebar li, .sidebar a {
+                display: none !important;
+            }
+            .dashboard-layout, .main-content, .dashboard-section {
+                box-shadow: none !important;
+                background: #fff !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+            .history-header {
+                margin: 0 0 8px 0 !important;
+                padding: 0 !important;
+                text-align: center !important;
+            }
+            .history-section {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .history-table {
+                width: 90% !important;
+                margin: 0 auto !important;
+                border-collapse: collapse !important;
+                text-align: center !important;
+                table-layout: fixed !important;
+            }
+            .history-table th, .history-table td {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #000 !important;
+                font-size: 12pt !important;
+                padding: 4px 8px !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+            }
+            .history-table th:nth-child(1), .history-table td:nth-child(1) { width: 18%; }
+            .history-table th:nth-child(2), .history-table td:nth-child(2) { width: 18%; }
+            .history-table th:nth-child(3), .history-table td:nth-child(3) { width: 22%; }
+            .history-table th:nth-child(4), .history-table td:nth-child(4) { width: 18%; }
+            .history-table th:nth-child(5), .history-table td:nth-child(5) { width: 24%; }
+            .history-tabs, .history-tab {
+                display: none !important;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #000 !important;
+                text-align: center !important;
+            }
+            .transfer-table, .transfer-table th, .transfer-table td {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                table-layout: fixed !important;
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #000 !important;
+                font-size: 12pt !important;
+                padding: 4px 8px !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+            }
+            .transfer-table th:nth-child(1), .transfer-table td:nth-child(1) { width: 60%; }
+            .transfer-table th:nth-child(2), .transfer-table td:nth-child(2) { width: 40%; }
         }
     </style>
 </head>
@@ -257,9 +332,9 @@ function renderHistoryTable(tab) {
     tbody.innerHTML = '';
     let filtered = allHistoryData;
     if (tab === 'topup') {
-        thead.innerHTML = `<tr><th>Tanggal</th><th>e-Wallet</th><th>Rekening</th><th style='text-align:right;'>Nominal</th><th>Ulasan</th></tr>`;
+        thead.innerHTML = `<tr><th>Tanggal</th><th>e-Wallet</th><th>Rekening</th><th>Nominal</th><th>Ulasan</th></tr>`;
     } else {
-        thead.innerHTML = `<tr><th>Tanggal</th><th>Rekening Tujuan</th><th style='text-align:right;'>Nominal</th><th>Ulasan</th></tr>`;
+        thead.innerHTML = `<tr><th>Tanggal</th><th>Rekening Tujuan</th><th>Nominal</th><th>Ulasan</th></tr>`;
     }
     if (!Array.isArray(filtered) || filtered.length === 0) {
         empty.style.display = 'block';
@@ -269,9 +344,9 @@ function renderHistoryTable(tab) {
     filtered.forEach(item => {
         const tr = document.createElement('tr');
         if (tab === 'topup') {
-            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.ewallet}</td><td>${item.rekening}</td><td class='amount'>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
+            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.ewallet}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
         } else {
-            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.rekening}</td><td class='amount'>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
+            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
         }
         tbody.appendChild(tr);
     });
