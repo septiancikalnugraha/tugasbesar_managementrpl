@@ -252,6 +252,9 @@ $role = 'Nasabah';
                     <span style="font-size:1.05rem;">Cetak</span>
                 </button>
             </div>
+            <div style="font-size:0.98rem;color:#1976d2;margin-top:0.5rem;">
+              Setelah klik Cetak, pilih <b>Save as PDF</b> pada dialog print untuk menyimpan file.
+            </div>
             <div class="history-tabs">
                 <button class="history-tab active" id="tab-topup" onclick="showHistoryTab('topup')">Top Up</button>
                 <button class="history-tab" id="tab-transfer" onclick="showHistoryTab('transfer')">Transfer</button>
@@ -479,6 +482,7 @@ function showDetailModal(data) {
                 .print-title { color:#1976d2; font-size:1.35rem; font-weight:800; display:flex; align-items:center; gap:0.6rem; margin-bottom:1.1rem; }
                 .print-desc { margin-bottom:1.2rem; color:#555; font-size:1.08rem; }
                 table { border-collapse:collapse; min-width:340px; font-size:1.08rem; margin-bottom:1.2rem; }
+                table,th,td { border:1px solid #222; text-align:center; }
                 td { padding:7px 0; vertical-align:top; }
                 td:first-child { color:#1976d2; font-weight:600; width:44%; padding-right:18px; }
                 td:last-child { color:#222; }
@@ -505,7 +509,7 @@ document.getElementById('btn-cetak-history').onclick = function() {
     var table = document.getElementById('history-table');
     var tab = currentTab;
     var title = tab === 'topup' ? 'Riwayat Top Up' : 'Riwayat Transfer';
-    var style = '<style>body{font-family:Segoe UI,Arial,sans-serif;}table{width:100%;border-collapse:collapse;}th,td{padding:12px 8px;}th{background:#f4f6f8;color:#1976d2;}td{text-align:left;}th:last-child,td:last-child{text-align:right;}</style>';
+    var style = '<style>body{font-family:Segoe UI,Arial,sans-serif;}table{width:100%;border-collapse:collapse;}table,th,td{border:1px solid #222;}th,td{padding:12px 8px;}th{background:#f4f6f8;color:#1976d2;}td{text-align:left;}th:last-child,td:last-child{text-align:right;}</style>';
     var win = window.open('', '', 'width=800,height=600');
     win.document.write('<html><head><title>'+title+'</title>' + style + '</head><body>');
     win.document.write('<h2 style="color:#1976d2;">'+title+'</h2>');

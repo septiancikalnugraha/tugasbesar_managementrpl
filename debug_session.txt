@@ -91,3 +91,5 @@
 {"user_id":43,"user_name":"andhika","user_email":"andhika@gmail.com","account_number":"+62 301274324413","balance":"0.00","role":"nasabah","last_login":"2025-06-29 13:26:17"}
 {"user_id":43,"user_name":"andhika","user_email":"andhika@gmail.com","account_number":"+62 301274324413","balance":"100000.00","role":"nasabah","last_login":"2025-06-29 13:29:42"}
 {"user_id":43,"user_name":"andhika","user_email":"andhika@gmail.com","account_number":"+62 301274324413","balance":"100000.00","role":"nasabah","last_login":"2025-06-29 13:29:42"}
+{"user_id":42,"user_name":"septian","user_email":"septian@gmail.com","account_number":"+62 301497846910","balance":"20000.00","role":"nasabah","last_login":"2025-06-29 19:33:32"}
+{"user_id":42,"user_name":"septian","user_email":"septian@gmail.com","account_number":"+62 301497846910","balance":"20000.00","role":"nasabah","last_login":"2025-06-29 19:33:32"}

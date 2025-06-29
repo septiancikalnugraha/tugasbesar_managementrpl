@@ -228,3 +228,90 @@
 2025-06-29 19:35:32 - Request Method: GET
 2025-06-29 19:35:32 - User ID: 42, Method: GET
 2025-06-29 19:35:32 - GET request for user_id: 42
+2025-06-29 19:54:26 - Request Method: POST
+2025-06-29 19:54:26 - User ID: 42, Method: POST
+2025-06-29 19:54:26 - POST Data: jenis=data, keterangan=0812234567890, nominal=20000
+2025-06-29 19:54:30 - Request Method: GET
+2025-06-29 19:54:30 - User ID: 42, Method: GET
+2025-06-29 19:54:30 - GET request for user_id: 42
+2025-06-29 19:54:50 - Request Method: DELETE
+2025-06-29 19:54:50 - User ID: 42, Method: DELETE
+2025-06-29 19:54:50 - DELETE request for tagihan_id: 19
+2025-06-29 19:54:50 - Request Method: GET
+2025-06-29 19:54:50 - User ID: 42, Method: GET
+2025-06-29 19:54:50 - GET request for user_id: 42
+2025-06-29 19:55:09 - Request Method: POST
+2025-06-29 19:55:09 - User ID: 42, Method: POST
+2025-06-29 19:55:09 - POST Data: jenis=pulsa, keterangan=0812234567890, nominal=10000
+2025-06-29 19:55:13 - Request Method: GET
+2025-06-29 19:55:13 - User ID: 42, Method: GET
+2025-06-29 19:55:13 - GET request for user_id: 42
+2025-06-29 19:55:14 - Request Method: PATCH
+2025-06-29 19:55:14 - User ID: 42, Method: PATCH
+2025-06-29 19:55:14 - PATCH request for tagihan_id: 20
+2025-06-29 19:55:14 - Request Method: GET
+2025-06-29 19:55:14 - User ID: 42, Method: GET
+2025-06-29 19:55:14 - GET request for user_id: 42
+2025-06-29 19:55:16 - Request Method: PUT
+2025-06-29 19:55:16 - User ID: 42, Method: PUT
+2025-06-29 19:55:16 - PUT request for tagihan_id: 20
+2025-06-29 19:55:16 - Request Method: GET
+2025-06-29 19:55:16 - User ID: 42, Method: GET
+2025-06-29 19:55:16 - GET request for user_id: 42
+2025-06-29 19:55:18 - Request Method: GET
+2025-06-29 19:55:18 - User ID: 42, Method: GET
+2025-06-29 19:55:18 - GET request for user_id: 42
+2025-06-29 19:55:59 - Request Method: POST
+2025-06-29 19:55:59 - User ID: 42, Method: POST
+2025-06-29 19:55:59 - POST Data: jenis=edukasi, keterangan=301220049, nominal=10000
+2025-06-29 19:55:59 - Request Method: PATCH
+2025-06-29 19:55:59 - User ID: 42, Method: PATCH
+2025-06-29 19:55:59 - PATCH request for tagihan_id: 21
+2025-06-29 19:55:59 - Request Method: PUT
+2025-06-29 19:55:59 - User ID: 42, Method: PUT
+2025-06-29 19:55:59 - PUT request for tagihan_id: 21
+2025-06-29 19:55:59 - Request Method: GET
+2025-06-29 19:55:59 - User ID: 42, Method: GET
+2025-06-29 19:55:59 - GET request for user_id: 42
+2025-06-29 19:55:59 - Request Method: GET
+2025-06-29 19:55:59 - User ID: 42, Method: GET
+2025-06-29 19:55:59 - GET request for user_id: 42
+2025-06-29 19:56:06 - Request Method: GET
+2025-06-29 19:56:06 - User ID: 42, Method: GET
+2025-06-29 19:56:06 - GET request for user_id: 42
+2025-06-29 19:56:41 - Request Method: GET
+2025-06-29 19:56:41 - User ID: 42, Method: GET
+2025-06-29 19:56:41 - GET request for user_id: 42
+2025-06-29 19:56:43 - Request Method: GET
+2025-06-29 19:56:43 - User ID: 42, Method: GET
+2025-06-29 19:56:43 - GET request for user_id: 42
+2025-06-29 19:56:44 - Request Method: GET
+2025-06-29 19:56:44 - User ID: 42, Method: GET
+2025-06-29 19:56:44 - GET request for user_id: 42
+2025-06-29 19:59:24 - Request Method: GET
+2025-06-29 19:59:24 - User ID: 42, Method: GET
+2025-06-29 19:59:24 - GET request for user_id: 42
+2025-06-29 19:59:25 - Request Method: GET
+2025-06-29 19:59:25 - User ID: 42, Method: GET
+2025-06-29 19:59:25 - GET request for user_id: 42
+2025-06-29 20:01:10 - Request Method: GET
+2025-06-29 20:01:10 - User ID: 42, Method: GET
+2025-06-29 20:01:10 - GET request for user_id: 42
+2025-06-29 20:03:27 - Request Method: GET
+2025-06-29 20:03:27 - User ID: 42, Method: GET
+2025-06-29 20:03:27 - GET request for user_id: 42
+2025-06-29 20:06:42 - Request Method: GET
+2025-06-29 20:06:42 - User ID: 42, Method: GET
+2025-06-29 20:06:42 - GET request for user_id: 42
+2025-06-29 20:17:35 - Request Method: GET
+2025-06-29 20:17:35 - User ID: 42, Method: GET
+2025-06-29 20:17:35 - GET request for user_id: 42
+2025-06-29 20:20:19 - Request Method: GET
+2025-06-29 20:20:19 - User ID: 42, Method: GET
+2025-06-29 20:20:19 - GET request for user_id: 42
+2025-06-29 20:21:13 - Request Method: GET
+2025-06-29 20:21:13 - User ID: 42, Method: GET
+2025-06-29 20:21:13 - GET request for user_id: 42
+2025-06-29 20:21:14 - Request Method: GET
+2025-06-29 20:21:14 - User ID: 42, Method: GET
+2025-06-29 20:21:14 - GET request for user_id: 42

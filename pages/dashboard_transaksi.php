@@ -392,7 +392,14 @@ function showTransaksiTab(tab) {
         section.innerHTML = `<div id='tagihan-table-section'>Memuat...</div>`;
         loadTagihanTable();
     } else if (tab === 'riwayat') {
-        section.innerHTML = `<h3 style='color:#1976d2;margin-bottom:1.2rem;'>Riwayat Transaksi/Tagihan</h3><div id='riwayat-table-section'>Memuat...</div>`;
+        section.innerHTML = `
+            <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;'>
+                <h3 style='color:#1976d2;margin:0;font-size:1.35rem;font-weight:700;'>Riwayat Transaksi/Tagihan</h3>
+                <button id='btn-print-riwayat' onclick='printRiwayatTable()' style='padding:0.5rem 1.2rem;font-size:1rem;border-radius:7px;background:#1976d2;color:#fff;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;gap:0.5rem;'>
+                    <i class="fa fa-print"></i> Cetak
+                </button>
+            </div>
+            <div id='riwayat-table-section'>Memuat...</div>`;
         loadRiwayatTable();
     }
 }
@@ -1100,6 +1107,24 @@ function bayarTagihanQris(id, jenis, keterangan, nominal) {
     generateQrisQrCode();
     startQrisPaymentPolling();
   });
+}
+
+function printRiwayatTable() {
+    var table = document.querySelector('#riwayat-table-section table');
+    if (!table) {
+        alert('Tabel riwayat belum dimuat.');
+        return;
+    }
+    var win = window.open('', '', 'width=900,height=600');
+    win.document.write('<html><head><title>Riwayat Transaksi/Tagihan</title>');
+    win.document.write('<style>body{font-family:Segoe UI,Arial,sans-serif;}table{width:100%;border-collapse:collapse;}th,td{padding:12px 8px;}th{background:#f4f6f8;color:#1976d2;}td{text-align:left;}th,td{border:1px solid #ddd;}th:last-child,td:last-child{text-align:right;}</style>');
+    win.document.write('</head><body>');
+    win.document.write('<h2 style="color:#1976d2;">Riwayat Transaksi/Tagihan</h2>');
+    win.document.write(table.outerHTML);
+    win.document.write('</body></html>');
+    win.document.close();
+    win.focus();
+    setTimeout(function(){ win.print(); win.close(); }, 500);
 }
 </script>
 
