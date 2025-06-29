@@ -31,8 +31,8 @@ class Auth {
             // Hash password
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
-            // Insert new user, role default 'nasabah'
-            $stmt = $this->db->prepare("INSERT INTO users (full_name, email, phone, password, account_number, role, gender, birth_date, provinsi, kota) VALUES (?, ?, ?, ?, ?, 'nasabah', ?, ?, ?, ?)");
+            // Insert new user, role default 'nasabah', kategori default 'non-prioritas'
+            $stmt = $this->db->prepare("INSERT INTO users (full_name, email, phone, password, account_number, role, gender, birth_date, provinsi, kota, kategori) VALUES (?, ?, ?, ?, ?, 'nasabah', ?, ?, ?, ?, 'non-prioritas')");
             $result = $stmt->execute([$full_name, $email, $phone, $hashed_password, $account_number, $gender, $birth_date, $provinsi, $kota]);
             
             if ($result) {
@@ -117,6 +117,16 @@ class Auth {
             return $stmt->execute([$photo_path, $user_id]);
         } catch (PDOException $e) {
             error_log("Error updating profile photo: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Tambahkan method untuk update kategori
+    public function updateKategori($user_id, $kategori) {
+        try {
+            $stmt = $this->db->prepare("UPDATE users SET kategori = ? WHERE id = ?");
+            return $stmt->execute([$kategori, $user_id]);
+        } catch (PDOException $e) {
             return false;
         }
     }

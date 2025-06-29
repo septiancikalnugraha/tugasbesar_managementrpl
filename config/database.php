@@ -54,4 +54,9 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 */
+
+// SQL untuk menambah kolom kategori pada tabel users
+/*
+ALTER TABLE users ADD COLUMN kategori VARCHAR(20) NOT NULL DEFAULT 'non-prioritas';
+*/
 ?>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,
@@ -529,14 +529,18 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             align-items: flex-start;
             justify-content: center;
         }
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
     </style>
 </head>
 <body>
 <nav class="main-navbar">
     <div class="navbar-content">
         <div class="navbar-logo">
-            <!-- Logo image removed to prevent loading issues -->
-            Bank FTI
+            <img src="../image/logo.jpeg" alt="Logo" style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.10);margin-right:12px;background:#fff;" />
+            FTI M-Banking
         </div>
     </div>
 </nav>
@@ -553,7 +557,7 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
         <ul>
             <li><a href="dashboard_profil.php"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="#" class="active"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
+            <li><a href="dashboard_transaksi.php"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
@@ -598,9 +602,23 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                             <span class="account-label">Terakhir Login:</span>
                             <span class="account-value"><?= $formatted_last_login ?> WIB</span>
                         </div>
+                        <div class="account-item" style="display:flex;align-items:center;gap:10px;">
+                            <span class="account-label">Kategori Nasabah:</span>
+                            <span class="account-value" style="display:flex;align-items:center;gap:7px;">
+                                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'non-prioritas'): ?>
+                                    <i class="fa fa-star" style="color:#ffc107;cursor:pointer;" title="Upgrade ke Prioritas" onclick="document.getElementById('btn-upgrade-prioritas')?.click()"></i>
+                                    Non-prioritas
+                                <?php elseif (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                                    <i class="fa fa-star" style="color:#43A047;"></i>
+                                    Prioritas
+                                <?php else: ?>
+                                    Non-prioritas
+                                <?php endif; ?>
+                            </span>
+                        </div>
                     </div>
                     <div style="text-align:center;min-width:130px;display:flex;flex-direction:column;align-items:center;gap:0.3rem;">
-                        <div id="rekening-qrcode" style="display:inline-block;width:130px;height:130px;background:#fff;border-radius:10px;border:2px solid #e3e7ed;cursor:pointer;padding:7px;box-sizing:border-box;" title="Klik untuk unduh QR"></div>
+                        <div id="rekening-qrcode" style="display:inline-block;width:130px;height:130px;background:#fff;border-radius:10px;border:2px solid #e3e7ed;cursor:pointer;padding:7px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;" title="Klik untuk unduh QR"></div>
                         <div style="font-size:0.95rem;color:#1976d2;margin-top:0.15rem;font-weight:600;">QR Rekening</div>
                     </div>
                 </div>
@@ -619,7 +637,7 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                         <div class="action-btn-desc">Kirim uang ke rekening lain dengan cepat dan aman</div>
                     </div>
                 </button>
-                <button class="action-btn action-btn-horizontal" onclick="showEwalletPopup(event)">
+                <button class="action-btn action-btn-horizontal" onclick="showTopupSaldoPopup()">
                     <div class="action-btn-icon">
                         <i class="fa fa-wallet"></i>
                     </div>
@@ -639,134 +657,62 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
         </div>
         
         <!-- Menu Top Up -->
-        <div class="menu-section">
-            <div class="menu-section-title">Top Up</div>
+        <div class="menu-section" style="background:linear-gradient(90deg,#1976d2 0%,#1976d2 30%,#2196f3 100%);color:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(25,118,210,0.07);padding:1.5rem 1.2rem 1.2rem 1.2rem;margin-bottom:2.2rem;border:1px solid #1565c0;">
+            <div class="menu-section-title" style="color:#fff;">Top Up</div>
             <div class="menu-grid">
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon orange"><i class="fa fa-wallet"></i></div>
-                    <div class="menu-label">Top Up E-Wallet</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=ewallet'" style="color:#fff;">
+                    <div class="menu-icon orange" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-wallet"></i></div>
+                    <div class="menu-label" style="color:#fff;">Top Up E-Wallet</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon green"><i class="fa fa-mobile-alt"></i></div>
-                    <div class="menu-label">Pulsa</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=pulsa'" style="color:#fff;">
+                    <div class="menu-icon green" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-mobile-alt"></i></div>
+                    <div class="menu-label" style="color:#fff;">Pulsa</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon green"><i class="fa fa-wifi"></i></div>
-                    <div class="menu-label">Data</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=data'" style="color:#fff;">
+                    <div class="menu-icon blue" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-wifi"></i></div>
+                    <div class="menu-label" style="color:#fff;">Data</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-gamepad"></i></div>
-                    <div class="menu-label">Top Up Game</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=game'" style="color:#fff;">
+                    <div class="menu-icon purple" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-gamepad"></i></div>
+                    <div class="menu-label" style="color:#fff;">Top Up Game</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon green" style="display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(25,118,210,0.10);padding:4px;">
-                        <svg width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-                            <polygon points="6,4 40,24 6,44" fill="#43A047"/>
-                            <polygon points="6,4 24,24 6,44" fill="#FFC107"/>
-                            <polygon points="24,24 42,8 42,40" fill="#1976D2"/>
-                            <polygon points="6,4 42,8 24,24" fill="#F44336"/>
-                        </svg>
-                    </div>
-                    <div class="menu-label">Saldo Google Play</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=gplay'" style="color:#fff;">
+                    <div class="menu-icon green" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-play"></i></div>
+                    <div class="menu-label" style="color:#fff;">Saldo Google Play</div>
                 </div>
             </div>
         </div>
         <!-- Menu Tagihan -->
-        <div class="menu-section">
-            <div class="menu-section-title">Tagihan</div>
+        <div class="menu-section" style="background:linear-gradient(90deg,#1976d2 0%,#1976d2 30%,#2196f3 100%);color:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(25,118,210,0.07);padding:1.5rem 1.2rem 1.2rem 1.2rem;margin-bottom:2.2rem;border:1px solid #1565c0;">
+            <div class="menu-section-title" style="color:#fff;">Tagihan</div>
             <div class="menu-grid">
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon orange"><i class="fa fa-bolt"></i></div>
-                    <div class="menu-label">PLN</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=pln'" style="color:#fff;">
+                    <div class="menu-icon orange" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-bolt"></i></div>
+                    <div class="menu-label" style="color:#fff;">PLN</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-satellite-dish"></i></div>
-                    <div class="menu-label">TV Kabel & Internet</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=tv'" style="color:#fff;">
+                    <div class="menu-icon blue" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-satellite-dish"></i></div>
+                    <div class="menu-label" style="color:#fff;">TV Kabel & Internet</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon orange"><i class="fa fa-id-card"></i></div>
-                    <div class="menu-label">BPJS</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=bpjs'" style="color:#fff;">
+                    <div class="menu-icon orange" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-id-card"></i></div>
+                    <div class="menu-label" style="color:#fff;">BPJS</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-tint"></i></div>
-                    <div class="menu-label">PDAM</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=pdam'" style="color:#fff;">
+                    <div class="menu-icon blue" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-tint"></i></div>
+                    <div class="menu-label" style="color:#fff;">PDAM</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon blue"><i class="fa fa-graduation-cap"></i></div>
-                    <div class="menu-label">Edukasi</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=edukasi'" style="color:#fff;">
+                    <div class="menu-icon blue" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-graduation-cap"></i></div>
+                    <div class="menu-label" style="color:#fff;">Edukasi</div>
                 </div>
-                <div class="menu-item" onclick="showComingSoon()">
-                    <div class="menu-icon green"><i class="fa fa-hand-holding-heart"></i></div>
-                    <div class="menu-label">Donasi & Zakat</div>
+                <div class="menu-item" onclick="window.location.href='dashboard_transaksi.php?tab=donasi'" style="color:#fff;">
+                    <div class="menu-icon green" style="background:#fff1;border:2px solid #fff;color:#fff;"><i class="fa fa-hand-holding-heart"></i></div>
+                    <div class="menu-label" style="color:#fff;">Donasi & Zakat</div>
                 </div>
             </div>
         </div>
     </main>
-</div>
-
-<!-- E-Wallet Popup -->
-<div id="ewallet-popup" class="ewallet-popup-overlay" style="display:none;">
-  <div class="ewallet-popup-modal">
-    <div class="ewallet-popup-header">
-      <span class="ewallet-popup-title">Pilih e-Wallet</span>
-      <button class="ewallet-popup-close" onclick="closeEwalletPopup()">&times;</button>
-    </div>
-    <div class="ewallet-list">
-      <div class="ewallet-item" onclick="selectEwallet('Bank FTI')">
-        <img src="https://ui-avatars.com/api/?name=Bank+FTI&background=1976d2&color=fff&rounded=true&size=64" alt="Bank FTI">
-        <span>Bank FTI</span>
-      </div>
-      <div class="ewallet-item" onclick="selectEwallet('DANA')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Logo_Dana.png" alt="DANA">
-        <span>DANA</span>
-      </div>
-      <div class="ewallet-item" onclick="selectEwallet('GO-PAY')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logo_Gopay.png" alt="GO-PAY">
-        <span>GO-PAY</span>
-      </div>
-      <div class="ewallet-item" onclick="selectEwallet('LinkAja')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Logo_LinkAja.png" alt="LinkAja">
-        <span>LinkAja</span>
-      </div>
-      <div class="ewallet-item" onclick="selectEwallet('OVO')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Logo_OVO.png" alt="OVO">
-        <span>OVO</span>
-      </div>
-      <div class="ewallet-item" onclick="selectEwallet('ShopeePay')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Logo_ShopeePay.png" alt="ShopeePay">
-        <span>ShopeePay</span>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- E-Wallet Detail Form Popup -->
-<div id="ewallet-detail-popup" class="ewallet-popup-overlay" style="display:none;">
-  <div class="ewallet-popup-modal">
-    <div class="ewallet-popup-header">
-      <span class="ewallet-popup-title">Masukkan Detail e-Wallet</span>
-      <button class="ewallet-popup-close" onclick="closeEwalletDetailPopup()">&times;</button>
-    </div>
-    <form id="ewallet-detail-form" onsubmit="submitEwalletDetail(event)">
-      <div style="color:#888;font-size:1rem;margin-bottom:1.2rem;">Pilih e-Wallet yang ingin kamu top up dan masukkan informasi akun.</div>
-      <div style="margin-bottom:1.2rem;">
-        <label style="font-weight:500;color:#222;">e-Wallet</label><br>
-        <input id="ewallet-detail-name" name="ewallet" type="text" readonly style="width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
-      </div>
-      <div style="margin-bottom:1.2rem;">
-        <label style="font-weight:500;color:#222;">No. Rekening e-Wallet</label><br>
-        <input id="ewallet-detail-user" name="user" type="text" required placeholder="Masukkan nomor rekening e-wallet" style="width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
-      </div>
-      <div style="margin-bottom:1.2rem;">
-        <label style="font-weight:500;color:#222;">Nominal Top Up</label><br>
-        <input id="ewallet-detail-amount" name="amount" type="number" min="1000" step="1000" required placeholder="Masukkan nominal top up" style="width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
-      </div>
-      <div style="margin-bottom:1.2rem;display:flex;align-items:center;gap:0.7rem;">
-        <input type="checkbox" id="ewallet-detail-save" name="save" style="width:1.2rem;height:1.2rem;">
-        <label for="ewallet-detail-save" style="color:#555;font-size:1rem;">Simpan e-Wallet</label>
-      </div>
-      <button type="submit" style="width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#90caf9;color:#fff;font-weight:700;border:none;cursor:pointer;">Lanjut</button>
-    </form>
-  </div>
 </div>
 
 <!-- History Popup -->
@@ -788,6 +734,8 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             <th style="padding:0.7rem 0.3rem;text-align:left;">e-Wallet</th>
             <th style="padding:0.7rem 0.3rem;text-align:left;">Rekening</th>
             <th style="padding:0.7rem 0.3rem;text-align:right;">Nominal</th>
+            <th style="padding:0.7rem 0.3rem;text-align:left;">Ulasan</th>
+            <th style="padding:0.7rem 0.3rem;text-align:center;">Aksi</th>
           </tr>
         </thead>
         <tbody id="history-table-body"></tbody>
@@ -831,15 +779,18 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
 </div>
 
 <!-- QR Scan Popup -->
-<div id="qrscan-popup" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:18px;max-width:370px;width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:2rem 1.2rem 1.2rem 1.2rem;position:relative;text-align:center;">
-    <div style="font-size:1.3rem;font-weight:700;color:#1976d2;margin-bottom:0.7rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><i class='fa fa-qrcode'></i> Scan QR Code</div>
-    <div id="qr-reader" style="width:100%;max-width:260px;margin:0 auto 1rem auto;"></div>
-    <div id="qr-file-reader" style="display:none;"></div>
-    <input id="qr-result" type="text" readonly placeholder="Hasil scan QR akan muncul di sini" style="width:100%;margin-bottom:1rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
-    <label for="qr-file-input" style="display:inline-block;margin-bottom:1rem;cursor:pointer;color:#1976d2;font-weight:600;background:#e3f2fd;padding:0.5rem 1.2rem;border-radius:7px;transition:background 0.2s;">Ambil dari Galeri</label>
-    <input type="file" id="qr-file-input" accept="image/*" style="display:none;">
-    <button onclick="closeQrScanPopup()" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Tutup</button>
+<div id="qrscan-popup" style="display:none;flex-direction:column;align-items:center;z-index:99999;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);justify-content:center;">
+  <div style="background:#fff;border-radius:16px;max-width:340px;width:95vw;padding:2rem 1.5rem;box-shadow:0 8px 32px rgba(25,118,210,0.18);text-align:center;position:relative;">
+    <button onclick="closeQrScanPopup()" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;"><i class="fa fa-times"></i></button>
+    <div style="font-size:1.3rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;"><i class="fa fa-qrcode"></i> Scan QR Code</div>
+    <div id="qrscan-camera-preview" style="display:none;margin-bottom:1rem;"></div>
+    <input id="qrscan-result" type="text" readonly value="Hasil scan QR akan muncul di sini" style="width:90%;margin-bottom:1rem;text-align:center;background:#f8fafc;border-radius:8px;border:1.5px solid #e3e7ed;padding:0.7rem 1rem;">
+    <input id="qrscan-file" type="file" accept="image/*" style="display:none;">
+    <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1rem;">
+      <button onclick="document.getElementById('qrscan-file').click()" style="background:#e3f2fd;color:#1976d2;font-weight:700;padding:0.8rem 1.5rem;border-radius:10px;border:none;cursor:pointer;">Ambil dari Galeri</button>
+      <button id="btn-scan-camera" onclick="startQrCameraScan()" style="background:#1976d2;color:#fff;font-weight:700;padding:0.8rem 1.5rem;border-radius:10px;border:none;cursor:pointer;">Scan dari Kamera</button>
+      <button id="btn-stop-camera" onclick="stopQrCameraScan()" style="background:#e53e3e;color:#fff;font-weight:700;padding:0.8rem 1.5rem;border-radius:10px;border:none;cursor:pointer;display:none;">Stop Kamera</button>
+    </div>
   </div>
 </div>
 
@@ -859,845 +810,939 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
     </div>
 </footer>
 
-<script src="../assets/js/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<!-- Modal Rating Bintang -->
+<div id="rating-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;max-width:350px;width:90vw;padding:2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;text-align:center;">
+    <div style="font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;">Beri Rating Transaksi</div>
+    <div id="rating-stars" style="font-size:2.2rem;margin-bottom:1.2rem;">
+      <span class="star" data-value="1">☆</span>
+      <span class="star" data-value="2">☆</span>
+      <span class="star" data-value="3">☆</span>
+      <span class="star" data-value="4">☆</span>
+      <span class="star" data-value="5">☆</span>
+    </div>
+    <textarea id="rating-review" placeholder="Tulis ulasan (opsional)" style="width:100%;min-height:60px;border-radius:8px;border:1.5px solid #e3e7ed;padding:0.7rem 1rem;margin-bottom:1.2rem;"></textarea>
+    <button id="submit-rating-btn" style="width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Kirim</button>
+    <button onclick="closeRatingModal()" style="width:100%;margin-top:0.7rem;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">Batal</button>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:1.2rem;">
+<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'non-prioritas'): ?>
+    <button id="btn-upgrade-prioritas" style="padding:0.8rem 2.2rem;font-size:1.1rem;border-radius:8px;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;box-shadow:0 2px 8px rgba(25,118,210,0.10);cursor:pointer;">Upgrade ke Prioritas</button>
+    <div id="upgrade-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2.2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
+        <div style='font-size:2.1rem;color:#1976d2;margin-bottom:0.7rem;'><i class='fa fa-star'></i></div>
+        <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Upgrade ke Nasabah Prioritas</div>
+        <div style='color:#444;margin-bottom:1.2rem;'>Silakan transfer <b>Rp 50.000</b> ke rekening teller berikut untuk upgrade:<br><br><b>FTI00000002 a.n. Teller Bank</b><br><br>Setelah transfer, klik tombol <b>Upgrade</b> di bawah untuk melanjutkan proses otomatis.</div>
+        <button id="btn-upgrade-bayar" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Upgrade</button>
+        <button onclick="document.getElementById('upgrade-modal').style.display='none'" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;margin-top:0.7rem;">Batal</button>
+        <div id="upgrade-status" style="margin-top:1rem;font-size:1.05rem;color:#1976d2;"></div>
+      </div>
+    </div>
+<?php endif; ?>
+</div>
+
+<div id="ewallet-popup-overlay" class="ewallet-popup-overlay" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:20000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:18px;max-width:350px;width:90vw;padding:2rem 1.2rem;box-shadow:0 8px 32px rgba(25,118,210,0.18);position:relative;">
+    <button onclick="document.getElementById('ewallet-popup-overlay').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;"><i class="fa fa-times"></i></button>
+    <div style="font-size:1.2rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;text-align:center;">Top Up E-Wallet</div>
+    <form id="ewallet-topup-form" onsubmit="submitEwalletTopup(event)">
+      <div style="margin-bottom:1rem;">
+        <label for="ewallet-select" style="font-weight:600;color:#1976d2;">Pilih E-Wallet</label>
+        <select id="ewallet-select" name="ewallet" required style="width:100%;padding:0.6rem 0.5rem;border-radius:8px;border:1px solid #b0bec5;font-size:1rem;" onchange="toggleEwalletRekInput()">
+          <option value="">-- Pilih --</option>
+          <option value="BANK FTI">Bank FTI</option>
+          <option value="OVO">OVO</option>
+          <option value="GOPAY">GOPAY</option>
+          <option value="DANA">DANA</option>
+          <option value="SHOPEEPAY">ShopeePay</option>
+          <option value="LINKAJA">LinkAja</option>
+        </select>
+      </div>
+      <div id="ewallet-rek-group" style="margin-bottom:1rem;display:none;">
+        <label for="ewallet-rek" style="font-weight:600;color:#1976d2;">No. Rekening e-Wallet</label>
+        <input type="text" id="ewallet-rek" name="rekening" placeholder="Masukkan nomor rekening e-wallet" style="width:100%;padding:0.6rem 0.5rem;border-radius:8px;border:1px solid #b0bec5;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label for="ewallet-nominal" style="font-weight:600;color:#1976d2;">Nominal</label>
+        <input type="number" id="ewallet-nominal" name="nominal" min="10000" step="1000" required style="width:100%;padding:0.6rem 0.5rem;border-radius:8px;border:1px solid #b0bec5;font-size:1rem;">
+      </div>
+      <button type="submit" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Top Up</button>
+    </form>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="assets/js/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-function showComingSoon() {
-    // Create a more attractive modal-style alert
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        backdrop-filter: blur(4px);
-    `;
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        max-width: 400px;
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        transform: scale(0.9);
-        transition: transform 0.3s ease;
-    `;
-    
-    modalContent.innerHTML = `
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-        <h3 style="color: #1976d2; margin-bottom: 0.5rem; font-weight: 700;">Fitur Segera Hadir!</h3>
-        <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">
-            Kami sedang mengembangkan fitur ini untuk memberikan pengalaman banking yang lebih baik.
-        </p>
-        <button onclick="this.closest('.modal-overlay').remove()" style="
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-            Mengerti
-        </button>
-    `;
-    
-    modal.className = 'modal-overlay';
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    // Animate in
-    setTimeout(() => {
-        modalContent.style.transform = 'scale(1)';
-    }, 10);
-    
-    // Close on outside click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-}
+let ratingTargetId = null;
+let ratingTargetType = null;
+let selectedRating = 0;
 
-// Auto refresh balance every 60 seconds
-// setInterval(function() {
-//     // In a real application, you would make an AJAX call to refresh the balance
-//     console.log('Auto refresh - Ready for implementation');
-// }, 60000);
-
-// Welcome animation with staggered effects
-window.addEventListener('load', function() {
-    // Animate welcome header
-    const welcomeHeader = document.querySelector('.welcome-header');
-    if (welcomeHeader) {
-        welcomeHeader.style.opacity = '0';
-        welcomeHeader.style.transform = 'translateY(-30px)';
-        setTimeout(() => {
-            welcomeHeader.style.transition = 'all 0.8s ease';
-            welcomeHeader.style.opacity = '1';
-            welcomeHeader.style.transform = 'translateY(0)';
-        }, 100);
-    }
-    
-    // Animate stat cards
-    const statCards = document.querySelectorAll('.stat-card');
-    statCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 200 + (index * 100));
-    });
-    
-    // Animate action buttons
-    const actionBtns = document.querySelectorAll('.action-btn');
-    actionBtns.forEach((btn, index) => {
-        btn.style.opacity = '0';
-        btn.style.transform = 'translateX(-30px)';
-        setTimeout(() => {
-            btn.style.transition = 'all 0.6s ease';
-            btn.style.opacity = '1';
-            btn.style.transform = 'translateX(0)';
-        }, 400 + (index * 150));
-    });
-    
-    // Animate other sections (recent-activity only, NOT account-info-card)
-    const sections = document.querySelectorAll('.recent-activity');
-    sections.forEach((section, index) => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(40px)';
-        setTimeout(() => {
-            section.style.transition = 'all 0.8s ease';
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        }, 800 + (index * 200));
-    });
-    
-    // Animate sidebar items
-    const sidebarItems = document.querySelectorAll('.sidebar ul li');
-    sidebarItems.forEach((item, index) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateX(-20px)';
-        setTimeout(() => {
-            item.style.transition = 'all 0.4s ease';
-            item.style.opacity = '1';
-            item.style.transform = 'translateX(0)';
-        }, 100 + (index * 80));
-    });
-    
-    // Animate profile section
-    const profile = document.querySelector('.sidebar-profile');
-    if (profile) {
-        profile.style.opacity = '0';
-        profile.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            profile.style.transition = 'all 0.5s ease';
-            profile.style.opacity = '1';
-            profile.style.transform = 'scale(1)';
-        }, 50);
-    }
-});
-
-// Add hover effects for interactive elements
-document.addEventListener('DOMContentLoaded', function() {
-    // Add ripple effect to action buttons
-    const actionButtons = document.querySelectorAll('.action-btn');
-    actionButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                background: rgba(25, 118, 210, 0.3);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-                pointer-events: none;
-            `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-    
-    // Add CSS for ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-  var logo = document.querySelector('.navbar-logo img');
-  if (logo) {
-    logo.onerror = function() {
-      this.style.background = '#e3f2fd';
-      this.src = 'https://via.placeholder.com/38x38?text=BF';
+function showRatingModal(id, type) {
+  ratingTargetId = id;
+  ratingTargetType = type;
+  selectedRating = 0;
+  document.getElementById('rating-review').value = '';
+  document.querySelectorAll('#rating-stars .star').forEach(star => {
+    star.textContent = '☆';
+    star.style.color = '#888';
+    star.onclick = function() {
+      selectedRating = parseInt(this.getAttribute('data-value'));
+      document.querySelectorAll('#rating-stars .star').forEach((s, idx) => {
+        s.textContent = idx < selectedRating ? '★' : '☆';
+        s.style.color = idx < selectedRating ? '#FFD600' : '#888';
+      });
     };
+  });
+  document.getElementById('rating-modal').style.display = 'flex';
+}
+function closeRatingModal() {
+  document.getElementById('rating-modal').style.display = 'none';
+}
+document.getElementById('submit-rating-btn').onclick = function() {
+  if (!selectedRating) {
+    alert('Pilih rating bintang!');
+    return;
   }
-});
+  const review = document.getElementById('rating-review').value;
+  const url = ratingTargetType === 'topup' ? '../topup.php' : '../transfer.php';
+  const idField = ratingTargetType === 'topup' ? 'topup_id' : 'transfer_id';
+  const formData = `${idField}=${ratingTargetId}&rating=${selectedRating}&review=${encodeURIComponent(review)}`;
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Terima kasih atas rating Anda!');
+        closeRatingModal();
+        showHistoryTab(ratingTargetType);
+      } else {
+        alert(data.message || 'Gagal menyimpan rating!');
+      }
+    })
+    .catch(() => {
+      alert('Terjadi kesalahan.');
+    });
+};
 
-function showEwalletPopup(e) {
-  e.preventDefault();
-  document.getElementById('ewallet-popup').style.display = 'flex';
+function showTransferPopup(rek) {
+  document.getElementById('transfer-popup').style.display = 'flex';
+  loadReceivers();
+  document.getElementById('receiver-list-section').style.display = 'block';
+  document.getElementById('add-receiver-section').style.display = 'none';
+  document.getElementById('transfer-form-section').style.display = 'none';
+  if (rek) {
+    setTimeout(function() {
+      var input = document.querySelector('#transfer-form input[name=account_number]');
+      if (input) input.value = rek;
+    }, 300);
+  }
 }
-function closeEwalletPopup() {
-  document.getElementById('ewallet-popup').style.display = 'none';
+function submitTransfer(event) {
+  event.preventDefault();
+  const form = document.getElementById('transfer-form');
+  const receiver_id = form.querySelector('[name=receiver_id]').value;
+  const amount = form.querySelector('[name=amount]').value;
+  const note = form.querySelector('[name=note]') ? form.querySelector('[name=note]').value : '';
+  if (!receiver_id || !amount) {
+    alert('Mohon lengkapi semua data!');
+    return;
+  }
+  const btn = form.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = 'Memproses...';
+  fetch('../transfer.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `receiver_id=${encodeURIComponent(receiver_id)}&amount=${encodeURIComponent(amount)}&note=${encodeURIComponent(note)}`
+  })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.textContent = 'Transfer';
+      if (data.success) {
+        document.getElementById('transfer-popup').style.display = 'none';
+        showRatingModal(data.transfer_id, 'transfer');
+      } else {
+        alert(data.message || 'Transfer gagal!');
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Transfer';
+      alert('Terjadi kesalahan.');
+    });
 }
-function selectEwallet(name) {
-  closeEwalletPopup();
-  // Tampilkan popup detail e-wallet
-  document.getElementById('ewallet-detail-popup').style.display = 'flex';
-  document.getElementById('ewallet-detail-name').value = name;
-  document.getElementById('ewallet-detail-user').value = '';
-  document.getElementById('ewallet-detail-save').checked = false;
+function loadReceivers() {
+  fetch('../get_receivers.php')
+    .then(res => res.json())
+    .then(data => {
+      const receiverList = document.getElementById('receiver-list');
+      if (data.length === 0) {
+        receiverList.innerHTML = '<div style="text-align:center;color:#888;padding:1rem;">Belum ada penerima. Silakan tambah penerima baru.</div>';
+        return;
+      }
+      receiverList.innerHTML = data.map(receiver => `
+        <div class="receiver-item" onclick="selectReceiver(${receiver.id}, '${receiver.name}', '${receiver.account_number}')" style="display:flex;align-items:center;justify-content:space-between;padding:0.8rem;border:1px solid #e3e7ed;border-radius:8px;margin-bottom:0.5rem;cursor:pointer;transition:background 0.2s;">
+          <div>
+            <div style="font-weight:600;color:#222;">${receiver.name}</div>
+            <div style="color:#666;font-size:0.9rem;">${receiver.account_number}</div>
+          </div>
+          <button onclick="event.stopPropagation();deleteReceiver(${receiver.id})" style="background:none;border:none;color:#f44336;cursor:pointer;font-size:1.1rem;">×</button>
+        </div>
+      `).join('');
+    })
+    .catch(() => {
+      document.getElementById('receiver-list').innerHTML = '<div style="text-align:center;color:#888;padding:1rem;">Gagal memuat daftar penerima.</div>';
+    });
 }
-function closeEwalletDetailPopup() {
-  document.getElementById('ewallet-detail-popup').style.display = 'none';
+function closeTransferPopup() {
+  document.getElementById('transfer-popup').style.display = 'none';
+  document.getElementById('receiver-list-section').style.display = 'block';
+  document.getElementById('add-receiver-section').style.display = 'none';
+  document.getElementById('transfer-form-section').style.display = 'none';
 }
 function showHistoryTab(tab) {
   document.getElementById('tab-topup').style.background = tab === 'topup' ? '#1976d2' : '#e3e7ed';
   document.getElementById('tab-topup').style.color = tab === 'topup' ? '#fff' : '#1976d2';
   document.getElementById('tab-transfer').style.background = tab === 'transfer' ? '#1976d2' : '#e3e7ed';
   document.getElementById('tab-transfer').style.color = tab === 'transfer' ? '#fff' : '#1976d2';
-  renderHistoryTable(tab);
-}
-function renderHistoryTable(tab) {
-  var tbody = document.getElementById('history-table-body');
-  var empty = document.getElementById('history-empty');
-  var thead = tbody.parentElement.previousElementSibling;
-  tbody.innerHTML = '';
-  // Ubah header jika transfer
-  if (tab === 'transfer') {
-    thead.innerHTML = `<tr style="background:#f4f6f8;color:#1976d2;font-size:1rem;">
-      <th style="padding:0.7rem 0.3rem;text-align:left;">Tanggal</th>
-      <th style="padding:0.7rem 0.3rem;text-align:left;">e-Wallet</th>
-      <th style="padding:0.7rem 0.3rem;text-align:left;">Rekening</th>
-      <th style="padding:0.7rem 0.3rem;text-align:right;">Nominal</th>
-    </tr>`;
-  } else {
-    thead.innerHTML = `<tr style="background:#f4f6f8;color:#1976d2;font-size:1rem;">
-      <th style="padding:0.7rem 0.3rem;text-align:left;">Tanggal</th>
-      <th style="padding:0.7rem 0.3rem;text-align:left;">e-Wallet</th>
-      <th style="padding:0.7rem 0.3rem;text-align:left;">Rekening</th>
-      <th style="padding:0.7rem 0.3rem;text-align:right;">Nominal</th>
-    </tr>`;
-  }
-  var filtered = allHistoryData.filter(function(item) {
-    return (tab === 'topup' ? item.kategori === 'topup' : item.kategori === 'transfer');
-  });
-  if (!Array.isArray(filtered) || filtered.length === 0) {
-    empty.style.display = 'block';
-    return;
-  } else {
-    empty.style.display = 'none';
-  }
-  filtered.forEach(function(item) {
-    var tr = document.createElement('tr');
-    if (tab === 'transfer') {
-      tr.innerHTML = '<td style="padding:0.5rem 0.3rem;">' + item.tanggal + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;">' + item.ewallet + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;">' + item.rekening + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;text-align:right;">Rp ' + parseInt(item.nominal).toLocaleString('id-ID') + '</td>';
-    } else {
-      tr.innerHTML = '<td style="padding:0.5rem 0.3rem;">' + item.tanggal + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;">' + item.ewallet + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;">' + item.rekening + '</td>' +
-                     '<td style="padding:0.5rem 0.3rem;text-align:right;">Rp ' + parseInt(item.nominal).toLocaleString('id-ID') + '</td>';
-    }
-    tbody.appendChild(tr);
-  });
-}
-function renderHistoryTableInit() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '../get_history.php', true);
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      try {
-        allHistoryData = JSON.parse(xhr.responseText);
-        showHistoryTab('topup');
-      } catch (e) {
-        document.getElementById('history-empty').style.display = 'block';
+  
+  fetch(`../get_history.php?type=${tab}`)
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('history-table-body');
+      const empty = document.getElementById('history-empty');
+      tbody.innerHTML = '';
+      
+      if (data.length === 0) {
+        empty.style.display = 'block';
+        return;
       }
-    } else {
+      
+      empty.style.display = 'none';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        let stars = '';
+        if (item.rating && item.rating > 0) {
+          for (let i = 1; i <= 5; i++) {
+            stars += `<span style='color:${i <= item.rating ? '#FFD600' : '#ccc'};font-size:1.1em;'>${i <= item.rating ? '★' : '☆'}</span>`;
+          }
+        }
+        const reviewValue = (item.review && item.review.trim() !== "" && item.review !== "-") ? item.review : null;
+        const reviewButton = reviewValue
+          ? `<span style=\"color:#666;font-size:0.9rem;\">${reviewValue}</span>`
+          : `<button onclick=\"showUlasanPopup(${item.id}, '${tab}')\" style=\"background:none;border:none;color:#1976d2;cursor:pointer;font-size:0.9rem;\">Tambah Ulasan</button>`;
+        tr.innerHTML = `
+          <td style=\"padding:0.7rem 0.3rem;\">${item.tanggal}</td>
+          <td style=\"padding:0.7rem 0.3rem;\">${item.ewallet}</td>
+          <td style=\"padding:0.7rem 0.3rem;\">${item.rekening}</td>
+          <td style=\"padding:0.7rem 0.3rem;text-align:right;\">Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td>
+          <td style=\"padding:0.7rem 0.3rem;\">${stars} ${reviewButton}</td>
+          <td style=\"padding:0.7rem 0.3rem;text-align:center;\">
+            <button onclick=\"showDetailModal(${item.id}, '${tab}')\" style=\"background:none;border:none;color:#1976d2;cursor:pointer;font-size:1.1rem;\" title=\"Lihat Detail\"><i class=\"fa fa-eye\"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(() => {
       document.getElementById('history-empty').style.display = 'block';
+    });
+}
+function selectReceiver(receiverId, name, accountNumber) {
+  const transferFormSection = document.getElementById('transfer-form-section');
+  transferFormSection.innerHTML = `
+    <form id="transfer-form" onsubmit="submitTransfer(event)">
+      <div style="margin-bottom:1rem;">
+        <label style="color:#1976d2;font-weight:600;">Penerima</label><br>
+        <input type="text" value="${name} (${accountNumber})" readonly style="width:100%;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
+        <input type="hidden" name="receiver_id" value="${receiverId}">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="color:#1976d2;font-weight:600;">Nominal Transfer</label><br>
+        <input type="number" name="amount" min="1000" step="1000" required placeholder="Masukkan nominal transfer" style="width:100%;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;outline:none;transition:border 0.2s;">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="color:#1976d2;font-weight:600;">Catatan (Opsional)</label><br>
+        <input type="text" name="note" placeholder="Catatan transfer" style="width:100%;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;outline:none;transition:border 0.2s;">
+      </div>
+      <button type="submit" style="width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Transfer</button>
+      <button type="button" onclick="backToReceiverList()" style="width:100%;margin-top:0.7rem;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">Kembali</button>
+    </form>
+  `;
+  document.getElementById('receiver-list-section').style.display = 'none';
+  transferFormSection.style.display = 'block';
+}
+function selectEwallet(ewallet) {
+  document.getElementById('ewallet-detail-name').value = ewallet;
+  document.getElementById('ewallet-popup').style.display = 'none';
+  document.getElementById('ewallet-detail-popup').style.display = 'flex';
+  setTimeout(function() {
+    var rekInput = document.getElementById('ewallet-detail-user');
+    if (rekInput) {
+      if (ewallet === 'BANK FTI') {
+        rekInput.value = '<?php echo htmlspecialchars($account_number); ?>';
+        rekInput.readOnly = true;
+      } else {
+        rekInput.value = '';
+        rekInput.readOnly = false;
+      }
+    }
+    rekInput?.focus();
+  }, 200);
+}
+document.querySelectorAll('.ewallet-item[data-ewallet]').forEach(function(item) {
+  item.onclick = function() {
+    selectEwallet('BANK FTI');
+  };
+});
+function closeEwalletDetailPopup() {
+  document.getElementById('ewallet-detail-popup').style.display = 'none';
+}
+function closeEwalletPopup() {
+  document.getElementById('ewallet-popup').style.display = 'none';
+}
+function showAddReceiverForm() {
+  document.getElementById('receiver-list-section').style.display = 'none';
+  document.getElementById('add-receiver-section').style.display = 'block';
+}
+
+function hideAddReceiverForm() {
+  document.getElementById('add-receiver-section').style.display = 'none';
+  document.getElementById('receiver-list-section').style.display = 'block';
+  // Reset form
+  document.getElementById('add-receiver-form').reset();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('btn-upgrade-prioritas');
+    if (btn) {
+        btn.onclick = function() {
+            document.getElementById('upgrade-modal').style.display = 'flex';
+        };
+    }
+    var star = document.querySelector('.fa-star[title="Upgrade ke Prioritas"]');
+    if (star) {
+        star.onclick = function() {
+            document.getElementById('btn-upgrade-prioritas')?.click();
+        };
+    }
+    var bayarBtn = document.getElementById('btn-upgrade-bayar');
+    if (bayarBtn) {
+        bayarBtn.onclick = function() {
+            document.getElementById('upgrade-modal').style.display = 'none';
+            // Buka popup transfer otomatis ke rekening FTI00000002
+            showTransferPopup('FTI00000002');
+            setTimeout(function() {
+                // Isi nominal otomatis jika form sudah muncul
+                var inputRek = document.querySelector('#transfer-form input[name=account_number]');
+                var inputAmount = document.querySelector('#transfer-form input[name=amount]');
+                if (inputRek) inputRek.value = 'FTI00000002';
+                if (inputAmount) inputAmount.value = 50000;
+            }, 400);
+        };
+    }
+    var copyBtn = document.getElementById('copy-account-btn');
+    var copyIcon = document.getElementById('copy-account-icon');
+    var toast = document.getElementById('copy-toast');
+    if (copyBtn) {
+        copyBtn.onclick = function() {
+            var accNum = document.getElementById('account-number-value').textContent.trim();
+            navigator.clipboard.writeText(accNum).then(function() {
+                if (copyIcon) copyIcon.style.color = '#ff9800';
+                if (toast) {
+                    toast.style.display = 'inline';
+                    setTimeout(function(){
+                        toast.style.display = 'none';
+                        if (copyIcon) copyIcon.style.color = '#555';
+                    }, 1500);
+                }
+            }, function() {
+                alert('Gagal menyalin nomor rekening');
+            });
+        };
+    }
+});
+
+function deleteReceiver(id) {
+  if (!confirm('Yakin ingin menghapus penerima ini?')) return;
+  fetch('../delete_receiver.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'id=' + encodeURIComponent(id)
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        loadReceivers();
+      } else {
+        alert(data.message || 'Gagal menghapus penerima!');
+      }
+    })
+    .catch(() => {
+      alert('Terjadi kesalahan saat menghapus penerima!');
+    });
+}
+
+function submitAddReceiver(event) {
+  event.preventDefault();
+  const form = document.getElementById('add-receiver-form');
+  const name = document.getElementById('receiver-name').value.trim();
+  const account = document.getElementById('receiver-account').value.trim();
+  if (!name || !account) {
+    alert('Nama dan nomor rekening wajib diisi!');
+    return;
+  }
+  const btn = form.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+  fetch('../add_receiver.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `name=${encodeURIComponent(name)}&account_number=${encodeURIComponent(account)}`
+  })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.textContent = 'Simpan Penerima';
+      if (data.success) {
+        document.getElementById('add-receiver-section').style.display = 'none';
+        document.getElementById('receiver-list-section').style.display = 'block';
+        loadReceivers();
+        form.reset();
+      } else {
+        alert(data.message || 'Gagal menyimpan penerima!');
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Simpan Penerima';
+      alert('Terjadi kesalahan saat menyimpan penerima!');
+    });
+}
+
+function showComingSoon() {
+  alert('Fitur ini segera hadir!');
+}
+
+function showQrScanPopup() {
+  var popup = document.getElementById('qrscan-popup');
+  if (popup) popup.style.display = 'flex';
+  var resultInput = document.getElementById('qrscan-result');
+  if (resultInput) {
+    resultInput.value = 'Hasil scan QR akan muncul di sini';
+    setTimeout(function() { resultInput.focus(); }, 200);
+  }
+  var actionBtns = document.getElementById('qr-action-buttons');
+  if (actionBtns) actionBtns.style.display = 'none';
+}
+
+// Event: jika hasil scan QR diinput/diubah
+var qrResultInput = document.getElementById('qr-result');
+if (qrResultInput) {
+  qrResultInput.addEventListener('input', function() {
+    var rekening = qrResultInput.value.trim();
+    if (rekening.length >= 8) { // asumsi minimal 8 digit rekening
+      document.getElementById('qr-action-buttons').style.display = 'flex';
+      // Simpan rekening hasil scan ke data attribute tombol
+      document.getElementById('btn-transfer-qr').setAttribute('data-rekening', rekening);
+      document.getElementById('btn-topup-qr').setAttribute('data-rekening', rekening);
+      document.getElementById('btn-tagihan-qr').setAttribute('data-rekening', rekening);
+    } else {
+      document.getElementById('qr-action-buttons').style.display = 'none';
+    }
+  });
+}
+
+// Event: klik Transfer Saldo ke Rekening Ini
+var btnTransferQr = document.getElementById('btn-transfer-qr');
+if (btnTransferQr) {
+  btnTransferQr.onclick = function() {
+    var rekening = this.getAttribute('data-rekening');
+    if (rekening) {
+      document.getElementById('qrscan-popup').style.display = 'none';
+      showTransferPopup(rekening);
     }
   };
-  xhr.send();
 }
-function showHistoryPopup(e) {
-  if (e) e.preventDefault();
-  renderHistoryTableInit();
-  document.getElementById('history-popup').style.display = 'flex';
+// Event: klik Top Up ke Rekening Ini (bisa diarahkan ke halaman topup dengan rekening tujuan)
+var btnTopupQr = document.getElementById('btn-topup-qr');
+if (btnTopupQr) {
+  btnTopupQr.onclick = function() {
+    var rekening = this.getAttribute('data-rekening');
+    if (rekening) {
+      window.location.href = 'dashboard_transaksi.php?tab=ewallet&rekening=' + encodeURIComponent(rekening);
+    }
+  };
 }
+// Event: klik Bayar Tagihan ke Rekening Ini (bisa diarahkan ke halaman tagihan dengan rekening tujuan)
+var btnTagihanQr = document.getElementById('btn-tagihan-qr');
+if (btnTagihanQr) {
+  btnTagihanQr.onclick = function() {
+    var rekening = this.getAttribute('data-rekening');
+    if (rekening) {
+      window.location.href = 'dashboard_transaksi.php?tab=tagihan&rekening=' + encodeURIComponent(rekening);
+    }
+  };
+}
+
+function toggleEwalletRekInput() {
+  var ewallet = document.getElementById('ewallet-select').value;
+  var rekGroup = document.getElementById('ewallet-rek-group');
+  if (ewallet && ewallet !== 'BANK FTI') {
+    rekGroup.style.display = 'block';
+  } else {
+    rekGroup.style.display = 'none';
+    document.getElementById('ewallet-rek').value = '';
+  }
+}
+
+function submitEwalletTopup(event) {
+  event.preventDefault();
+  var ewallet = document.getElementById('ewallet-select').value;
+  var rekening = document.getElementById('ewallet-rek').value;
+  var nominal = document.getElementById('ewallet-nominal').value;
+  if (!ewallet || !nominal || (ewallet !== 'BANK FTI' && !rekening)) {
+    alert('Mohon lengkapi semua data!');
+    return;
+  }
+  var btn = event.target.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = 'Memproses...';
+  fetch('../topup.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `ewallet=${encodeURIComponent(ewallet)}&rekening=${encodeURIComponent(rekening)}&amount=${encodeURIComponent(nominal)}`
+  })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.textContent = 'Top Up';
+      if (data.success) {
+        document.getElementById('ewallet-popup-overlay').style.display = 'none';
+        if (data.new_balance !== undefined) {
+          var saldoEls = document.querySelectorAll('.balance');
+          saldoEls.forEach(function(el) { el.textContent = 'Rp ' + Number(data.new_balance).toLocaleString('id-ID'); });
+        }
+        showRatingModal(data.topup_id, 'topup');
+      } else {
+        alert(data.message || 'Top up gagal!');
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Top Up';
+      alert('Terjadi kesalahan.');
+    });
+}
+
+document.getElementById('ewallet-select').addEventListener('change', toggleEwalletRekInput);
+
+function showTopupReviewModal(topup_id) {
+  var modal = document.createElement('div');
+  modal.id = 'topup-review-modal';
+  modal.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;max-width:350px;width:90vw;padding:2.2rem 1.2rem;box-shadow:0 8px 32px rgba(25,118,210,0.18);text-align:center;position:relative;">
+      <button onclick="document.body.removeChild(document.getElementById('topup-review-modal'))" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;"><i class='fa fa-times'></i></button>
+      <div style='font-size:1.2rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;'>Beri Ulasan Top Up</div>
+      <form id='topup-review-form'>
+        <div style='margin-bottom:1rem;'>
+          <label style='font-weight:600;color:#1976d2;'>Rating</label><br>
+          <span id='topup-rating-stars'>
+            <i class='fa fa-star-o' data-val='1'></i>
+            <i class='fa fa-star-o' data-val='2'></i>
+            <i class='fa fa-star-o' data-val='3'></i>
+            <i class='fa fa-star-o' data-val='4'></i>
+            <i class='fa fa-star-o' data-val='5'></i>
+          </span>
+        </div>
+        <div style='margin-bottom:1rem;'>
+          <label style='font-weight:600;color:#1976d2;'>Ulasan</label>
+          <textarea id='topup-review-text' style='width:100%;min-height:60px;border-radius:8px;border:1px solid #b0bec5;padding:0.5rem;font-size:1rem;'></textarea>
+        </div>
+        <button type='submit' style='width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;'>Kirim Ulasan</button>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  // Bintang rating interaktif
+  var stars = modal.querySelectorAll('#topup-rating-stars i');
+  var rating = 0;
+  stars.forEach(function(star) {
+    star.onclick = function() {
+      rating = parseInt(this.getAttribute('data-val'));
+      stars.forEach(function(s, idx) {
+        s.className = idx < rating ? 'fa fa-star' : 'fa fa-star-o';
+      });
+    };
+  });
+  // Submit ulasan
+  modal.querySelector('#topup-review-form').onsubmit = function(e) {
+    e.preventDefault();
+    var review = modal.querySelector('#topup-review-text').value;
+    fetch('../topup.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'topup_id=' + encodeURIComponent(topup_id) + '&review=' + encodeURIComponent(review) + '&rating=' + encodeURIComponent(rating)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Terima kasih atas ulasan Anda!');
+          document.body.removeChild(modal);
+        } else {
+          alert(data.message || 'Gagal menyimpan ulasan!');
+        }
+      });
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.ewallet-item[data-ewallet]').forEach(function(item) {
+    item.onclick = function() {
+      selectEwallet(item.getAttribute('data-ewallet'));
+    };
+  });
+});
+
+function showTopupSaldoPopup() {
+  document.getElementById('topup-saldo-popup').style.display = 'flex';
+}
+function closeTopupSaldoPopup() {
+  document.getElementById('topup-saldo-popup').style.display = 'none';
+}
+function submitTopupSaldo(event) {
+  event.preventDefault();
+  var nominal = document.getElementById('topup-saldo-nominal').value;
+  var ewallet = document.getElementById('topup-saldo-ewallet').value;
+  var rekening = document.getElementById('topup-saldo-rekening').value;
+  var btn = event.target.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = 'Memproses...';
+  fetch('../topup.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `ewallet=${encodeURIComponent(ewallet)}&rekening=${encodeURIComponent(rekening)}&amount=${encodeURIComponent(nominal)}`
+  })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.textContent = 'Top Up';
+      var result = document.getElementById('topup-saldo-result');
+      if (data.success) {
+        result.innerHTML = '<span style="color:#2f855a;">Top up berhasil!</span>';
+        event.target.reset();
+        // Update saldo di UI jika ada elemen saldo
+        if (data.new_balance !== undefined) {
+          var saldoEls = document.querySelectorAll('.balance');
+          saldoEls.forEach(function(el) { el.textContent = 'Rp ' + Number(data.new_balance).toLocaleString('id-ID'); });
+        }
+        setTimeout(closeTopupSaldoPopup, 1200);
+        if (data.topup_id) {
+          showRatingModal(data.topup_id, 'topup');
+        }
+      } else {
+        result.innerHTML = '<span style="color:#e53e3e;">' + (data.message || 'Top up gagal!') + '</span>';
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = 'Top Up';
+      document.getElementById('topup-saldo-result').innerHTML = '<span style="color:#e53e3e;">Terjadi kesalahan.</span>';
+    });
+}
+
 function closeHistoryPopup() {
   document.getElementById('history-popup').style.display = 'none';
 }
+
+function backToReceiverList() {
+  document.getElementById('transfer-form-section').style.display = 'none';
+  document.getElementById('receiver-list-section').style.display = 'block';
+}
+
 function printHistoryTable() {
-  var popup = document.getElementById('history-popup');
-  var table = popup.querySelector('table');
-  var style = '<style>body{font-family:Segoe UI,Arial,sans-serif;}table{width:100%;border-collapse:collapse;}th,td{padding:8px 6px;}th{background:#f4f6f8;color:#1976d2;}td{text-align:left;}th:last-child,td:last-child{text-align:right;}</style>';
-  var win = window.open('', '', 'width=700,height=600');
-  win.document.write('<html><head><title>Cetak Riwayat Top Up</title>' + style + '</head><body>');
-  win.document.write('<h2 style="color:#1976d2;">Riwayat Top Up</h2>');
+  var table = document.querySelector('#history-popup table');
+  var win = window.open('', '', 'width=800,height=600');
+  win.document.write('<html><head><title>Riwayat Transaksi</title></head><body>');
+  win.document.write('<h2>Riwayat Transaksi</h2>');
   win.document.write(table.outerHTML);
   win.document.write('</body></html>');
   win.document.close();
   win.focus();
   setTimeout(function(){ win.print(); win.close(); }, 500);
 }
-function showTransferPopup() {
-  document.getElementById('transfer-popup').style.display = 'flex';
-  loadReceivers();
-  document.getElementById('receiver-list-section').style.display = 'block';
-  document.getElementById('add-receiver-section').style.display = 'none';
-  document.getElementById('transfer-form-section').style.display = 'none';
+
+function showUlasanPopup(id, type) {
+  showRatingModal(id, type);
 }
-function closeTransferPopup() {
-  document.getElementById('transfer-popup').style.display = 'none';
-}
-function showAddReceiverForm() {
-  document.getElementById('receiver-list-section').style.display = 'none';
-  document.getElementById('add-receiver-section').style.display = 'block';
-}
-function hideAddReceiverForm() {
-  document.getElementById('add-receiver-section').style.display = 'none';
-  document.getElementById('receiver-list-section').style.display = 'block';
-}
-function submitAddReceiver(e) {
-  e.preventDefault();
-  var name = document.getElementById('receiver-name').value.trim();
-  var account = document.getElementById('receiver-account').value.trim();
-  if (!name || !account) { alert('Nama dan nomor rekening wajib diisi!'); return; }
-  var btn = document.querySelector('#add-receiver-form button[type=submit]');
-  var oldText = btn.innerHTML;
-  btn.innerHTML = 'Menyimpan...'; btn.disabled = true;
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '../add_receiver.php', true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onload = function() {
-    btn.innerHTML = oldText; btn.disabled = false;
-    try {
-      var res = JSON.parse(xhr.responseText);
-      if (res.success) {
-        hideAddReceiverForm();
-        loadReceivers();
-      } else { alert(res.message || 'Gagal menambah penerima'); }
-    } catch (e) { alert('Gagal menambah penerima'); }
-  };
-  xhr.onerror = function() { btn.innerHTML = oldText; btn.disabled = false; alert('Gagal terhubung ke server.'); };
-  xhr.send('name=' + encodeURIComponent(name) + '&account_number=' + encodeURIComponent(account));
-}
-function loadReceivers() {
-  var list = document.getElementById('receiver-list');
-  list.innerHTML = 'Memuat...';
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '../get_receivers.php', true);
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      try {
-        var data = JSON.parse(xhr.responseText);
-        if (!Array.isArray(data) || data.length === 0) {
-          list.innerHTML = '<div style="color:#888;text-align:center;">Belum ada penerima.<br>Tambah penerima terlebih dahulu.</div>';
-          return;
-        }
-        list.innerHTML = '';
-        data.forEach(function(item) {
-          var div = document.createElement('div');
-          div.className = 'receiver-item';
-          div.style = 'padding:0.7rem 0.5rem;border-bottom:1px solid #e3e7ed;display:flex;align-items:center;gap:1rem;';
-          div.innerHTML = '<span style="font-weight:600;">' + item.name + '</span>' +
-                          '<span style="color:#1976d2;">' + item.account_number + '</span>' +
-                          '<button class="btn-delete-receiver" title="Hapus" style="margin-left:auto;background:none;border:none;color:#e53935;font-size:1.1rem;cursor:pointer;"><i class="fa fa-trash"></i></button>';
-          // Hapus hanya jika klik icon hapus
-          div.querySelector('.btn-delete-receiver').onclick = function(e) {
-            e.stopPropagation();
-            if (confirm('Hapus penerima ini?')) {
-              var xhrDel = new XMLHttpRequest();
-              xhrDel.open('POST', '../delete_receiver.php', true);
-              xhrDel.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-              xhrDel.onload = function() {
-                try {
-                  var res = JSON.parse(xhrDel.responseText);
-                  if (res.success) loadReceivers();
-                  else alert(res.message || 'Gagal menghapus penerima');
-                } catch (e) { alert('Gagal menghapus penerima'); }
-              };
-              xhrDel.onerror = function() { alert('Gagal menghapus penerima'); };
-              xhrDel.send('id=' + encodeURIComponent(item.id));
-            }
-          };
-          div.onclick = function() { showTransferForm(item); };
-          list.appendChild(div);
+
+function showDetailModal(id, type) {
+  // Fetch detail data berdasarkan ID dan type
+  fetch(`../get_history.php?type=${type}&id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        const item = data[0];
+        let detailHtml = `
+          <div style="background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2rem 1.2rem;box-shadow:0 8px 32px rgba(25,118,210,0.18);text-align:center;position:relative;">
+            <button onclick="this.closest('.modal-overlay').remove()" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;"><i class='fa fa-times'></i></button>
+            <div style="font-size:1.2rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;">Detail Transaksi</div>
+            <div style="text-align:left;margin-bottom:1rem;">
+              <p><strong>Tanggal:</strong> ${item.tanggal}</p>
+              <p><strong>e-Wallet:</strong> ${item.ewallet}</p>
+              <p><strong>Rekening:</strong> ${item.rekening}</p>
+              <p><strong>Nominal:</strong> Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</p>
+              ${item.review ? `<p><strong>Ulasan:</strong> ${item.review}</p>` : ''}
+              ${item.rating ? `<p><strong>Rating:</strong> ${item.rating}/5 ⭐</p>` : ''}
+            </div>
+          </div>
+        `;
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;display:flex;align-items:center;justify-content:center;';
+        modal.innerHTML = detailHtml;
+        document.body.appendChild(modal);
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.remove();
+          }
         });
-      } catch (e) { list.innerHTML = '<div style="color:#888;text-align:center;">Gagal memuat penerima.</div>'; }
-    } else { list.innerHTML = '<div style="color:#888;text-align:center;">Gagal memuat penerima.</div>'; }
-  };
-  xhr.onerror = function() { list.innerHTML = '<div style="color:#888;text-align:center;">Gagal memuat penerima.</div>'; };
-  xhr.send();
-}
-function showTransferForm(receiver) {
-  document.getElementById('receiver-list-section').style.display = 'none';
-  document.getElementById('add-receiver-section').style.display = 'none';
-  var section = document.getElementById('transfer-form-section');
-  section.style.display = 'block';
-  section.innerHTML = `
-    <div style="margin-bottom:1.2rem;"><b>Penerima:</b> ${receiver.name} (${receiver.account_number})</div>
-    <form id="transfer-form" onsubmit="submitTransfer(event, ${receiver.id})">
-      <div style="margin-bottom:1rem;">
-        <label>Nominal Transfer</label><br>
-        <input type="number" id="transfer-amount" name="amount" min="1000" step="1000" required style="width:100%;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;outline:none;transition:border 0.2s;">
-      </div>
-      <button type="submit" style="width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Transfer</button>
-      <button type="button" onclick="backToReceiverList()" style="width:100%;margin-top:0.7rem;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">Batal</button>
-    </form>
-  `;
-}
-function backToReceiverList() {
-  document.getElementById('transfer-form-section').style.display = 'none';
-  document.getElementById('receiver-list-section').style.display = 'block';
-}
-function submitTransfer(e, receiver_id) {
-  e.preventDefault();
-  var amount = parseInt(document.getElementById('transfer-amount').value);
-  var btn = document.querySelector('#transfer-form button[type=submit]');
-  var oldText = btn.innerHTML;
-  if (isNaN(amount) || amount < 1000) { alert('Nominal transfer minimal 1.000!'); return; }
-  btn.innerHTML = 'Memproses...'; btn.disabled = true;
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '../transfer.php', true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onload = function() {
-    btn.innerHTML = oldText; btn.disabled = false;
-    if (xhr.status === 200) {
-      try {
-        var res = JSON.parse(xhr.responseText);
-        if (res.success) {
-          closeTransferPopup();
-          // Update saldo aktif
-          var saldoElem = document.querySelector('.account-value.balance');
-          if (saldoElem) {
-            saldoElem.textContent = 'Rp ' + parseInt(res.new_balance).toLocaleString('id-ID');
-          }
-          showTransferSuccessFeedback(res.transfer_id);
-        } else {
-          alert(res.message || 'Transfer gagal');
-        }
-      } catch (e) { alert('Terjadi kesalahan server.'); }
-    } else {
-      alert('Gagal terhubung ke server.');
-    }
-  };
-  xhr.onerror = function() {
-    btn.innerHTML = oldText; btn.disabled = false;
-    alert('Gagal terhubung ke server.');
-  };
-  xhr.send('receiver_id=' + encodeURIComponent(receiver_id) + '&amount=' + amount);
-}
-function showTransferSuccessFeedback(transferId) {
-  var modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:30000;display:flex;align-items:center;justify-content:center;';
-  var content = document.createElement('div');
-  content.style.cssText = 'background:#fff;border-radius:18px;max-width:370px;width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:2rem 1.2rem 1.2rem 1.2rem;position:relative;text-align:center;';
-  content.innerHTML = `
-    <div style='font-size:2.5rem;color:#1976d2;margin-bottom:0.7rem;'>✔️</div>
-    <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Transfer Berhasil!</div>
-    <div style='color:#444;margin-bottom:1.2rem;'>Saldo berhasil ditransfer ke penerima.<br>Terima kasih telah menggunakan layanan Bank FTI.</div>
-    <div style='margin-bottom:1rem;'>
-      <label for='ulasan-transfer' style='font-weight:600;color:#1976d2;'>Ulasan Anda</label><br>
-      <textarea id='ulasan-transfer' rows='3' style='width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;resize:none;'></textarea>
-    </div>
-    <button id='btn-kirim-ulasan' style='width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;'>Kirim Ulasan</button>
-    <button onclick='this.closest(".modal-overlay-feedback").remove()' style='width:100%;margin-top:0.7rem;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;'>Tutup</button>
-  `;
-  modal.className = 'modal-overlay-feedback';
-  modal.appendChild(content);
-  document.body.appendChild(modal);
-  // Close on outside click
-  modal.addEventListener('click', function(e) {
-    if (e.target === modal) modal.remove();
-  });
-  // Kirim ulasan ke backend
-  content.querySelector('#btn-kirim-ulasan').onclick = function() {
-    var review = content.querySelector('#ulasan-transfer').value.trim();
-    if (!review) { alert('Ulasan tidak boleh kosong!'); return; }
-    this.disabled = true;
-    this.innerHTML = 'Mengirim...';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '../transfer.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-      content.querySelector('#btn-kirim-ulasan').disabled = false;
-      content.querySelector('#btn-kirim-ulasan').innerHTML = 'Kirim Ulasan';
-      if (xhr.status === 200) {
-        try {
-          var res = JSON.parse(xhr.responseText);
-          if (res.success) {
-            alert('Ulasan berhasil dikirim!');
-            modal.remove();
-          } else {
-            alert(res.message || 'Gagal mengirim ulasan');
-          }
-        } catch (e) { alert('Gagal mengirim ulasan'); }
-      } else { alert('Gagal terhubung ke server.'); }
-    };
-    xhr.onerror = function() { alert('Gagal terhubung ke server.'); };
-    xhr.send('review=' + encodeURIComponent(review) + '&transfer_id=' + encodeURIComponent(transferId));
-  };
-}
-// Ganti onclick tombol Transfer Saldo agar buka popup transfer
-var transferBtn = document.querySelectorAll('.action-btn-title');
-transferBtn.forEach(function(btn) {
-  if (btn.textContent.trim() === 'Transfer Saldo') {
-    btn.parentElement.onclick = function() { showTransferPopup(); };
-  }
-});
-
-// Add this function after showTransferSuccessFeedback
-function showTopupSuccessFeedback(topupId) {
-  var modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:30000;display:flex;align-items:center;justify-content:center;';
-  var content = document.createElement('div');
-  content.style.cssText = 'background:#fff;border-radius:18px;max-width:370px;width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:2rem 1.2rem 1.2rem 1.2rem;position:relative;text-align:center;';
-  content.innerHTML = `
-    <div style='font-size:2.5rem;color:#1976d2;margin-bottom:0.7rem;'>✔️</div>
-    <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Top Up Berhasil!</div>
-    <div style='color:#444;margin-bottom:1.2rem;'>Saldo berhasil ditambahkan ke rekening Anda.<br>Terima kasih telah menggunakan layanan Bank FTI.</div>
-    <div style='margin-bottom:1rem;'>
-      <label for='ulasan-topup' style='font-weight:600;color:#1976d2;'>Ulasan Anda</label><br>
-      <textarea id='ulasan-topup' rows='3' style='width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;resize:none;'></textarea>
-    </div>
-    <button id='btn-kirim-ulasan-topup' style='width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;'>Kirim Ulasan</button>
-    <button onclick='this.closest(".modal-overlay-feedback-topup").remove()' style='width:100%;margin-top:0.7rem;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;'>Tutup</button>
-  `;
-  modal.className = 'modal-overlay-feedback-topup';
-  modal.appendChild(content);
-  document.body.appendChild(modal);
-  // Close on outside click
-  modal.addEventListener('click', function(e) {
-    if (e.target === modal) modal.remove();
-  });
-  // Kirim ulasan ke backend
-  content.querySelector('#btn-kirim-ulasan-topup').onclick = function() {
-    var review = content.querySelector('#ulasan-topup').value.trim();
-    if (!review) { alert('Ulasan tidak boleh kosong!'); return; }
-    this.disabled = true;
-    this.innerHTML = 'Mengirim...';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '../topup.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-      content.querySelector('#btn-kirim-ulasan-topup').disabled = false;
-      content.querySelector('#btn-kirim-ulasan-topup').innerHTML = 'Kirim Ulasan';
-      if (xhr.status === 200) {
-        try {
-          var res = JSON.parse(xhr.responseText);
-          if (res.success) {
-            alert('Ulasan berhasil dikirim!');
-            modal.remove();
-          } else {
-            alert(res.message || 'Gagal mengirim ulasan');
-          }
-        } catch (e) { alert('Gagal mengirim ulasan'); }
-      } else { alert('Gagal terhubung ke server.'); }
-    };
-    xhr.onerror = function() { alert('Gagal terhubung ke server.'); };
-    xhr.send('topup_id=' + encodeURIComponent(topupId) + '&review=' + encodeURIComponent(review));
-  };
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var ewalletForm = document.getElementById('ewallet-detail-form');
-  if (ewalletForm) {
-    ewalletForm.onsubmit = function(e) {
-      e.preventDefault();
-      var btn = ewalletForm.querySelector('button[type=submit]');
-      var oldText = btn.innerHTML;
-      btn.innerHTML = 'Memproses...'; btn.disabled = true;
-      var ewallet = document.getElementById('ewallet-detail-name').value.trim();
-      var rekening = document.getElementById('ewallet-detail-user').value.trim();
-      var amount = document.getElementById('ewallet-detail-amount').value.trim();
-      if (!ewallet || !rekening || !amount) {
-        alert('Semua field wajib diisi!');
-        btn.innerHTML = oldText; btn.disabled = false;
-        return;
+      } else {
+        alert('Data tidak ditemukan');
       }
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '../topup.php', true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onload = function() {
-        btn.innerHTML = oldText; btn.disabled = false;
-        if (xhr.status === 200) {
-          try {
-            var res = JSON.parse(xhr.responseText);
-            if (res.success) {
-              closeEwalletDetailPopup();
-              // Update saldo aktif
-              var saldoElem = document.querySelector('.account-value.balance');
-              if (saldoElem && res.new_balance) {
-                saldoElem.textContent = 'Rp ' + parseInt(res.new_balance).toLocaleString('id-ID');
-              }
-              // Langsung gunakan id dari response
-              showTopupSuccessFeedback(res.topup_id || null);
-            } else {
-              alert(res.message || 'Top up gagal');
-            }
-          } catch (e) { alert('Terjadi kesalahan server.'); }
-        } else {
-          alert('Gagal terhubung ke server.');
-        }
-      };
-      xhr.onerror = function() {
-        btn.innerHTML = oldText; btn.disabled = false;
-        alert('Gagal terhubung ke server.');
-      };
-      xhr.send('ewallet=' + encodeURIComponent(ewallet) + '&rekening=' + encodeURIComponent(rekening) + '&amount=' + encodeURIComponent(amount));
-    };
-  }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var rekening = <?= json_encode($account_number) ?>;
-    var qrContainer = document.getElementById('rekening-qrcode');
-    qrContainer.innerHTML = '';
-    if (rekening && rekening !== 'Tidak tersedia') {
-        new QRCode(qrContainer, {
-            text: rekening,
-            width: 116,
-            height: 116,
-            colorDark : "#1976d2",
-            colorLight : "#fff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-    } else {
-        qrContainer.innerHTML = '<div style="width:116px;height:116px;display:flex;align-items:center;justify-content:center;background:#f4f6f8;border-radius:10px;border:2px dashed #e3e7ed;color:#bbb;">QR</div>';
-    }
-});
-
-function showQrScanPopup() {
-  document.getElementById('qrscan-popup').style.display = 'flex';
-  const qrReader = new Html5Qrcode("qr-reader");
-  qrReader.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 200 },
-    qrCodeMessage => {
-      document.getElementById('qr-result').value = qrCodeMessage;
-      qrReader.stop();
-    },
-    errorMessage => {}
-  ).catch(err => {
-    document.getElementById('qr-result').value = 'Tidak dapat mengakses kamera.';
-  });
-  window._qrReader = qrReader;
+    })
+    .catch(() => {
+      alert('Gagal memuat detail transaksi');
+    });
 }
+
 function closeQrScanPopup() {
   document.getElementById('qrscan-popup').style.display = 'none';
-  if (window._qrReader) {
-    window._qrReader.stop().catch(()=>{});
-    window._qrReader.clear();
-    window._qrReader = null;
-  }
-  document.getElementById('qr-result').value = '';
-  document.getElementById('qr-reader').innerHTML = '';
-  document.getElementById('qr-file-input').value = '';
 }
-document.querySelectorAll('.action-btn').forEach(btn => {
-  if (btn.querySelector('.action-btn-title') && btn.querySelector('.action-btn-title').textContent.trim() === 'Scan QR Code') {
-    btn.onclick = showQrScanPopup;
-  }
-});
-document.getElementById('qr-file-input').addEventListener('change', async function(e) {
-  const file = e.target.files[0];
-  const qrResult = document.getElementById('qr-result');
-  if (!file || !file.type.match(/^image\/(png|jpeg|jpg)$/)) {
-    qrResult.value = 'File harus berupa gambar PNG/JPG.';
-    this.value = '';
-    return;
-  }
-  if (file.size > 2 * 1024 * 1024) {
-    qrResult.value = 'Ukuran gambar terlalu besar (maks 2MB).';
-    this.value = '';
-    return;
-  }
-  qrResult.value = 'Memproses gambar...';
-  let finished = false;
-  let timeoutId;
-  let newReader = null;
-  let html5QrFileReader = null;
-  const resetAll = (msg) => {
-    if (finished) return;
-    finished = true;
-    qrResult.value = msg;
-    try { html5QrFileReader && html5QrFileReader.clear(); } catch(e){}
-    try { newReader && newReader.remove(); } catch(e){}
-    document.getElementById('qr-file-input').value = '';
-    if (timeoutId) clearTimeout(timeoutId);
-    // Fallback: jika timeout, tutup popup scan QR
-    if (msg && msg.includes('timeout')) {
-      document.getElementById('qrscan-popup').style.display = 'none';
-      alert('QR tidak ditemukan di gambar (timeout). Silakan coba gambar lain atau refresh halaman.');
-    }
-  };
-  try {
-    if (window._qrReader) {
-      await window._qrReader.stop();
-      await window._qrReader.clear();
-      window._qrReader = null;
-    }
-    let oldReader = document.getElementById('qr-file-reader');
-    if (oldReader) try { oldReader.remove(); } catch(e){}
-    newReader = document.createElement('div');
-    newReader.id = 'qr-file-reader';
-    newReader.style.display = 'none';
-    document.querySelector('#qrscan-popup > div').appendChild(newReader);
-    html5QrFileReader = new Html5Qrcode('qr-file-reader');
-    timeoutId = setTimeout(() => {
-      resetAll('QR tidak ditemukan di gambar (timeout).');
-    }, 10000);
-    const decodedText = await html5QrFileReader.scanFile(file, true);
-    resetAll('');
-    if (/^\+?\d{8,}$/.test(decodedText)) {
-      showQrActionPopup(decodedText);
-    } else {
-      qrResult.value = decodedText || 'QR tidak valid.';
-    }
-  } catch (err) {
-    console.error('QR scan error:', err);
-    resetAll('QR tidak ditemukan di gambar.');
-  }
-});
-function showQrActionPopup(rekening) {
-  document.getElementById('qr-action-rekening').textContent = rekening;
-  document.getElementById('qr-action-popup').style.display = 'flex';
-  window._qrActionRekening = rekening;
-}
-function closeQrActionPopup() {
-  document.getElementById('qr-action-popup').style.display = 'none';
-  window._qrActionRekening = null;
-}
-function handleQrAction(type) {
-  const rek = window._qrActionRekening;
-  closeQrActionPopup();
-  if (type === 'transfer') showTransferPopup(rek);
-  else if (type === 'topup') showEwalletPopup(null, rek);
-  else if (type === 'tagihan') showTagihanPopup(rek);
-}
-
-document.getElementById('rekening-qrcode').onclick = function() {
-    var qrDiv = document.getElementById('rekening-qrcode');
-    var img = qrDiv.querySelector('img') || qrDiv.querySelector('canvas');
-    if (!img) return alert('QR belum tersedia');
-    let dataUrl = img.tagName === 'IMG' ? img.src : img.toDataURL('image/png');
-    var a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'qr_rekening.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-};
-
-function showQrActionButtonsIfValid() {
-  const qrResult = document.getElementById('qr-result');
-  const qrActionButtons = document.getElementById('qr-action-buttons');
-  if (/^\+?\d{8,}$/.test(qrResult.value.trim())) {
-    qrActionButtons.style.display = 'flex';
-  } else {
-    qrActionButtons.style.display = 'none';
-  }
-}
-document.getElementById('qr-result').addEventListener('input', showQrActionButtonsIfValid);
-// Tampilkan juga setelah scan
-const origQrResultSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-Object.defineProperty(document.getElementById('qr-result'), 'value', {
-  set: function(v) {
-    origQrResultSetter.call(this, v);
-    showQrActionButtonsIfValid();
-  }
-});
-// Handler tombol aksi
-function openTransferWithRek(rek) {
-  // Implementasi: buka popup transfer, isi rekening tujuan
-  showTransferPopup(rek);
-}
-function openTopupWithRek(rek) {
-  // Implementasi: buka popup topup, isi rekening tujuan
-  showEwalletPopup(null, rek);
-}
-function openTagihanWithRek(rek) {
-  // Implementasi: buka popup tagihan, isi rekening tujuan
-  showTagihanPopup(rek);
-}
-document.getElementById('btn-transfer-qr').onclick = function() {
-  closeQrScanPopup();
-  openTransferWithRek(document.getElementById('qr-result').value.trim());
-};
-document.getElementById('btn-topup-qr').onclick = function() {
-  closeQrScanPopup();
-  openTopupWithRek(document.getElementById('qr-result').value.trim());
-};
-document.getElementById('btn-tagihan-qr').onclick = function() {
-  closeQrScanPopup();
-  openTagihanWithRek(document.getElementById('qr-result').value.trim());
-};
-// Panggil showQrActionButtonsIfValid setiap kali hasil scan berubah
-['input','change'].forEach(ev=>document.getElementById('qr-result').addEventListener(ev, showQrActionButtonsIfValid));
 
 document.addEventListener('DOMContentLoaded', function() {
-  var copyBtn = document.getElementById('copy-account-btn');
-  var copyIcon = document.getElementById('copy-account-icon');
-  var toast = document.getElementById('copy-toast');
-  if (copyBtn) {
-    copyBtn.onclick = function() {
-      var accNum = document.getElementById('account-number-value').textContent.trim();
-      navigator.clipboard.writeText(accNum).then(function() {
-        if (copyIcon) copyIcon.style.color = '#ff9800';
-        if (toast) {
-          toast.style.display = 'inline';
-          toast.style.color = '#ff9800';
-          setTimeout(function(){
-            toast.style.display = 'none';
-            if (copyIcon) copyIcon.style.color = '#555';
-            toast.style.color = '#ff9800';
-          }, 1500);
-        }
-      }, function() {
-        alert('Gagal menyalin nomor rekening');
-      });
+  var rekening = "<?php echo isset($account_number) ? htmlspecialchars($account_number) : (isset($user_data['account_number']) ? htmlspecialchars($user_data['account_number']) : ''); ?>";
+  if (rekening && typeof QRCode !== 'undefined') {
+    new QRCode(document.getElementById('rekening-qrcode'), {
+      text: rekening,
+      width: 110,
+      height: 110,
+      colorDark: "#1976d2",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+  
+  // QR Download functionality
+  var rekeningQrCode = document.getElementById('rekening-qrcode');
+  if (rekeningQrCode) {
+    rekeningQrCode.onclick = function() {
+      var qrDiv = document.getElementById('rekening-qrcode');
+      var qrCanvas = qrDiv.querySelector('canvas');
+      var preview = document.getElementById('qr-download-preview');
+      preview.innerHTML = '';
+      if (qrCanvas) {
+        var clone = qrCanvas.cloneNode(true);
+        preview.appendChild(clone);
+      }
+      document.getElementById('qr-download-popup').style.display = 'flex';
     };
   }
 });
+
+function closeQrDownloadPopup() {
+  document.getElementById('qr-download-popup').style.display = 'none';
+}
+
+function downloadQrPng() {
+  var qrUi = document.getElementById('qr-download-ui');
+  if (qrUi) {
+    html2canvas(qrUi).then(function(canvas) {
+      var link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'qr_rekening.png';
+      link.click();
+    });
+  }
+}
+
+document.getElementById('qrscan-file').onchange = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      const imageData = ctx.getImageData(0, 0, img.width, img.height);
+      const code = jsQR(imageData.data, img.width, img.height);
+      if (code) {
+        document.getElementById('qrscan-result').value = code.data;
+        handleQrResult(code.data);
+      } else {
+        // Fallback: coba html5-qrcode
+        html5QrDecodeFromImage(ev.target.result, function(qrText) {
+          if (qrText) {
+            document.getElementById('qrscan-result').value = qrText;
+            handleQrResult(qrText);
+          } else {
+            document.getElementById('qrscan-result').value = 'QR tidak terdeteksi!';
+          }
+        });
+      }
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+function html5QrDecodeFromImage(dataUrl, callback) {
+  // Buat elemen img sementara
+  const img = document.createElement('img');
+  img.onload = function() {
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
+    // html5-qrcode decode
+    try {
+      const qrCodeResult = window.Html5QrcodeScanner ? Html5QrcodeScanner.qrcodeSuccessCallback(imageData) : null;
+      if (qrCodeResult && typeof qrCodeResult === 'string') {
+        callback(qrCodeResult);
+        return;
+      }
+    } catch (e) {}
+    // Fallback: gunakan Html5Qrcode API
+    try {
+      const html5Qr = new Html5Qrcode(/* dummy id */ 'html5qr-temp');
+      html5Qr.decodeImage(canvas)
+        .then(decodedText => {
+          callback(decodedText);
+        })
+        .catch(() => {
+          callback(null);
+        });
+    } catch (e) {
+      callback(null);
+    }
+  };
+  img.onerror = function() { callback(null); };
+  img.src = dataUrl;
+}
+
+function handleQrResult(data) {
+  // Contoh logika: jika data adalah rekening (10 digit angka), munculkan popup transfer
+  if (/^\d{10,}$/.test(data)) {
+    showTransferPopup(data);
+  } else if (data.startsWith('TAGIHAN:')) {
+    // logika tagihan jika ada
+  } else {
+    // tampilkan pesan atau aksi lain
+  }
+}
+
+let html5QrCamera = null;
+let isCameraScanning = false;
+function startQrCameraScan() {
+  var preview = document.getElementById('qrscan-camera-preview');
+  var btnScan = document.getElementById('btn-scan-camera');
+  var btnStop = document.getElementById('btn-stop-camera');
+  if (!preview) return;
+  preview.style.display = 'block';
+  btnScan.style.display = 'none';
+  btnStop.style.display = 'inline-block';
+  if (!html5QrCamera) {
+    html5QrCamera = new Html5Qrcode('qrscan-camera-preview');
+  }
+  html5QrCamera.start(
+    { facingMode: 'environment' },
+    { fps: 10, qrbox: 220 },
+    qrCodeMessage => {
+      document.getElementById('qrscan-result').value = qrCodeMessage;
+      handleQrResult(qrCodeMessage);
+      stopQrCameraScan();
+    },
+    errorMessage => {
+      // Optional: tampilkan error scanning
+    }
+  ).then(() => {
+    isCameraScanning = true;
+  }).catch(err => {
+    document.getElementById('qrscan-result').value = 'Kamera tidak tersedia atau akses ditolak!';
+    stopQrCameraScan();
+  });
+}
+function stopQrCameraScan() {
+  var preview = document.getElementById('qrscan-camera-preview');
+  var btnScan = document.getElementById('btn-scan-camera');
+  var btnStop = document.getElementById('btn-stop-camera');
+  if (preview) preview.style.display = 'none';
+  if (btnScan) btnScan.style.display = 'inline-block';
+  if (btnStop) btnStop.style.display = 'none';
+  if (html5QrCamera && isCameraScanning) {
+    html5QrCamera.stop().then(() => {
+      html5QrCamera.clear();
+      isCameraScanning = false;
+    }).catch(() => { isCameraScanning = false; });
+  }
+}
+function closeQrScanPopup() {
+  stopQrCameraScan();
+  var popup = document.getElementById('qrscan-popup');
+  if (popup) popup.style.display = 'none';
+}
+
 </script>
+
+<!-- QR Download Popup -->
+<div id="qr-download-popup" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;">
+  <div id="qr-download-ui" style="background:#fff;border-radius:16px;padding:2rem 1.5rem;max-width:340px;width:95vw;box-shadow:0 8px 32px rgba(25,118,210,0.18);text-align:center;position:relative;">
+    <button onclick="closeQrDownloadPopup()" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;"><i class="fa fa-times"></i></button>
+    <div style="font-size:1.1rem;font-weight:700;color:#1976d2;margin-bottom:1.2rem;">QR Rekening Anda</div>
+    <div id="qr-download-preview" style="margin-bottom:1.2rem;"></div>
+    <button onclick="downloadQrPng()" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Unduh QR</button>
+  </div>
+</div>
+
+<!-- Top Up Saldo Popup -->
+<div id="topup-saldo-popup" class="ewallet-popup-overlay" style="display:none;z-index:21000;align-items:center;justify-content:center;">
+  <div class="ewallet-popup-modal" style="max-width:350px;width:90vw;">
+    <div class="ewallet-popup-header">
+      <span class="ewallet-popup-title">Top Up Saldo</span>
+      <button class="ewallet-popup-close" onclick="closeTopupSaldoPopup()">&times;</button>
+    </div>
+    <form id="topup-saldo-form" onsubmit="submitTopupSaldo(event)">
+      <input type="hidden" id="topup-saldo-ewallet" name="ewallet" value="BANK FTI">
+      <input type="hidden" id="topup-saldo-rekening" name="rekening" value="<?= htmlspecialchars($account_number) ?>">
+      <div style="margin-bottom:1.2rem;">
+        <label style="font-weight:500;color:#222;">Nominal Top Up</label><br>
+        <input id="topup-saldo-nominal" name="amount" type="number" min="10000" step="1000" required placeholder="Masukkan nominal top up" style="width:100%;margin-top:0.3rem;padding:0.7rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;background:#f8fafc;font-size:1rem;">
+      </div>
+      <button type="submit" style="width:100%;padding:0.9rem 0;font-size:1.1rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Top Up</button>
+    </form>
+    <div id="topup-saldo-result" style="margin-top:1rem;"></div>
+  </div>
+</div>
 
 </body>
 </html>

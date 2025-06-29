@@ -22,15 +22,21 @@ $user_id = $_SESSION['user_id'];
 if (isset($_POST['review']) && isset($_POST['transfer_id'])) {
     $review = trim($_POST['review']);
     $transfer_id = intval($_POST['transfer_id']);
-    if ($transfer_id <= 0 || !$review) {
+    $rating = isset($_POST['rating']) ? intval($_POST['rating']) : null;
+    if ($transfer_id <= 0) {
         echo json_encode(['success' => false, 'message' => 'Data tidak valid.']);
         exit;
     }
     try {
         $db = new Database();
         $pdo = $db->getConnection();
-        $stmt = $pdo->prepare('UPDATE transfer_history SET review = ? WHERE id = ? AND from_user = ?');
-        $stmt->execute([$review, $transfer_id, $user_id]);
+        if ($rating !== null) {
+            $stmt = $pdo->prepare('UPDATE transfer_history SET review = ?, rating = ? WHERE id = ? AND from_user = ?');
+            $stmt->execute([$review, $rating, $transfer_id, $user_id]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE transfer_history SET review = ? WHERE id = ? AND from_user = ?');
+            $stmt->execute([$review, $transfer_id, $user_id]);
+        }
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Gagal menyimpan ulasan: ' . $e->getMessage()]);
@@ -92,10 +98,15 @@ try {
     $stmt6 = $pdo->prepare('INSERT INTO transfer_history (from_user, to_user, receiver_id, amount, note, transfer_date, rating, review, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())');
     $stmt6->execute([$user_id, $to_user_id, $receiver_id, $amount, $note, $date, $rating, $review]);
     $transfer_id = $pdo->lastInsertId();
+    // Jika transfer upgrade prioritas (ke FTI00000002 dan 50000)
+    if (strtoupper($receiver['account_number']) === 'FTI00000002' && $amount == 50000) {
+        $stmt7 = $pdo->prepare('UPDATE users SET kategori = "prioritas" WHERE id = ?');
+        $stmt7->execute([$user_id]);
+    }
     // Ambil saldo terbaru
-    $stmt7 = $pdo->prepare('SELECT balance FROM users WHERE id = ?');
-    $stmt7->execute([$user_id]);
-    $new_balance = $stmt7->fetchColumn();
+    $stmt8 = $pdo->prepare('SELECT balance FROM users WHERE id = ?');
+    $stmt8->execute([$user_id]);
+    $new_balance = $stmt8->fetchColumn();
     $pdo->commit();
     echo json_encode(['success' => true, 'new_balance' => $new_balance, 'transfer_id' => $transfer_id]);
 } catch (Exception $e) {

@@ -23,15 +23,16 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-if (isset($_POST['topup_id']) && isset($_POST['review'])) {
+if (isset($_POST['topup_id']) && (isset($_POST['review']) || isset($_POST['rating']))) {
     $user_id = $_SESSION['user_id'];
     $topup_id = intval($_POST['topup_id']);
-    $review = trim($_POST['review']);
+    $review = isset($_POST['review']) ? trim($_POST['review']) : null;
+    $rating = isset($_POST['rating']) ? intval($_POST['rating']) : null;
     try {
         $db = new Database();
         $pdo = $db->getConnection();
-        $stmt = $pdo->prepare('UPDATE topup_history SET review = :review WHERE id = :id AND user_id = :user_id');
-        $stmt->execute([':review' => $review, ':id' => $topup_id, ':user_id' => $user_id]);
+        $stmt = $pdo->prepare('UPDATE topup_history SET review = :review, rating = :rating WHERE id = :id AND user_id = :user_id');
+        $stmt->execute([':review' => $review, ':rating' => $rating, ':id' => $topup_id, ':user_id' => $user_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Gagal menyimpan ulasan: ' . $e->getMessage()]);
@@ -63,19 +64,42 @@ try {
     $db = new Database();
     $pdo = $db->getConnection();
     $pdo->beginTransaction();
-    // Update saldo user
-    $stmt = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE id = :id');
-    $stmt->execute([':amount' => $amount, ':id' => $user_id]);
+    // Jika topup untuk upgrade prioritas (rekening FTI00000002 dan nominal 50000)
+    if ((strtoupper($ewallet) === 'FTI00000002' || strtoupper($rekening) === 'FTI00000002') && $amount == 50000) {
+        // Kurangi saldo user (upgrade prioritas)
+        $stmt4 = $pdo->prepare('UPDATE users SET balance = balance - :amount WHERE id = :id');
+        $stmt4->execute([':amount' => $amount, ':id' => $user_id]);
+        // Tambah saldo teller
+        $stmtTeller = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE account_number = :accnum');
+        $stmtTeller->execute([':amount' => $amount, ':accnum' => 'FTI00000002']);
+        // Ubah kategori user
+        $stmt5 = $pdo->prepare('UPDATE users SET kategori = "prioritas" WHERE id = :id');
+        $stmt5->execute([':id' => $user_id]);
+    } else if (strtoupper($ewallet) === 'BANK FTI') {
+        // Topup saldo: saldo user bertambah
+        $stmt = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE id = :id');
+        $stmt->execute([':amount' => $amount, ':id' => $user_id]);
+    } else if (in_array(strtoupper($ewallet), ['OVO','GOPAY','DANA','SHOPEEPAY','LINKAJA'])) {
+        // Topup ewallet: saldo user berkurang
+        $stmt = $pdo->prepare('UPDATE users SET balance = balance - :amount WHERE id = :id');
+        $stmt->execute([':amount' => $amount, ':id' => $user_id]);
+    } else {
+        // Default: saldo bertambah
+        $stmt = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE id = :id');
+        $stmt->execute([':amount' => $amount, ':id' => $user_id]);
+    }
     // Insert ke riwayat
-    $stmt2 = $pdo->prepare('INSERT INTO topup_history (user_id, ewallet, rekening, nominal, tanggal, review) VALUES (:user_id, :ewallet, :rekening, :nominal, NOW(), :review)');
+    $stmt2 = $pdo->prepare('INSERT INTO topup_history (user_id, ewallet, rekening, nominal, tanggal, review, rating) VALUES (:user_id, :ewallet, :rekening, :nominal, NOW(), :review, :rating)');
     $stmt2->execute([
         ':user_id' => $user_id,
         ':ewallet' => $ewallet,
         ':rekening' => $rekening,
         ':nominal' => $amount,
-        ':review' => isset($_POST['review']) ? trim($_POST['review']) : null
+        ':review' => isset($_POST['review']) ? trim($_POST['review']) : null,
+        ':rating' => isset($_POST['rating']) ? intval($_POST['rating']) : null
     ]);
     $topup_id = $pdo->lastInsertId();
+
     // Ambil saldo terbaru
     $stmt3 = $pdo->prepare('SELECT balance FROM users WHERE id = :id');
     $stmt3->execute([':id' => $user_id]);

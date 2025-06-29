@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS topup_history (
     rekening VARCHAR(30) NOT NULL,
     nominal INT NOT NULL,
     tanggal DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    review TEXT,
+    rating INT DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -61,4 +63,16 @@ CREATE TABLE IF NOT EXISTS transfer_history (
     FOREIGN KEY (from_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (to_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES receivers(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk menyimpan tagihan/topup/pembayaran
+CREATE TABLE IF NOT EXISTS tagihan (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    jenis VARCHAR(32) NOT NULL, -- contoh: pulsa, data, game, PLN, BPJS, dll
+    keterangan VARCHAR(128) NOT NULL, -- nomor HP, ID pelanggan, dsb
+    nominal INT NOT NULL,
+    status ENUM('Draft','Belum Lunas','Lunas') DEFAULT 'Draft',
+    waktu DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 ); 

@@ -17,3 +17,31 @@
 {"ewallet":"OVO","rekening":"+62 301521902942","amount":"9000"}
 {"ewallet":"GO-PAY","rekening":"+62 301891895488","amount":"1000"}
 {"ewallet":"LinkAja","rekening":"+62 301306150360","amount":"10000"}
+{"ewallet":"Bank FTI","rekening":"+62 301306150360","amount":"1000","save":"1"}
+{"ewallet":"GO-PAY","rekening":"+62 301850121459","amount":"9000","save":"1"}
+{"ewallet":"LinkAja","rekening":" +62 301850121459 ","amount":"9000","save":"1"}
+{"ewallet":"LinkAja","rekening":"+62 301850121459","amount":"50000","save":"1"}
+{"ewallet":"Bank FTI","rekening":"FTI00000002","amount":"50000","save":"1"}
+{"ewallet":"DANA","rekening":"FTI00000002","amount":"50000","save":"1"}
+{"ewallet":"DANA","rekening":"FTI00000002","amount":"50000","save":"1"}
+{"ewallet":"OVO","rekening":"+62 301194249304","amount":"50000","save":"1"}
+{"ewallet":"LinkAja","rekening":"+62 301194249304","amount":"50000","save":"1"}
+{"ewallet":"ShopeePay","rekening":"FTI00000002","amount":"50000","save":"1"}
+{"ewallet":"GO-PAY","rekening":"+62 301306150360","amount":"40000","save":"1"}
+{"ewallet":"Bank FTI","rekening":"+62 301195052638","amount":"50000","save":"1"}
+{"ewallet":"Bank FTI","rekening":"+62 301195052638","amount":"1000","save":"1"}
+{"ewallet":"DANA","rekening":"+62 301850121459","amount":"2000","save":"0"}
+{"ewallet":"BANK FTI","rekening":"+62 301850121459","amount":"4000","save":"0"}
+{"ewallet":"OVO","rekening":"0123456","amount":"10000"}
+{"ewallet":"LINKAJA","rekening":"0123456","amount":"12000"}
+{"ewallet":"GOPAY","rekening":"0123456","amount":"15000"}
+{"ewallet":"GOPAY","rekening":"0123456","amount":"15000"}
+{"ewallet":"BANK FTI","rekening":"+62 301850121459","amount":"15000"}
+{"ewallet":"BANK FTI","rekening":"+62 301850121459","amount":"10000"}
+{"ewallet":"BANK FTI","rekening":"+62 301745125525","amount":"10000"}
+{"ewallet":"BANK FTI","rekening":"+62 301745125525","amount":"12000"}
+{"ewallet":"BANK FTI","rekening":"+62 301745125525","amount":"52000"}
+{"ewallet":"BANK FTI","rekening":"+62 301745125525","amount":"12000"}
+{"ewallet":"BANK FTI","rekening":"+62 301194249304","amount":"10000"}
+{"ewallet":"BANK FTI","rekening":"+62 301274324413","amount":"100000"}
+{"ewallet":"BANK FTI","rekening":"+62 301274324413","amount":"20000"}

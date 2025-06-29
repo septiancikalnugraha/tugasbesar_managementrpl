@@ -83,8 +83,8 @@ if (isset($_SESSION['user_id'])) {
 <nav class="navbar">
     <div class="navbar-content">
         <div class="navbar-logo">
-            <img src="assets/images/logo.png" alt="Logo">
-            Bank FTI
+            <img src="image/logo.jpeg" alt="Logo" style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.10);margin-right:12px;background:#fff;" />
+            FTI M-Banking
         </div>
         <div class="navbar-links">
             <a href="pages/login.php" class="btn btn-primary">Login</a>

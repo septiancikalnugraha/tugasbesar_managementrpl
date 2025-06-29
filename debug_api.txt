@@ -1,0 +1,230 @@
+2025-06-29 11:16:34 - Request Method: GET
+2025-06-29 11:16:34 - User ID: 40, Method: GET
+2025-06-29 11:16:34 - GET request for user_id: 40
+2025-06-29 11:16:51 - Request Method: POST
+2025-06-29 11:16:51 - User ID: 40, Method: POST
+2025-06-29 11:16:51 - POST Data: jenis=game, keterangan=0667767676, nominal=120000
+2025-06-29 11:16:57 - Request Method: GET
+2025-06-29 11:16:57 - User ID: 40, Method: GET
+2025-06-29 11:16:57 - GET request for user_id: 40
+2025-06-29 11:17:02 - Request Method: PATCH
+2025-06-29 11:17:02 - User ID: 40, Method: PATCH
+2025-06-29 11:17:02 - PATCH request for tagihan_id: 10
+2025-06-29 11:17:02 - PATCH Error: Saldo tidak cukup. Saldo: Rp 10.000, Dibutuhkan: Rp 120.000
+2025-06-29 11:17:27 - Request Method: POST
+2025-06-29 11:17:27 - User ID: 40, Method: POST
+2025-06-29 11:17:27 - POST Data: jenis=game, keterangan=0667767676, nominal=12000
+2025-06-29 11:17:31 - Request Method: GET
+2025-06-29 11:17:31 - User ID: 40, Method: GET
+2025-06-29 11:17:31 - GET request for user_id: 40
+2025-06-29 11:17:33 - Request Method: PATCH
+2025-06-29 11:17:33 - User ID: 40, Method: PATCH
+2025-06-29 11:17:33 - PATCH request for tagihan_id: 11
+2025-06-29 11:17:33 - PATCH Error: Saldo tidak cukup. Saldo: Rp 10.000, Dibutuhkan: Rp 12.000
+2025-06-29 11:17:54 - Request Method: POST
+2025-06-29 11:17:54 - User ID: 40, Method: POST
+2025-06-29 11:17:54 - POST Data: jenis=game, keterangan=0667767676, nominal=10000
+2025-06-29 11:17:57 - Request Method: GET
+2025-06-29 11:17:57 - User ID: 40, Method: GET
+2025-06-29 11:17:57 - GET request for user_id: 40
+2025-06-29 11:18:00 - Request Method: PATCH
+2025-06-29 11:18:00 - User ID: 40, Method: PATCH
+2025-06-29 11:18:00 - PATCH request for tagihan_id: 12
+2025-06-29 11:18:00 - Request Method: GET
+2025-06-29 11:18:00 - User ID: 40, Method: GET
+2025-06-29 11:18:00 - GET request for user_id: 40
+2025-06-29 11:18:04 - Request Method: PUT
+2025-06-29 11:18:04 - User ID: 40, Method: PUT
+2025-06-29 11:18:04 - PUT request for tagihan_id: 12
+2025-06-29 11:18:04 - Request Method: GET
+2025-06-29 11:18:04 - User ID: 40, Method: GET
+2025-06-29 11:18:04 - GET request for user_id: 40
+2025-06-29 11:18:06 - Request Method: GET
+2025-06-29 11:18:06 - User ID: 40, Method: GET
+2025-06-29 11:18:06 - GET request for user_id: 40
+2025-06-29 11:20:31 - Request Method: POST
+2025-06-29 11:20:31 - User ID: 40, Method: POST
+2025-06-29 11:20:31 - POST Data: jenis=donasi, keterangan=Shodaqoh, nominal=12000
+2025-06-29 11:20:31 - Request Method: GET
+2025-06-29 11:20:31 - User ID: 40, Method: GET
+2025-06-29 11:20:31 - GET request for user_id: 40
+2025-06-29 11:20:33 - Request Method: GET
+2025-06-29 11:20:33 - User ID: 40, Method: GET
+2025-06-29 11:20:33 - GET request for user_id: 40
+2025-06-29 11:20:36 - Request Method: PATCH
+2025-06-29 11:20:36 - User ID: 40, Method: PATCH
+2025-06-29 11:20:36 - PATCH request for tagihan_id: 13
+2025-06-29 11:20:36 - Request Method: GET
+2025-06-29 11:20:36 - User ID: 40, Method: GET
+2025-06-29 11:20:36 - GET request for user_id: 40
+2025-06-29 11:20:41 - Request Method: PUT
+2025-06-29 11:20:41 - User ID: 40, Method: PUT
+2025-06-29 11:20:41 - PUT request for tagihan_id: 13
+2025-06-29 11:20:41 - Request Method: GET
+2025-06-29 11:20:41 - User ID: 40, Method: GET
+2025-06-29 11:20:41 - GET request for user_id: 40
+2025-06-29 11:20:42 - Request Method: GET
+2025-06-29 11:20:42 - User ID: 40, Method: GET
+2025-06-29 11:20:42 - GET request for user_id: 40
+2025-06-29 11:37:04 - Request Method: GET
+2025-06-29 11:37:04 - User ID: 40, Method: GET
+2025-06-29 11:37:04 - GET request for user_id: 40
+2025-06-29 11:37:05 - Request Method: GET
+2025-06-29 11:37:05 - User ID: 40, Method: GET
+2025-06-29 11:37:05 - GET request for user_id: 40
+2025-06-29 11:38:28 - Request Method: GET
+2025-06-29 11:38:28 - User ID: 40, Method: GET
+2025-06-29 11:38:29 - GET request for user_id: 40
+2025-06-29 11:41:18 - Request Method: GET
+2025-06-29 11:41:18 - User ID: 40, Method: GET
+2025-06-29 11:41:18 - GET request for user_id: 40
+2025-06-29 11:41:21 - Request Method: PATCH
+2025-06-29 11:41:21 - User ID: 40, Method: PATCH
+2025-06-29 11:41:21 - PATCH request for tagihan_id: 11
+2025-06-29 11:41:21 - Request Method: GET
+2025-06-29 11:41:21 - User ID: 40, Method: GET
+2025-06-29 11:41:21 - GET request for user_id: 40
+2025-06-29 11:41:23 - Request Method: PUT
+2025-06-29 11:41:23 - User ID: 40, Method: PUT
+2025-06-29 11:41:23 - PUT request for tagihan_id: 11
+2025-06-29 11:41:23 - Request Method: GET
+2025-06-29 11:41:23 - User ID: 40, Method: GET
+2025-06-29 11:41:23 - GET request for user_id: 40
+2025-06-29 11:41:25 - Request Method: GET
+2025-06-29 11:41:25 - User ID: 40, Method: GET
+2025-06-29 11:41:25 - GET request for user_id: 40
+2025-06-29 11:43:04 - Request Method: GET
+2025-06-29 11:43:04 - User ID: 40, Method: GET
+2025-06-29 11:43:04 - GET request for user_id: 40
+2025-06-29 11:44:48 - Request Method: POST
+2025-06-29 11:44:48 - User ID: 40, Method: POST
+2025-06-29 11:44:48 - POST Data: jenis=ewallet, keterangan=OVO, nominal=10000
+2025-06-29 11:44:48 - Request Method: PATCH
+2025-06-29 11:44:48 - User ID: 40, Method: PATCH
+2025-06-29 11:44:48 - PATCH request for tagihan_id: 14
+2025-06-29 11:44:48 - Request Method: PUT
+2025-06-29 11:44:48 - User ID: 40, Method: PUT
+2025-06-29 11:44:48 - PUT request for tagihan_id: 14
+2025-06-29 11:44:48 - Request Method: GET
+2025-06-29 11:44:48 - User ID: 40, Method: GET
+2025-06-29 11:44:48 - GET request for user_id: 40
+2025-06-29 11:44:48 - Request Method: GET
+2025-06-29 11:44:48 - User ID: 40, Method: GET
+2025-06-29 11:44:48 - GET request for user_id: 40
+2025-06-29 11:44:56 - Request Method: GET
+2025-06-29 11:44:56 - User ID: 40, Method: GET
+2025-06-29 11:44:56 - GET request for user_id: 40
+2025-06-29 11:55:05 - Request Method: GET
+2025-06-29 11:55:05 - User ID: 40, Method: GET
+2025-06-29 11:55:05 - GET request for user_id: 40
+2025-06-29 11:55:36 - Request Method: GET
+2025-06-29 11:55:36 - User ID: 40, Method: GET
+2025-06-29 11:55:36 - GET request for user_id: 40
+2025-06-29 11:59:00 - Request Method: POST
+2025-06-29 11:59:00 - User ID: 40, Method: POST
+2025-06-29 11:59:00 - POST Data: jenis=donasi, keterangan=infaq, nominal=10000
+2025-06-29 11:59:00 - Request Method: PATCH
+2025-06-29 11:59:00 - User ID: 40, Method: PATCH
+2025-06-29 11:59:00 - PATCH request for tagihan_id: 15
+2025-06-29 11:59:00 - Request Method: PUT
+2025-06-29 11:59:00 - User ID: 40, Method: PUT
+2025-06-29 11:59:00 - PUT request for tagihan_id: 15
+2025-06-29 11:59:00 - Request Method: GET
+2025-06-29 11:59:00 - User ID: 40, Method: GET
+2025-06-29 11:59:00 - GET request for user_id: 40
+2025-06-29 11:59:00 - Request Method: GET
+2025-06-29 11:59:00 - User ID: 40, Method: GET
+2025-06-29 11:59:00 - GET request for user_id: 40
+2025-06-29 11:59:07 - Request Method: GET
+2025-06-29 11:59:07 - User ID: 40, Method: GET
+2025-06-29 11:59:07 - GET request for user_id: 40
+2025-06-29 12:00:26 - Request Method: GET
+2025-06-29 12:00:26 - User ID: 40, Method: GET
+2025-06-29 12:00:26 - GET request for user_id: 40
+2025-06-29 12:00:54 - Request Method: GET
+2025-06-29 12:00:54 - User ID: 40, Method: GET
+2025-06-29 12:00:54 - GET request for user_id: 40
+2025-06-29 12:00:58 - Request Method: GET
+2025-06-29 12:00:58 - User ID: 40, Method: GET
+2025-06-29 12:00:58 - GET request for user_id: 40
+2025-06-29 12:03:38 - Request Method: GET
+2025-06-29 12:03:38 - User ID: 40, Method: GET
+2025-06-29 12:03:38 - GET request for user_id: 40
+2025-06-29 12:03:41 - Request Method: DELETE
+2025-06-29 12:03:41 - User ID: 40, Method: DELETE
+2025-06-29 12:03:41 - DELETE request for tagihan_id: 10
+2025-06-29 12:03:41 - Request Method: GET
+2025-06-29 12:03:41 - User ID: 40, Method: GET
+2025-06-29 12:03:41 - GET request for user_id: 40
+2025-06-29 12:28:59 - Request Method: GET
+2025-06-29 12:28:59 - User ID: 34, Method: GET
+2025-06-29 12:28:59 - GET request for user_id: 34
+2025-06-29 12:51:26 - Request Method: POST
+2025-06-29 12:51:26 - User ID: 36, Method: POST
+2025-06-29 12:51:26 - POST Data: jenis=bpjs, keterangan=0812234567890, nominal=10000
+2025-06-29 12:51:26 - Request Method: PATCH
+2025-06-29 12:51:26 - User ID: 36, Method: PATCH
+2025-06-29 12:51:26 - PATCH request for tagihan_id: 16
+2025-06-29 12:51:26 - Request Method: PUT
+2025-06-29 12:51:26 - User ID: 36, Method: PUT
+2025-06-29 12:51:26 - PUT request for tagihan_id: 16
+2025-06-29 12:51:26 - Request Method: GET
+2025-06-29 12:51:26 - User ID: 36, Method: GET
+2025-06-29 12:51:26 - GET request for user_id: 36
+2025-06-29 12:51:26 - Request Method: GET
+2025-06-29 12:51:26 - User ID: 36, Method: GET
+2025-06-29 12:51:26 - GET request for user_id: 36
+2025-06-29 12:51:33 - Request Method: GET
+2025-06-29 12:51:33 - User ID: 36, Method: GET
+2025-06-29 12:51:33 - GET request for user_id: 36
+2025-06-29 12:51:34 - Request Method: GET
+2025-06-29 12:51:34 - User ID: 36, Method: GET
+2025-06-29 12:51:34 - GET request for user_id: 36
+2025-06-29 13:33:48 - Request Method: POST
+2025-06-29 13:33:48 - User ID: 43, Method: POST
+2025-06-29 13:33:48 - POST Data: jenis=edukasi, keterangan=301220049, nominal=50000
+2025-06-29 13:33:48 - Request Method: GET
+2025-06-29 13:33:48 - User ID: 43, Method: GET
+2025-06-29 13:33:48 - GET request for user_id: 43
+2025-06-29 13:33:49 - Request Method: GET
+2025-06-29 13:33:49 - User ID: 43, Method: GET
+2025-06-29 13:33:49 - GET request for user_id: 43
+2025-06-29 13:33:56 - Request Method: DELETE
+2025-06-29 13:33:56 - User ID: 43, Method: DELETE
+2025-06-29 13:33:56 - DELETE request for tagihan_id: 17
+2025-06-29 13:33:56 - Request Method: GET
+2025-06-29 13:33:56 - User ID: 43, Method: GET
+2025-06-29 13:33:56 - GET request for user_id: 43
+2025-06-29 13:34:28 - Request Method: POST
+2025-06-29 13:34:28 - User ID: 43, Method: POST
+2025-06-29 13:34:28 - POST Data: jenis=edukasi, keterangan=301220049, nominal=50000
+2025-06-29 13:34:28 - Request Method: PATCH
+2025-06-29 13:34:28 - User ID: 43, Method: PATCH
+2025-06-29 13:34:28 - PATCH request for tagihan_id: 18
+2025-06-29 13:34:28 - Request Method: PUT
+2025-06-29 13:34:28 - User ID: 43, Method: PUT
+2025-06-29 13:34:28 - PUT request for tagihan_id: 18
+2025-06-29 13:34:28 - Request Method: GET
+2025-06-29 13:34:28 - User ID: 43, Method: GET
+2025-06-29 13:34:28 - GET request for user_id: 43
+2025-06-29 13:34:28 - Request Method: GET
+2025-06-29 13:34:28 - User ID: 43, Method: GET
+2025-06-29 13:34:28 - GET request for user_id: 43
+2025-06-29 13:34:33 - Request Method: GET
+2025-06-29 13:34:33 - User ID: 43, Method: GET
+2025-06-29 13:34:33 - GET request for user_id: 43
+2025-06-29 13:34:48 - Request Method: GET
+2025-06-29 13:34:48 - User ID: 43, Method: GET
+2025-06-29 13:34:48 - GET request for user_id: 43
+2025-06-29 13:34:49 - Request Method: GET
+2025-06-29 13:34:49 - User ID: 43, Method: GET
+2025-06-29 13:34:49 - GET request for user_id: 43
+2025-06-29 19:35:20 - Request Method: GET
+2025-06-29 19:35:20 - User ID: 42, Method: GET
+2025-06-29 19:35:20 - GET request for user_id: 42
+2025-06-29 19:35:22 - Request Method: GET
+2025-06-29 19:35:22 - User ID: 42, Method: GET
+2025-06-29 19:35:22 - GET request for user_id: 42
+2025-06-29 19:35:32 - Request Method: GET
+2025-06-29 19:35:32 - User ID: 42, Method: GET
+2025-06-29 19:35:32 - GET request for user_id: 42

@@ -61,9 +61,9 @@ include '../includes/header.php';
             </div>
         <?php endif; ?>
         <div class="auth-logo">
-            <img src="../assets/images/logo.png" alt="Logo" />
+            <img src="../image/logo.jpeg" alt="Logo" style="width:100px;height:100px;object-fit:contain;border-radius:18px;box-shadow:0 2px 8px rgba(0,0,0,0.10);margin-bottom:10px;" />
         </div>
-        <h2>Login Mobile Banking</h2>
+        <h2>Login FTI M-Banking</h2>
         <div class="form-group">
             <div class="input-icon">
                 <i class="fa fa-envelope"></i>

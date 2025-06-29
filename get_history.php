@@ -24,8 +24,8 @@ try {
     $db = new Database();
     $pdo = $db->getConnection();
     if ($type === 'topup') {
-        // Hanya riwayat topup
-        $stmt = $pdo->prepare('SELECT id, tanggal, ewallet, rekening, nominal, review FROM topup_history WHERE user_id = :user_id ORDER BY tanggal DESC');
+        // Hanya riwayat topup ke BANK FTI
+        $stmt = $pdo->prepare('SELECT id, tanggal, ewallet, rekening, nominal, review, rating FROM topup_history WHERE user_id = :user_id AND UPPER(ewallet) = "BANK FTI" ORDER BY tanggal DESC');
         $stmt->execute([':user_id' => $user_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as &$row) {
@@ -35,7 +35,27 @@ try {
         exit;
     } else if ($type === 'transfer') {
         // Hanya riwayat transfer
-        $stmt = $pdo->prepare('SELECT IFNULL(th.transfer_date, th.created_at) as tanggal, u.account_number as rekening, th.amount as nominal, th.review FROM transfer_history th JOIN users u ON th.to_user = u.id WHERE th.from_user = :user_id ORDER BY tanggal DESC');
+        $stmt = $pdo->prepare('SELECT th.id, IFNULL(th.transfer_date, th.created_at) as tanggal, "Transfer" as ewallet, u.account_number as rekening, th.amount as nominal, th.review, th.rating FROM transfer_history th JOIN users u ON th.to_user = u.id WHERE th.from_user = :user_id ORDER BY tanggal DESC');
+        $stmt->execute([':user_id' => $user_id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as &$row) {
+            $row['tanggal'] = date('d/m/Y, H:i', strtotime($row['tanggal']));
+        }
+        echo json_encode($rows);
+        exit;
+    } else if ($type === 'masuk') {
+        // Saldo masuk (uang diterima)
+        $stmt = $pdo->prepare('SELECT th.id, IFNULL(th.transfer_date, th.created_at) as tanggal, "Transfer Masuk" as ewallet, u.account_number as rekening, th.amount as nominal, th.review, th.rating FROM transfer_history th JOIN users u ON th.from_user = u.id WHERE th.to_user = :user_id ORDER BY tanggal DESC');
+        $stmt->execute([':user_id' => $user_id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as &$row) {
+            $row['tanggal'] = date('d/m/Y, H:i', strtotime($row['tanggal']));
+        }
+        echo json_encode($rows);
+        exit;
+    } else if ($type === 'keluar') {
+        // Saldo keluar (uang dikirim)
+        $stmt = $pdo->prepare('SELECT th.id, IFNULL(th.transfer_date, th.created_at) as tanggal, "Transfer Keluar" as ewallet, u.account_number as rekening, th.amount as nominal, th.review, th.rating FROM transfer_history th JOIN users u ON th.to_user = u.id WHERE th.from_user = :user_id ORDER BY tanggal DESC');
         $stmt->execute([':user_id' => $user_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as &$row) {

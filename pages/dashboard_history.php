@@ -179,13 +179,49 @@ $role = 'Nasabah';
             .transfer-table th:nth-child(1), .transfer-table td:nth-child(1) { width: 60%; }
             .transfer-table th:nth-child(2), .transfer-table td:nth-child(2) { width: 40%; }
         }
+        .transfer-filter-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 7px;
+            border: none;
+            cursor: pointer;
+            background: #e3e7ed;
+            color: #1976d2;
+            transition: background 0.2s, color 0.2s;
+        }
+        .transfer-filter-btn.active {
+            background: #1976d2;
+            color: #fff;
+        }
+        .detail-col {
+            text-align: center;
+            vertical-align: middle !important;
+            width: 48px;
+            padding: 0 !important;
+        }
+        .view-detail-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 50%;
+            transition: background 0.18s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .view-detail-btn:hover {
+            background: #e3f2fd;
+        }
     </style>
 </head>
 <body>
 <nav class="main-navbar">
     <div class="navbar-content">
         <div class="navbar-logo">
-            Bank FTI
+            <img src="../image/logo.jpeg" alt="Logo" style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.10);margin-right:12px;background:#fff;" />
+            FTI M-Banking
         </div>
     </div>
 </nav>
@@ -201,7 +237,7 @@ $role = 'Nasabah';
         <ul>
             <li><a href="dashboard_profil.php"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
+            <li><a href="dashboard_transaksi.php"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="#" class="active"><i class="fa fa-history"></i> Riwayat</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
@@ -219,6 +255,10 @@ $role = 'Nasabah';
             <div class="history-tabs">
                 <button class="history-tab active" id="tab-topup" onclick="showHistoryTab('topup')">Top Up</button>
                 <button class="history-tab" id="tab-transfer" onclick="showHistoryTab('transfer')">Transfer</button>
+            </div>
+            <div id="transfer-filter-section" style="display:none;justify-content:left;gap:0.7rem;margin-bottom:1.2rem;">
+                <button class="transfer-filter-btn active" id="filter-keluar" onclick="setTransferFilter('keluar')">Saldo Keluar</button>
+                <button class="transfer-filter-btn" id="filter-masuk" onclick="setTransferFilter('masuk')">Saldo Masuk</button>
             </div>
             <div id="history-table-section">
                 <table class="history-table" id="history-table">
@@ -317,7 +357,20 @@ function showHistoryTab(tab) {
     currentTab = tab;
     document.getElementById('tab-topup').classList.toggle('active', tab === 'topup');
     document.getElementById('tab-transfer').classList.toggle('active', tab === 'transfer');
-    fetchAndRenderHistory(tab);
+    const filterSection = document.getElementById('transfer-filter-section');
+    if (tab === 'transfer') {
+        filterSection.style.display = 'flex';
+        setTransferFilter('keluar'); // Default to saldo keluar
+    } else {
+        filterSection.style.display = 'none';
+        fetchAndRenderHistory(tab);
+    }
+}
+
+function setTransferFilter(type) {
+    document.getElementById('filter-keluar').classList.toggle('active', type === 'keluar');
+    document.getElementById('filter-masuk').classList.toggle('active', type === 'masuk');
+    fetchAndRenderHistory(type);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -332,25 +385,122 @@ function renderHistoryTable(tab) {
     tbody.innerHTML = '';
     let filtered = allHistoryData;
     if (tab === 'topup') {
-        thead.innerHTML = `<tr><th>Tanggal</th><th>e-Wallet</th><th>Rekening</th><th>Nominal</th><th>Ulasan</th></tr>`;
+        thead.innerHTML = `<tr><th>Tanggal</th><th>e-Wallet</th><th>Rekening</th><th>Nominal</th><th>Ulasan</th><th class='detail-col'>Detail</th></tr>`;
+    } else if (tab === 'masuk') {
+        thead.innerHTML = `<tr><th>Tanggal</th><th>Dari Rekening</th><th>Nominal</th><th>Ulasan</th><th class='detail-col'>Detail</th></tr>`;
+    } else if (tab === 'keluar') {
+        thead.innerHTML = `<tr><th>Tanggal</th><th>Ke Rekening</th><th>Nominal</th><th>Ulasan</th><th class='detail-col'>Detail</th></tr>`;
     } else {
-        thead.innerHTML = `<tr><th>Tanggal</th><th>Rekening Tujuan</th><th>Nominal</th><th>Ulasan</th></tr>`;
+        thead.innerHTML = `<tr><th>Tanggal</th><th>Rekening Tujuan</th><th>Nominal</th><th>Ulasan</th><th class='detail-col'>Detail</th></tr>`;
     }
     if (!Array.isArray(filtered) || filtered.length === 0) {
         empty.style.display = 'block';
         return;
     }
     empty.style.display = 'none';
-    filtered.forEach(item => {
+    filtered.forEach((item, idx) => {
         const tr = document.createElement('tr');
+        let detailBtn = `<button class='view-detail-btn' title='Lihat Detail' data-idx='${idx}'><i class='fa fa-eye' style='color:#1976d2;font-size:1.18em;'></i></button>`;
+        let stars = '';
+        if (item.rating && item.rating > 0) {
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span style='color:${i <= item.rating ? '#FFD600' : '#ccc'};font-size:1.1em;'>${i <= item.rating ? '★' : '☆'}</span>`;
+            }
+        }
+        let reviewText = (item.review && item.review.trim() !== "" && item.review !== "-") ? item.review : "-";
+        let ulasanCol = `${stars} ${reviewText}`;
         if (tab === 'topup') {
-            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.ewallet}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
+            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.ewallet}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${ulasanCol}</td><td class='detail-col'>${detailBtn}</td>`;
         } else {
-            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${item.review ? item.review : '-'}</td>`;
+            tr.innerHTML = `<td>${item.tanggal}</td><td>${item.rekening}</td><td>Rp ${parseInt(item.nominal).toLocaleString('id-ID')}</td><td>${ulasanCol}</td><td class='detail-col'>${detailBtn}</td>`;
         }
         tbody.appendChild(tr);
     });
+    setTimeout(() => {
+        document.querySelectorAll('.view-detail-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = this.getAttribute('data-idx');
+                showDetailModal(filtered[idx]);
+            };
+        });
+    }, 10);
 }
+
+const detailModal = document.createElement('div');
+detailModal.id = 'detail-modal-popup';
+detailModal.style.display = 'none';
+detailModal.style.position = 'fixed';
+detailModal.style.top = '0';
+detailModal.style.left = '0';
+detailModal.style.width = '100vw';
+detailModal.style.height = '100vh';
+detailModal.style.background = 'rgba(0,0,0,0.35)';
+detailModal.style.zIndex = '99999';
+detailModal.style.alignItems = 'center';
+detailModal.style.justifyContent = 'center';
+detailModal.innerHTML = `<div id='detail-modal-content' style='background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;text-align:left;'></div>`;
+document.body.appendChild(detailModal);
+
+function showDetailModal(data) {
+    let html = `<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem;'>`;
+    html += `<div style='font-size:1.35rem;font-weight:800;color:#1976d2;display:flex;align-items:center;gap:0.6rem;'><i class='fa fa-eye'></i> Detail Transaksi</div>`;
+    html += `<button id='btn-print-detail' title='Cetak' style='background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:50%;transition:background 0.18s;'><i class='fa fa-print' style='color:#1976d2;font-size:1.25em;'></i></button>`;
+    html += `</div>`;
+    html += `<div style='margin-bottom:1.2rem;color:#555;font-size:1.08rem;'>Berikut detail lengkap transaksi Anda:</div>`;
+    html += `<table id='detail-print-table' style='width:100%;font-size:1.08rem;border-radius:10px;overflow:hidden;'>`;
+    const labelMap = {
+        tanggal: 'Tanggal',
+        ewallet: 'e-Wallet',
+        rekening: 'Rekening',
+        nominal: 'Nominal',
+        review: 'Ulasan',
+        'Dari Rekening': 'Dari Rekening',
+        'Ke Rekening': 'Ke Rekening',
+    };
+    for (const key in data) {
+        if (key === 'id') continue;
+        let label = labelMap[key] || key.replace(/_/g,' ').replace(/\b\w/g, l => l.toUpperCase());
+        let value = data[key];
+        if (key === 'nominal') value = 'Rp ' + parseInt(value).toLocaleString('id-ID');
+        html += `<tr><td style='font-weight:600;color:#1976d2;padding:7px 0;width:44%;vertical-align:top;'>${label}</td><td style='padding:7px 0;'>${value}</td></tr>`;
+    }
+    html += `</table>`;
+    html += `<button onclick='document.getElementById("detail-modal-popup").style.display="none"' style='margin-top:1.7rem;width:100%;padding:0.9rem 0;font-size:1.08rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;'>Tutup</button>`;
+    document.getElementById('detail-modal-content').innerHTML = html;
+    detailModal.style.display = 'flex';
+    setTimeout(() => {
+        const btnPrint = document.getElementById('btn-print-detail');
+        if (btnPrint) {
+            btnPrint.onclick = function() {
+                const printTable = document.getElementById('detail-print-table').outerHTML;
+                const style = `
+                <style>
+                body { font-family:Segoe UI,Arial,sans-serif; background:#fff; }
+                .print-title { color:#1976d2; font-size:1.35rem; font-weight:800; display:flex; align-items:center; gap:0.6rem; margin-bottom:1.1rem; }
+                .print-desc { margin-bottom:1.2rem; color:#555; font-size:1.08rem; }
+                table { border-collapse:collapse; min-width:340px; font-size:1.08rem; margin-bottom:1.2rem; }
+                td { padding:7px 0; vertical-align:top; }
+                td:first-child { color:#1976d2; font-weight:600; width:44%; padding-right:18px; }
+                td:last-child { color:#222; }
+                @media print { body,html{background:#fff!important;} }
+                </style>
+                `;
+                const win = window.open('', '', 'width=500,height=600');
+                win.document.write('<html><head><title>Cetak Detail Transaksi</title>' + style + '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></head><body>');
+                win.document.write('<div class="print-title"><i class="fa fa-eye"></i> Detail Transaksi</div>');
+                win.document.write('<div class="print-desc">Berikut detail lengkap transaksi Anda:</div>');
+                win.document.write(printTable);
+                win.document.write('</body></html>');
+                win.document.close();
+                win.focus();
+                setTimeout(function(){ win.print(); win.close(); }, 500);
+            };
+        }
+    }, 50);
+}
+
+detailModal.onclick = function(e) { if (e.target === detailModal) detailModal.style.display = 'none'; };
+
 document.getElementById('btn-cetak-history').onclick = function() {
     var table = document.getElementById('history-table');
     var tab = currentTab;

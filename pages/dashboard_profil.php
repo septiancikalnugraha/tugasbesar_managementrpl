@@ -262,12 +262,87 @@ function getInitials($name) {
                 padding-left: 1rem;
             }
         }
+        
+        /* Exclusive styling for prioritas users */
+        .profile-card-exclusive {
+            background: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%) !important;
+            border: 2px solid #FFD700 !important;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3), 0 4px 16px rgba(33, 150, 243, 0.18) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-card-exclusive::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.13) 50%, transparent 70%);
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
+        
+        .profile-badge-prioritas {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #FFD700;
+            color: #222;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(15deg);
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            z-index: 10;
+        }
+        
+        .profile-avatar-exclusive {
+            border: 3px solid #FFD700 !important;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3) !important;
+            background: #fff !important;
+        }
+        
+        .profile-text-exclusive {
+            color: #fff !important;
+        }
+        
+        .profile-text-exclusive-secondary {
+            color: #FFD700 !important;
+        }
+        
+        .profile-text-exclusive-tertiary {
+            color: #222 !important;
+        }
+        
+        .profile-crown-icon {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #FFD700;
+            margin-left: 1rem;
+        }
+        
+        .profile-crown-icon i {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
     </style>
 </head>
 <body>
 <nav class="main-navbar">
     <div class="navbar-content">
-        <div class="navbar-logo">Bank FTI</div>
+        <div class="navbar-logo">
+            <img src="../image/logo.jpeg" alt="Logo" style="width:60px;height:60px;object-fit:contain;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.10);margin-right:12px;background:#fff;" />
+            FTI M-Banking
+        </div>
     </div>
 </nav>
 <div class="dashboard-layout">
@@ -288,16 +363,19 @@ function getInitials($name) {
         <ul>
             <li><a href="dashboard_profil.php" class="active"><i class="fa fa-user"></i> Profil</a></li>
             <li><a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
+            <li><a href="dashboard_transaksi.php"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
             <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
     <main class="main-content">
-        <div class="dashboard-section" style="width:100%;max-width:900px;margin:0 0 2.5rem 0;padding:0;box-shadow:0 4px 24px rgba(25,118,210,0.08);background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:0.7rem;padding:2.5rem 2.5rem 2.5rem 0;">
+        <div class="dashboard-section <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-card-exclusive<?php endif; ?>" style="width:100%;max-width:900px;margin:0 0 2.5rem 0;padding:0;box-shadow:0 4px 24px rgba(25,118,210,0.08);background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:0.7rem;padding:2.5rem 2.5rem 2.5rem 0;">
+            <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                <div class="profile-badge-prioritas">PRIORITAS</div>
+            <?php endif; ?>
             <div style="flex-shrink:0;margin-left:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-width:140px;">
-                <div class="sidebar-avatar profile-avatar-large" id="profile-avatar-preview" style="width:130px;height:130px;font-size:3rem;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:#f4f6f8;border:4px solid #1976d2;">
+                <div class="sidebar-avatar profile-avatar-large <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-avatar-exclusive<?php endif; ?>" id="profile-avatar-preview" style="width:130px;height:130px;font-size:3rem;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:#f4f6f8;border:4px solid #1976d2;">
                     <?php if (!empty($user_data['profile_photo'])): ?>
                         <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                     <?php else: ?>
@@ -317,19 +395,48 @@ function getInitials($name) {
                 </form>
             </div>
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;height:100%;">
-                <div style="font-size:1.6rem;font-weight:800;letter-spacing:0.5px;margin-bottom:1.2rem; text-align:center;">Profil Saya</div>
+                <div style="font-size:1.6rem;font-weight:800;letter-spacing:0.5px;margin-bottom:1.2rem; text-align:center; <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php endif; ?>">Profil Saya</div>
                 <div style="display:grid;grid-template-columns:180px 1fr;gap:0.7rem 1.2rem;align-items:center;justify-content:center;max-width:420px;margin:0 auto;">
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Nama Lengkap</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($name) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Email</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($email) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">No. Handphone</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($phone) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Jenis Kelamin</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($gender) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Tanggal Lahir</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($formatted_birth_date) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Provinsi</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($provinsi) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Kota/Kabupaten</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($kota) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Nomor Rekening</div><div style="font-size:1.08rem;font-weight:700;color:#222;display:flex;align-items:center;gap:8px;"><span id="profil-account-number" style="user-select:all;"><?= htmlspecialchars($account_number) ?></span><button id="profil-copy-btn" title="Salin Nomor Rekening" style="background:none;border:none;cursor:pointer;outline:none;padding:0;"><i class="fa fa-copy" id="profil-copy-icon" style="color:#555;font-size:1.1em;"></i></button><span id="profil-copy-toast" style="display:none;margin-left:8px;color:#ff9800;font-size:0.98em;font-weight:600;vertical-align:middle;">Nomor rekening disalin!</span></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Role</div><div style="font-size:1.08rem;font-weight:700;color:#222;"><?= htmlspecialchars($role) ?></div>
-                    <div style="color:#1976d2;font-size:1rem;font-weight:600;">Saldo</div><div style="font-size:1.08rem;font-weight:700;color:#222;">Rp <?= $formatted_balance ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Nama Lengkap</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($name) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Email</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($email) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">No. Handphone</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($phone) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Jenis Kelamin</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($gender) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Tanggal Lahir</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($formatted_birth_date) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Provinsi</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($provinsi) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Kota/Kabupaten</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($kota) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Nomor Rekening</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>;display:flex;align-items:center;gap:8px;"><span id="profil-account-number" style="user-select:all;"><?= htmlspecialchars($account_number) ?></span><button id="profil-copy-btn" title="Salin Nomor Rekening" style="background:none;border:none;cursor:pointer;outline:none;padding:0;"><i class="fa fa-copy" id="profil-copy-icon" style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#555<?php endif; ?>;font-size:1.1em;"></i></button><span id="profil-copy-toast" style="display:none;margin-left:8px;color:#ff9800;font-size:0.98em;font-weight:600;vertical-align:middle;">Nomor rekening disalin!</span></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Role</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($role) ?></div>
+                    <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Saldo</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>">Rp <?= $formatted_balance ?></div>
+                    <div class="profil-info-row">
+                        <span class="profil-info-label" style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Kategori Nasabah</span>
+                        <span class="profil-info-value" style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>;display:flex;align-items:center;gap:8px;">
+                            <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                                <i class="fa fa-crown" style="color:#FFD700;font-size:1.1rem;"></i>
+                                <?= ucfirst($user_data['kategori']) ?>
+                            <?php else: ?>
+                                <?= ucfirst($user_data['kategori'] ?? 'Non-prioritas') ?>
+                            <?php endif; ?>
+                        </span>
+                    </div>
                 </div>
+                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'non-prioritas'): ?>
+                <div style="margin-top:1.2rem;text-align:center;">
+                    <button id="btn-upgrade-prioritas" style="padding:0.8rem 2.2rem;font-size:1.1rem;border-radius:8px;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;box-shadow:0 2px 8px rgba(25,118,210,0.10);cursor:pointer;">Upgrade ke Prioritas</button>
+                </div>
+                <div id="upgrade-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;align-items:center;justify-content:center;">
+                  <div style="background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2.2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
+                    <div style='font-size:2.1rem;color:#1976d2;margin-bottom:0.7rem;'><i class='fa fa-star'></i></div>
+                    <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Upgrade ke Nasabah Prioritas</div>
+                    <div style='color:#444;margin-bottom:1.2rem;'>Upload bukti pembayaran ke teller sebesar <b>Rp 50.000</b>.<br>Format: JPG, PNG, atau PDF.</div>
+                    <form id="form-upgrade" method="POST" action="upload_upgrade_request.php" enctype="multipart/form-data" style="margin-bottom:1.2rem;">
+                      <input type="file" name="bukti" accept="image/*,application/pdf" required style="margin-bottom:1rem;">
+                      <button type="submit" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Kirim Permintaan</button>
+                    </form>
+                    <button onclick="document.getElementById('upgrade-modal').style.display='none'" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">Batal</button>
+                    <div id="upgrade-status" style="margin-top:1rem;font-size:1.05rem;color:#1976d2;"></div>
+                  </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </main>
@@ -408,6 +515,21 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     };
   }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('btn-upgrade-prioritas');
+    if (btn) {
+        btn.onclick = function() {
+            document.getElementById('upgrade-modal').style.display = 'flex';
+        };
+    }
+    var form = document.getElementById('form-upgrade');
+    if (form) {
+        form.onsubmit = function(e) {
+            document.getElementById('upgrade-status').textContent = 'Mengirim permintaan...';
+        };
+    }
 });
 </script>
 </body>
