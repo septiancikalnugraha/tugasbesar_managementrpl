@@ -52,6 +52,8 @@ if ($current_hour < 12) {
 
 $last_login = $user_data['last_login'] ?? ($_SESSION['last_login'] ?? null);
 $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login)) : '-';
+
+$gender = $user_data['gender'] ?? ($_SESSION['gender'] ?? '');
 ?>
 
 <!DOCTYPE html>
@@ -287,31 +289,19 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             z-index: 100;
         }
         .navbar-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 0 2rem;
-            min-height: 56px;
+            max-width: unset !important;
+            margin: 0 !important;
+            padding-left: 0.7rem !important;
+            padding-right: 0 !important;
+            justify-content: flex-start !important;
         }
         .navbar-logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1976d2;
-            letter-spacing: 1px;
-            gap: 0.7rem;
+            margin-left: 0 !important;
+            gap: 0.7rem !important;
         }
         .navbar-logo img {
-            width: 38px;
-            height: 38px;
-            margin-right: 10px;
-            border-radius: 10px;
-            background: #e3f2fd;
-            object-fit: cover;
-            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+            margin-left: 0 !important;
+            margin-right: 10px !important;
         }
         .menu-section {
             background: #fff;
@@ -533,6 +523,13 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
+        .account-info-card-prioritas {
+            background: linear-gradient(120deg,#1976d2 0%,#42a5f5 100%)!important;
+            color: #fff!important;
+            border: 2.5px solid #FFD700!important;
+            box-shadow: 0 8px 32px rgba(25,118,210,0.13),0 4px 18px rgba(66,165,245,0.13)!important;
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -548,7 +545,23 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
 <div class="dashboard-layout">
     <aside class="sidebar">
         <div class="sidebar-profile">
-            <div class="sidebar-avatar"><?= strtoupper(substr($name,0,1)) ?></div>
+            <div class="sidebar-avatar">
+                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                    <?php if (strtolower($gender) === 'laki-laki'): ?>
+                        <img src="../image/prioritas_male.png" alt="Prioritas Laki-laki" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php elseif (strtolower($gender) === 'perempuan'): ?>
+                        <img src="../image/prioritas_female.png" alt="Prioritas Perempuan" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <img src="../image/default_avatar.png" alt="Prioritas" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if (!empty($user_data['profile_photo'])): ?>
+                        <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <?= strtoupper(substr($name,0,1)) ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
             <div>
                 <div class="sidebar-name"><?= htmlspecialchars($name) ?></div>
                 <div class="sidebar-role"><?= htmlspecialchars($role) ?></div>
@@ -559,7 +572,7 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
             <li><a href="#" class="active"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="dashboard_transaksi.php"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
+            <li><a href="dashboard_pengaturan.php"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
@@ -574,7 +587,10 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                 <i class="fa fa-info-circle"></i>
                 Informasi Rekening
             </h2>
-            <div class="account-info-card">
+            <div class="account-info-card<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?> account-info-card-prioritas<?php endif; ?>">
+                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                <div style="position:absolute;top:-18px;right:18px;z-index:2;background:#FFD700;padding:4px 18px;border-radius:18px;font-size:0.98rem;font-weight:700;box-shadow:0 2px 8px rgba(255,215,0,0.25);color:#222;display:flex;align-items:center;gap:7px;"><i class='fa fa-crown' style='color:#fff700;font-size:1.1rem;'></i> PRIORITAS</div>
+                <?php endif; ?>
                 <div class="account-header">
                     <h3><i class="fa fa-credit-card"></i> Detail Rekening Anda</h3>
                 </div>
@@ -619,7 +635,7 @@ $formatted_last_login = $last_login ? date('d M Y, H:i', strtotime($last_login))
                     </div>
                     <div style="text-align:center;min-width:130px;display:flex;flex-direction:column;align-items:center;gap:0.3rem;">
                         <div id="rekening-qrcode" style="display:inline-block;width:130px;height:130px;background:#fff;border-radius:10px;border:2px solid #e3e7ed;cursor:pointer;padding:7px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;" title="Klik untuk unduh QR"></div>
-                        <div style="font-size:0.95rem;color:#1976d2;margin-top:0.15rem;font-weight:600;">QR Rekening</div>
+                        <div style="font-size:0.95rem;color:#fff;margin-top:0.15rem;font-weight:600;">QR Rekening</div>
                     </div>
                 </div>
             </div>

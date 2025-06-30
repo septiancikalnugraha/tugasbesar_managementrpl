@@ -181,6 +181,73 @@ tagihan                 # Sistem tagihan/pembayaran
 
 ---
 
+## 📚 Fitur FAQ & Chat dengan Teller
+
+### **FAQ Interaktif**
+- Sidebar kiri menampilkan daftar pertanyaan populer (FAQ) yang dapat dipilih.
+- Setiap pertanyaan akan menampilkan jawaban otomatis dari sistem di area kanan.
+- Tampilan bubble Q&A modern, responsif, dan mudah dibaca.
+- Sidebar FAQ tetap rapi, dengan tombol navigasi di bagian bawah.
+
+### **Chat dengan Teller (Simulasi)**
+- Tersedia tombol **Chat dengan Teller** di sidebar FAQ.
+- Ketika diklik, area kanan berubah menjadi layout chat sederhana:
+  - Terdapat field input dan tombol "Kirim" di bagian paling bawah, seperti aplikasi chat profesional.
+  - Pesan yang dikirim hanya simulasi (belum terhubung ke backend).
+- Cocok untuk pengembangan fitur live chat di masa depan.
+
+### **Navigasi Cepat**
+- Tombol **Kembali ke Pengaturan** selalu berada di bagian paling bawah sidebar, memudahkan pengguna kembali ke menu pengaturan.
+
+---
+
+## 🛠️ Cara Menambah/Mengelola FAQ
+
+1. **Edit Tabel FAQ di Database**
+   - Tabel: `faq_bot`
+   - Kolom penting: `id`, `question`, `answer`
+   - Tambahkan/ubah pertanyaan dan jawaban sesuai kebutuhan.
+
+2. **Tampilan Otomatis**
+   - Semua pertanyaan unik di `faq_bot` otomatis muncul di sidebar FAQ.
+   - Jawaban sistem diambil dari kolom `answer`.
+
+---
+
+## 💡 Pengembangan Selanjutnya
+
+- **Integrasi Chat dengan Teller ke Backend:**  
+  Hubungkan form chat dengan database atau sistem notifikasi untuk komunikasi real-time antara nasabah dan teller.
+- **Notifikasi & Riwayat Chat:**  
+  Simpan dan tampilkan riwayat chat antara nasabah dan teller.
+- **Live Chat Bot:**  
+  Kembangkan bot FAQ yang dapat menjawab pertanyaan secara otomatis dan dinamis.
+
+---
+
+## 📝 Contoh Penggunaan
+
+### **FAQ**
+1. Pilih pertanyaan di sidebar kiri.
+2. Jawaban otomatis akan muncul di area kanan.
+
+### **Chat dengan Teller**
+1. Klik tombol **Chat dengan Teller** di sidebar.
+2. Ketik pesan pada field di bawah, lalu klik **Kirim** (simulasi).
+
+---
+
+## 🔗 Tautan Terkait
+- [README_REGISTRATION_UPDATE.md](README_REGISTRATION_UPDATE.md) — Update logik registrasi
+- [README_TAGIHAN_LOGIC.md](README_TAGIHAN_LOGIC.md) — Penjelasan sistem tagihan
+
+---
+
+**Catatan:**  
+Fitur FAQ & Chat dengan Teller ini dirancang agar mudah dikembangkan lebih lanjut sesuai kebutuhan institusi/perusahaan Anda.
+
+---
+
 ## 🚀 Cara Instalasi & Setup
 
 ### **Prerequisites**

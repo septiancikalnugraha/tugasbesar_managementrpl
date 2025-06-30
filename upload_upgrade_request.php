@@ -1,7 +1,9 @@
 <?php
+ob_start(); // Mulai output buffering
 // Enable error reporting untuk debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Jangan tampilkan error ke browser
+ini_set('log_errors', 1); // Log error ke file log
 
 require_once 'config/database.php';
 session_start();
@@ -10,15 +12,17 @@ header('Content-Type: application/json');
 // Log untuk debugging
 file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - Request Method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
 
+$method = $_SERVER['REQUEST_METHOD'];
+
+// Cek session untuk semua method
 if (!isset($_SESSION['user_id'])) {
     file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - Unauthorized: No user_id in session' . PHP_EOL, FILE_APPEND);
-    echo json_encode(['error' => 'Unauthorized']);
+    ob_clean();
+    echo json_encode(['success' => false, 'error' => 'Unauthorized or session expired. Silakan login ulang.']);
     exit;
 }
 
 $user_id = $_SESSION['user_id'];
-$method = $_SERVER['REQUEST_METHOD'];
-
 file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - User ID: ' . $user_id . ', Method: ' . $method . PHP_EOL, FILE_APPEND);
 
 try {
@@ -38,7 +42,8 @@ try {
         file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - POST Data: jenis=' . $jenis . ', keterangan=' . $keterangan . ', nominal=' . $nominal . PHP_EOL, FILE_APPEND);
         
         if (!$jenis || !$keterangan || !$nominal) {
-            echo json_encode(['error' => 'Data tidak lengkap']);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => 'Data tidak lengkap']);
             exit;
         }
         $stmt = $pdo->prepare('INSERT INTO tagihan (user_id, jenis, keterangan, nominal, status) VALUES (:user_id, :jenis, :keterangan, :nominal, "Draft")');
@@ -48,6 +53,7 @@ try {
             ':keterangan' => $keterangan,
             ':nominal' => $nominal
         ]);
+        ob_clean();
         echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
         exit;
         
@@ -60,6 +66,7 @@ try {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         file_put_contents('debug_tagihan.txt', json_encode($rows) . PHP_EOL, FILE_APPEND);
+        ob_clean();
         echo json_encode($rows);
         exit;
         
@@ -71,7 +78,8 @@ try {
         file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - PUT request for tagihan_id: ' . $id . PHP_EOL, FILE_APPEND);
         
         if (!$id) {
-            echo json_encode(['error' => 'ID tagihan tidak valid']);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => 'ID tagihan tidak valid']);
             exit;
         }
         
@@ -112,6 +120,7 @@ try {
             // Commit transaction
             $pdo->commit();
             
+            ob_clean();
             echo json_encode([
                 'success' => true, 
                 'message' => 'Pembayaran berhasil! Saldo ditambahkan ke rekening teller Rp ' . number_format($nominal, 0, ',', '.'),
@@ -124,7 +133,8 @@ try {
             // Rollback jika ada error
             $pdo->rollBack();
             file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - PUT Error: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            echo json_encode(['error' => $e->getMessage()]);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
         exit;
         
@@ -136,7 +146,8 @@ try {
         file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - PATCH request for tagihan_id: ' . $id . PHP_EOL, FILE_APPEND);
         
         if (!$id) {
-            echo json_encode(['error' => 'ID tagihan tidak valid']);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => 'ID tagihan tidak valid']);
             exit;
         }
         
@@ -182,6 +193,7 @@ try {
             // Commit transaction
             $pdo->commit();
             
+            ob_clean();
             echo json_encode([
                 'success' => true, 
                 'message' => 'Order berhasil! Saldo berkurang Rp ' . number_format($nominal, 0, ',', '.'),
@@ -194,7 +206,8 @@ try {
             // Rollback jika ada error
             $pdo->rollBack();
             file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - PATCH Error: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            echo json_encode(['error' => $e->getMessage()]);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
         exit;
         
@@ -206,7 +219,8 @@ try {
         file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - DELETE request for tagihan_id: ' . $id . PHP_EOL, FILE_APPEND);
         
         if (!$id) {
-            echo json_encode(['error' => 'ID tagihan tidak valid']);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => 'ID tagihan tidak valid']);
             exit;
         }
         
@@ -215,19 +229,61 @@ try {
         $stmt->execute([':id' => $id, ':user_id' => $user_id]);
         
         if ($stmt->rowCount() > 0) {
+            ob_clean();
             echo json_encode(['success' => true]);
         } else {
-            echo json_encode(['error' => 'Tagihan tidak ditemukan atau bukan status Draft']);
+            ob_clean();
+            echo json_encode(['success' => false, 'error' => 'Tagihan tidak ditemukan atau bukan status Draft']);
         }
         exit;
         
+    } else if ($method === 'POST' && isset($_FILES['bukti'])) {
+        $user_id = $_SESSION['user_id'];
+        $upload_dir = 'uploads/upgrade_bukti/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $file = $_FILES['bukti'];
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = 'bukti_' . $user_id . '_' . time() . '.' . $ext;
+        $target = $upload_dir . $filename;
+        if (move_uploaded_file($file['tmp_name'], $target)) {
+            // Langsung upgrade user ke prioritas
+            try {
+                $db = new Database();
+                $pdo = $db->getConnection();
+                $stmt = $pdo->prepare('UPDATE users SET kategori = :kategori WHERE id = :id');
+                $stmt->execute([
+                    ':kategori' => 'prioritas',
+                    ':id' => $user_id
+                ]);
+                if (isset($_SESSION['user_data'])) {
+                    $_SESSION['user_data']['kategori'] = 'prioritas';
+                }
+                echo json_encode(['success' => true, 'file' => $target]);
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'error' => 'Gagal upgrade: ' . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Gagal upload file.']);
+        }
+        exit;
     } else {
-        echo json_encode(['error' => 'Method not allowed']);
+        ob_clean();
+        echo json_encode(['success' => false, 'error' => 'Method not allowed']);
         exit;
     }
     
 } catch (Exception $e) {
     file_put_contents('debug_api.txt', date('Y-m-d H:i:s') . ' - General Error: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-    echo json_encode(['error' => $e->getMessage()]);
+    ob_clean();
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     exit;
-} 
+}
+
+// Fallback jika terjadi error di luar try-catch
+if (!headers_sent()) {
+    header('Content-Type: application/json');
+}
+echo json_encode(['success' => false, 'error' => 'Unknown error occurred.']);
+exit; 

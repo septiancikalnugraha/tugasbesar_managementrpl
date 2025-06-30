@@ -57,17 +57,42 @@ function getInitials($name) {
             margin: 0;
             padding: 0;
         }
+        /* Hapus/override custom dashboard-layout dan main-content agar ikut global */
         .dashboard-layout {
-            min-height: unset;
-            display: block;
+            min-height: unset !important;
+            display: flex !important;
+            background: unset !important;
         }
         .main-content {
-            flex: unset;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+        }
+        .sidebar-profile .sidebar-avatar {
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 1.8rem !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden;
+        }
+        .sidebar-profile {
+            flex-direction: row !important;
+            gap: 1rem !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+        }
+        .sidebar-profile img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
         }
         body { background: #f7f9fb; }
         .mobile-header {
@@ -334,6 +359,102 @@ function getInitials($name) {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
+        /* Tambahan agar logo dan judul navbar benar-benar rata kiri */
+        .navbar-content {
+            max-width: unset !important;
+            margin: 0 !important;
+            padding-left: 0.7rem !important;
+            padding-right: 0 !important;
+            justify-content: flex-start !important;
+        }
+        .navbar-logo {
+            margin-left: 0 !important;
+            gap: 0.7rem !important;
+        }
+        .navbar-logo img {
+            margin-left: 0 !important;
+            margin-right: 10px !important;
+        }
+        .dashboard-section.profile-card-exclusive, .dashboard-section {
+            margin: 0 auto 2.5rem auto !important;
+        }
+        .profile-badge-prioritas {
+            top: 10px !important;
+            right: 18px !important;
+            font-size: 0.9rem !important;
+            padding: 5px 16px !important;
+        }
+        .profile-avatar-large {
+            width: 100px !important;
+            height: 100px !important;
+            font-size: 2.1rem !important;
+            border-width: 3px !important;
+        }
+        .dashboard-section form#upload-photo-form {
+            margin-top: 0.5rem !important;
+        }
+        .dashboard-section .btn-lanjut {
+            padding: 0.5rem 1.2rem !important;
+            font-size: 1rem !important;
+            border-radius: 7px !important;
+        }
+        .dashboard-section .sidebar-avatar img {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .dashboard-section .sidebar-avatar {
+            margin-bottom: 0.5rem !important;
+        }
+        .dashboard-section .profil-info-row, .dashboard-section .profil-info-label, .dashboard-section .profil-info-value {
+            font-size: 0.98rem !important;
+        }
+        .dashboard-section > div[style*='flex-shrink'] {
+            margin-left: 0 !important;
+            min-width: 120px !important;
+        }
+        .dashboard-section > div[style*='flex:1'] {
+            padding-left: 1.5rem !important;
+        }
+        .dashboard-section .profil-info-row {
+            margin-top: 0.7rem !important;
+        }
+        .dashboard-section .profil-info-label {
+            min-width: 120px !important;
+        }
+        .dashboard-section .profil-info-value {
+            min-width: 80px !important;
+        }
+        .dashboard-section .profil-info-row .fa-crown {
+            font-size: 1rem !important;
+        }
+        .dashboard-section .profil-info-row {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+        .dashboard-section .profil-info-label, .dashboard-section .profil-info-value {
+            display: inline-block !important;
+        }
+        .dashboard-section .profil-info-label {
+            font-weight: 600 !important;
+        }
+        .dashboard-section .profil-info-value {
+            font-weight: 700 !important;
+        }
+        .dashboard-section .profil-info-row {
+            margin-bottom: 0 !important;
+        }
+        @media (max-width: 900px) {
+            .dashboard-section.profile-card-exclusive, .dashboard-section {
+                flex-direction: column !important;
+                align-items: center !important;
+                padding: 1.2rem 0.5rem 1.2rem 0.5rem !important;
+                max-width: 98vw !important;
+            }
+            .dashboard-section > div[style*='flex:1'] {
+                padding-left: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -348,11 +469,22 @@ function getInitials($name) {
 <div class="dashboard-layout">
     <aside class="sidebar">
         <div class="sidebar-profile">
-            <div class="sidebar-avatar" style="width:110px;height:110px;font-size:2.5rem;box-shadow:0 4px 18px rgba(25,118,210,0.10);background:#f4f6f8;">
-                <?php if (!empty($user_data['profile_photo'])): ?>
-                    <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <div class="sidebar-avatar">
+                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                    <?php if (strtolower($gender) === 'laki-laki'): ?>
+                        <img src="../image/prioritas_male.png" alt="Prioritas Laki-laki" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php elseif (strtolower($gender) === 'perempuan'): ?>
+                        <img src="../image/prioritas_female.png" alt="Prioritas Perempuan" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <!-- fallback jika gender tidak jelas -->
+                        <img src="../image/default_avatar.png" alt="Prioritas" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php endif; ?>
                 <?php else: ?>
-                    <?= getInitials($name) ?>
+                    <?php if (!empty($user_data['profile_photo'])): ?>
+                        <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil">
+                    <?php else: ?>
+                        <?= getInitials($name) ?>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             <div>
@@ -365,38 +497,38 @@ function getInitials($name) {
             <li><a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="dashboard_transaksi.php"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
+            <li><a href="dashboard_pengaturan.php"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
     <main class="main-content">
-        <div class="dashboard-section <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-card-exclusive<?php endif; ?>" style="width:100%;max-width:900px;margin:0 0 2.5rem 0;padding:0;box-shadow:0 4px 24px rgba(25,118,210,0.08);background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:0.7rem;padding:2.5rem 2.5rem 2.5rem 0;">
+        <div class="dashboard-section <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-card-exclusive<?php endif; ?>" style="width:100%;max-width:700px;margin:0 0 2.5rem 0;box-shadow:0 4px 24px rgba(25,118,210,0.08);background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:2.5rem;padding:2.5rem 2.5rem 2.5rem 2.5rem;min-height:340px;position:relative;">
             <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
                 <div class="profile-badge-prioritas">PRIORITAS</div>
             <?php endif; ?>
-            <div style="flex-shrink:0;margin-left:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-width:140px;">
-                <div class="sidebar-avatar profile-avatar-large <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-avatar-exclusive<?php endif; ?>" id="profile-avatar-preview" style="width:130px;height:130px;font-size:3rem;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:#f4f6f8;border:4px solid #1976d2;">
-                    <?php if (!empty($user_data['profile_photo'])): ?>
-                        <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-width:140px;">
+                <div class="sidebar-avatar profile-avatar-large <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>profile-avatar-exclusive<?php endif; ?>" id="profile-avatar-preview" style="width:120px;height:120px;font-size:2.1rem;box-shadow:0 4px 18px rgba(25,118,210,0.13);background:#f4f6f8;border:3px solid #1976d2;">
+                    <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>
+                        <?php if (strtolower($gender) === 'laki-laki'): ?>
+                            <img src="../image/prioritas_male.png" alt="Prioritas Laki-laki" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <?php elseif (strtolower($gender) === 'perempuan'): ?>
+                            <img src="../image/prioritas_female.png" alt="Prioritas Perempuan" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <?php else: ?>
+                            <!-- fallback jika gender tidak jelas -->
+                            <img src="../image/default_avatar.png" alt="Prioritas" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <?php endif; ?>
                     <?php else: ?>
-                        <?= getInitials($name) ?>
+                        <?php if (!empty($user_data['profile_photo'])): ?>
+                            <img src="../<?= htmlspecialchars($user_data['profile_photo']) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <?php else: ?>
+                            <?= getInitials($name) ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
-                <form id="upload-photo-form" style="margin-top:0.7rem;text-align:center;">
-                    <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
-                    <button type="button" class="btn btn-lanjut" style="padding:0.7rem 2.2rem;font-size:1.1rem;min-width:unset;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;border-radius:8px;box-shadow:0 2px 8px rgba(25,118,210,0.10);margin-bottom:0.7rem;" onclick="document.getElementById('profile-photo-input').click()">
-                        <?php if (!empty($user_data['profile_photo'])): ?>
-                            Ubah Foto
-                        <?php else: ?>
-                            Tambah Foto
-                        <?php endif; ?>
-                    </button>
-                    <div id="upload-feedback" style="margin-top:0.5rem;font-size:0.98rem;color:#1976d2;"></div>
-                </form>
             </div>
-            <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;height:100%;">
-                <div style="font-size:1.6rem;font-weight:800;letter-spacing:0.5px;margin-bottom:1.2rem; text-align:center; <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php endif; ?>">Profil Saya</div>
-                <div style="display:grid;grid-template-columns:180px 1fr;gap:0.7rem 1.2rem;align-items:center;justify-content:center;max-width:420px;margin:0 auto;">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;height:100%;padding-left:0;">
+                <div style="font-size:1.3rem;font-weight:800;letter-spacing:0.5px;margin-bottom:1.2rem; text-align:left; <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php endif; ?>">Profil Saya</div>
+                <div style="display:grid;grid-template-columns:160px 1fr;gap:0.7rem 1.5rem;align-items:center;justify-content:flex-start;max-width:420px;margin:0;">
                     <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Nama Lengkap</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($name) ?></div>
                     <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">Email</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($email) ?></div>
                     <div style="color:<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>rgba(255,255,255,0.8)<?php else: ?>#1976d2<?php endif; ?>;font-size:1rem;font-weight:600;">No. Handphone</div><div style="font-size:1.08rem;font-weight:700;<?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'prioritas'): ?>color:#fff;<?php else: ?>color:#222;<?php endif; ?>"><?= htmlspecialchars($phone) ?></div>
@@ -419,28 +551,18 @@ function getInitials($name) {
                         </span>
                     </div>
                 </div>
-                <?php if (isset($user_data['kategori']) && $user_data['kategori'] === 'non-prioritas'): ?>
-                <div style="margin-top:1.2rem;text-align:center;">
-                    <button id="btn-upgrade-prioritas" style="padding:0.8rem 2.2rem;font-size:1.1rem;border-radius:8px;background:linear-gradient(90deg,#1976d2,#42a5f5);color:#fff;font-weight:700;border:none;box-shadow:0 2px 8px rgba(25,118,210,0.10);cursor:pointer;">Upgrade ke Prioritas</button>
-                </div>
-                <div id="upgrade-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:99999;align-items:center;justify-content:center;">
-                  <div style="background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2.2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
-                    <div style='font-size:2.1rem;color:#1976d2;margin-bottom:0.7rem;'><i class='fa fa-star'></i></div>
-                    <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Upgrade ke Nasabah Prioritas</div>
-                    <div style='color:#444;margin-bottom:1.2rem;'>Upload bukti pembayaran ke teller sebesar <b>Rp 50.000</b>.<br>Format: JPG, PNG, atau PDF.</div>
-                    <form id="form-upgrade" method="POST" action="upload_upgrade_request.php" enctype="multipart/form-data" style="margin-bottom:1.2rem;">
-                      <input type="file" name="bukti" accept="image/*,application/pdf" required style="margin-bottom:1rem;">
-                      <button type="submit" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Kirim Permintaan</button>
-                    </form>
-                    <button onclick="document.getElementById('upgrade-modal').style.display='none'" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">Batal</button>
-                    <div id="upgrade-status" style="margin-top:1rem;font-size:1.05rem;color:#1976d2;"></div>
-                  </div>
-                </div>
-                <?php endif; ?>
             </div>
         </div>
     </main>
 </div>
+<footer class="footer dashboard-footer">
+    <div class="container">
+        <p>&copy; <?php echo date('Y'); ?> Bank FTI. Semua hak dilindungi undang-undang.</p>
+        <p class="footer-note">
+            Dibuat dengan <i class="fas fa-heart"></i> untuk Fakultas Teknologi Informasi
+        </p>
+    </div>
+</footer>
 <script>
 const input = document.getElementById('profile-photo-input');
 const previewCard = document.getElementById('profile-avatar-preview');
@@ -515,21 +637,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     };
   }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.getElementById('btn-upgrade-prioritas');
-    if (btn) {
-        btn.onclick = function() {
-            document.getElementById('upgrade-modal').style.display = 'flex';
-        };
-    }
-    var form = document.getElementById('form-upgrade');
-    if (form) {
-        form.onsubmit = function(e) {
-            document.getElementById('upgrade-status').textContent = 'Mengirim permintaan...';
-        };
-    }
 });
 </script>
 </body>

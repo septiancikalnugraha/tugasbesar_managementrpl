@@ -1,4 +1,40 @@
 <?php
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    // Cek session
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['success' => false, 'error' => 'Session expired. Silakan login ulang.']);
+        exit;
+    }
+    // Cek password
+    $password = $_POST['password'] ?? '';
+    if (!$password) {
+        echo json_encode(['success' => false, 'error' => 'Password harus diisi.']);
+        exit;
+    }
+    require_once 'config/database.php';
+    $db = new Database();
+    $pdo = $db->getConnection();
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :user_id');
+    $stmt->execute([':user_id' => $_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$user) {
+        echo json_encode(['success' => false, 'error' => 'User tidak ditemukan.']);
+        exit;
+    }
+    if (!password_verify($password, $user['password'])) {
+        echo json_encode(['success' => false, 'error' => 'Password salah.']);
+        exit;
+    }
+    echo json_encode(['success' => true]);
+    exit;
+}
+// Jika GET, tampilkan HTML debug/manual
+?>
+<!-- HTML debug/manual di bawah ini -->
+<?php
 echo "<h2>Pemeriksaan Session</h2>";
 
 // Test session configuration

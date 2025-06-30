@@ -18,8 +18,14 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$name = $_SESSION['user_name'] ?? '';
-$role = 'Nasabah';
+require_once '../includes/auth.php';
+$auth = new Auth();
+$user_data = $auth->getUserData($_SESSION['user_id']);
+$name = $user_data['full_name'] ?? '';
+$role = $user_data['role'] ?? '';
+$gender = $user_data['gender'] ?? '';
+$kategori = $user_data['kategori'] ?? '';
+$profile_photo = $user_data['profile_photo'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -222,6 +228,22 @@ $role = 'Nasabah';
         .status-belumlunas { background: #3182ce; color: #fff; }
         .status-lunas { background: #38a169; color: #fff; }
         .status-center { text-align: center !important; }
+        /* Tambahan agar logo dan judul navbar benar-benar rata kiri */
+        .navbar-content {
+            max-width: unset !important;
+            margin: 0 !important;
+            padding-left: 0.7rem !important;
+            padding-right: 0 !important;
+            justify-content: flex-start !important;
+        }
+        .navbar-logo {
+            margin-left: 0 !important;
+            gap: 0.7rem !important;
+        }
+        .navbar-logo img {
+            margin-left: 0 !important;
+            margin-right: 10px !important;
+        }
     </style>
 </head>
 <body>
@@ -236,7 +258,23 @@ $role = 'Nasabah';
 <div class="dashboard-layout">
     <aside class="sidebar">
         <div class="sidebar-profile">
-            <div class="sidebar-avatar"><?= strtoupper(substr($name,0,1)) ?></div>
+            <div class="sidebar-avatar">
+                <?php if ($kategori === 'prioritas'): ?>
+                    <?php if (strtolower($gender) === 'laki-laki'): ?>
+                        <img src="../image/prioritas_male.png" alt="Prioritas Laki-laki" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php elseif (strtolower($gender) === 'perempuan'): ?>
+                        <img src="../image/prioritas_female.png" alt="Prioritas Perempuan" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <img src="../image/default_avatar.png" alt="Prioritas" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if (!empty($profile_photo)): ?>
+                        <img src="../<?= htmlspecialchars($profile_photo) ?>?t=<?= time() ?>" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <?php else: ?>
+                        <?= strtoupper(substr($name,0,1)) ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
             <div>
                 <div class="sidebar-name"><?= htmlspecialchars($name) ?></div>
                 <div class="sidebar-role"><?= htmlspecialchars($role) ?></div>
@@ -247,7 +285,7 @@ $role = 'Nasabah';
             <li><a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="#" class="active"><i class="fa fa-exchange-alt"></i> Transaksi</a></li>
             <li><a href="dashboard_history.php"><i class="fa fa-history"></i> Riwayat</a></li>
-            <li><a href="#" onclick="showComingSoon()"><i class="fa fa-cog"></i> Pengaturan</a></li>
+            <li><a href="dashboard_pengaturan.php"><i class="fa fa-cog"></i> Pengaturan</a></li>
             <li class="sidebar-logout"><a href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </aside>
@@ -439,7 +477,7 @@ function showTopupModal(formHtml) {
   const qrisType = formId === 'form-tagihan-dinamis' ? 'tagihan' : 'topup';
   
   qrisButton.innerHTML = `
-    <button onclick="showQrisPayment('${qrisType}')" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:linear-gradient(90deg,#1976d2 0%,#2196f3 100%);color:#fff;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+    <button onclick="showQrisPaymentWithPassword('${qrisType}')" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:linear-gradient(90deg,#1976d2 0%,#2196f3 100%);color:#fff;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
       <i class="fa fa-qrcode"></i> Bayar dengan QRIS
     </button>
   `;
@@ -530,6 +568,117 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // ====== ORDER TAGIHAN DENGAN KONFIRMASI PASSWORD ======
+    let orderTagihanId = null;
+    let orderTagihanBtn = null;
+
+    // Fungsi utama: buka modal konfirmasi password sebelum order tagihan
+    window.orderTagihanDB = function(id, btn) {
+        orderTagihanId = id;
+        orderTagihanBtn = btn;
+        document.getElementById('order-password-input').value = '';
+        document.getElementById('order-password-error').style.display = 'none';
+        document.getElementById('modal-password-order').style.display = 'flex';
+    };
+
+    document.getElementById('order-password-cancel').onclick = function() {
+        document.getElementById('modal-password-order').style.display = 'none';
+        orderTagihanId = null;
+        orderTagihanBtn = null;
+    };
+
+    document.getElementById('order-password-ok').onclick = function() {
+        const pwd = document.getElementById('order-password-input').value;
+        if (!pwd) {
+            document.getElementById('order-password-error').textContent = 'Password harus diisi.';
+            document.getElementById('order-password-error').style.display = 'block';
+            return;
+        }
+        // 1. Verifikasi password ke server
+        fetch('../check_session.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'password=' + encodeURIComponent(pwd)
+        })
+        .then(async res => {
+            let text = await res.text();
+            try {
+                let data = JSON.parse(text);
+                return data;
+            } catch (e) {
+                document.getElementById('order-password-error').textContent = 'RESPON SERVER:\n' + text;
+                document.getElementById('order-password-error').style.display = 'block';
+                throw new Error('Response bukan JSON');
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                document.getElementById('modal-password-order').style.display = 'none';
+                if (typeof afterPasswordOkCallback === 'function') {
+                    afterPasswordOkCallback();
+                    afterPasswordOkCallback = null;
+                    return;
+                }
+                // 2. Jika password benar, lanjutkan order tagihan
+                if (orderTagihanId && orderTagihanBtn) {
+                    orderTagihanBtn.disabled = true;
+                    orderTagihanBtn.textContent = 'Memproses...';
+                    fetch('../upload_upgrade_request.php', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'id=' + orderTagihanId
+                    })
+                    .then(async res => {
+                        let text = await res.text();
+                        try {
+                            let data = JSON.parse(text);
+                            return data;
+                        } catch (e) {
+                            alert('RESPON SERVER:\n' + text);
+                            throw new Error('Response bukan JSON');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (orderTagihanBtn) {
+                                orderTagihanBtn.textContent = 'Ordered';
+                                orderTagihanBtn.classList.remove('btn-warning');
+                                orderTagihanBtn.classList.add('btn-primary');
+                            }
+                            loadTagihanTable();
+                        } else {
+                            if (orderTagihanBtn) {
+                                orderTagihanBtn.textContent = 'Order';
+                                orderTagihanBtn.disabled = false;
+                            }
+                            alert(data.error || 'Gagal order.');
+                        }
+                    })
+                    .catch((err) => {
+                        if (orderTagihanBtn) {
+                            orderTagihanBtn.textContent = 'Order';
+                            orderTagihanBtn.disabled = false;
+                        }
+                        alert('Gagal koneksi server. ' + (err && err.message ? err.message : ''));
+                    });
+                }
+                orderTagihanId = null;
+                orderTagihanBtn = null;
+            } else {
+                // Password salah atau session expired
+                document.getElementById('order-password-error').textContent = data.error || 'Password salah.';
+                document.getElementById('order-password-error').style.display = 'block';
+            }
+        })
+        .catch((err) => {
+            // Error fatal: tutup modal dan reset variabel
+            if (!document.getElementById('order-password-error').textContent.startsWith('RESPON SERVER:')) {
+                document.getElementById('order-password-error').textContent = 'Gagal koneksi server. ' + (err && err.message ? err.message : '');
+                document.getElementById('order-password-error').style.display = 'block';
+            }
+        });
+    };
 });
 
 function loadTagihanTable() {
@@ -571,7 +720,7 @@ function loadTagihanTable() {
                             html += `<button class='btn btn-danger' onclick='hapusTagihanDB(${row.id}, this)'>Hapus</button>`;
                         } else if (row.status === 'Belum Lunas') {
                             html += `<button class='btn btn-primary' onclick='bayarTagihanDB(${row.id}, this)'>Bayar</button> `;
-                            html += `<button class='btn btn-success' onclick='bayarTagihanQris(${row.id}, "${row.jenis}", "${row.keterangan}", ${row.nominal})'>QRIS</button>`;
+                            html += `<button class='btn btn-success' onclick='bayarTagihanQrisWithPassword(${row.id}, "${row.jenis}", "${row.keterangan}", ${row.nominal})'>QRIS</button>`;
                         }
                         html += `</td></tr>`;
                     }
@@ -598,7 +747,15 @@ function bayarTagihanDB(id, btn) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + id
     })
-    .then(res => res.json())
+    .then(async res => {
+        let data;
+        try {
+            data = await res.json();
+        } catch (e) {
+            throw new Error('Response bukan JSON');
+        }
+        return data;
+    })
     .then(data => {
         if (data.success) {
             btn.textContent = 'Lunas';
@@ -611,38 +768,10 @@ function bayarTagihanDB(id, btn) {
             alert(data.error || 'Gagal update status.');
         }
     })
-    .catch(() => {
+    .catch((err) => {
         btn.textContent = 'Bayar';
         btn.disabled = false;
-        alert('Gagal koneksi server.');
-    });
-}
-
-function orderTagihanDB(id, btn) {
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
-    fetch('../upload_upgrade_request.php', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'id=' + id
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            btn.textContent = 'Ordered';
-            btn.classList.remove('btn-warning');
-            btn.classList.add('btn-primary');
-            loadTagihanTable();
-        } else {
-            btn.textContent = 'Order';
-            btn.disabled = false;
-            alert(data.error || 'Gagal order.');
-        }
-    })
-    .catch(() => {
-        btn.textContent = 'Order';
-        btn.disabled = false;
-        alert('Gagal koneksi server.');
+        alert('Gagal koneksi server. ' + (err && err.message ? err.message : ''));
     });
 }
 
@@ -655,7 +784,15 @@ function hapusTagihanDB(id, btn) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + id
     })
-    .then(res => res.json())
+    .then(async res => {
+        let data;
+        try {
+            data = await res.json();
+        } catch (e) {
+            throw new Error('Response bukan JSON');
+        }
+        return data;
+    })
     .then(data => {
         if (data.success) {
             loadTagihanTable();
@@ -665,8 +802,8 @@ function hapusTagihanDB(id, btn) {
             btn.textContent = 'Hapus';
         }
     })
-    .catch(() => {
-        alert('Gagal koneksi server.');
+    .catch((err) => {
+        alert('Gagal koneksi server. ' + (err && err.message ? err.message : ''));
         btn.disabled = false;
         btn.textContent = 'Hapus';
     });
@@ -747,6 +884,21 @@ function openTagihanForm(jenis, label) {
 // Fungsi-fungsi QRIS
 let currentQrisData = null;
 let qrisCheckInterval = null;
+
+// Tambahkan global callback untuk password konfirmasi
+let afterPasswordOkCallback = null;
+
+// Modifikasi showQrisPayment agar minta password dulu
+function showQrisPaymentWithPassword(type) {
+  afterPasswordOkCallback = function() {
+    showQrisPayment(type);
+    afterPasswordOkCallback = null;
+  };
+  // Tampilkan modal password
+  document.getElementById('order-password-input').value = '';
+  document.getElementById('order-password-error').style.display = 'none';
+  document.getElementById('modal-password-order').style.display = 'flex';
+}
 
 function showQrisPayment(type) {
   // Ambil data dari form yang sedang aktif
@@ -1083,6 +1235,16 @@ function closeQrisModal() {
   `;
 }
 
+function bayarTagihanQrisWithPassword(id, jenis, keterangan, nominal) {
+  afterPasswordOkCallback = function() {
+    bayarTagihanQris(id, jenis, keterangan, nominal);
+    afterPasswordOkCallback = null;
+  };
+  document.getElementById('order-password-input').value = '';
+  document.getElementById('order-password-error').style.display = 'none';
+  document.getElementById('modal-password-order').style.display = 'flex';
+}
+
 function bayarTagihanQris(id, jenis, keterangan, nominal) {
   // Simpan data QRIS untuk tagihan yang sudah ada
   currentQrisData = {
@@ -1181,6 +1343,17 @@ function printRiwayatTable() {
     <button onclick="closeQrisModal()" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;">
       Tutup
     </button>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Password -->
+<div id="modal-password-order" style="display:none;position:fixed;z-index:99999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:14px;max-width:350px;width:90vw;padding:2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;text-align:center;">
+    <div style="font-size:1.15rem;font-weight:700;color:#1976d2;margin-bottom:1.1rem;">Konfirmasi Password</div>
+    <input type="password" id="order-password-input" placeholder="Masukkan password anda" style="width:100%;padding:0.8rem 1rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1.08rem;margin-bottom:1rem;" />
+    <div id="order-password-error" style="color:#d32f2f;font-size:0.98rem;margin-bottom:0.7rem;display:none;"></div>
+    <button id="order-password-ok" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Konfirmasi</button>
+    <button id="order-password-cancel" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;margin-top:0.5rem;">Batal</button>
   </div>
 </div>
 </body>

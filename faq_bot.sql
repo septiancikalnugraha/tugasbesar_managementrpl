@@ -1,0 +1,16 @@
+INSERT INTO faq_bot (question, keyword, answer) VALUES
+('Bagaimana cara registrasi?', 'registrasi', 'Untuk registrasi, klik menu Daftar, isi data diri Anda, lalu ikuti instruksi yang diberikan.'),
+('Bagaimana cara login?', 'login', 'Masukkan email dan password Anda pada halaman login, lalu klik tombol Login.'),
+('Bagaimana cara top up?', 'top up', 'Pilih menu "Top Up", pilih e-wallet, masukkan rekening & nominal, lalu klik "Top Up". Saldo Anda akan bertambah.'),
+('Bagaimana cara transfer?', 'transfer', 'Pilih menu "Transfer", masukkan rekening tujuan dan nominal, lalu klik "Kirim".'),
+('Bagaimana sistem tagihan?', 'tagihan', 'Menu tagihan digunakan untuk membayar berbagai tagihan seperti listrik, air, dan lainnya. Pilih tagihan, masukkan data, lalu bayar.'),
+('Bagaimana cek saldo?', 'cek saldo', 'Saldo Anda dapat dilihat di halaman utama dashboard setelah login.'),
+('Bagaimana melihat riwayat transaksi?', 'riwayat', 'Pilih menu "Riwayat Transaksi" untuk melihat semua transaksi yang pernah Anda lakukan.'),
+('Bagaimana mengubah profil?', 'profil', 'Masuk ke menu Profil, lalu klik Edit untuk mengubah data diri Anda.'),
+('Bagaimana logout?', 'logout', 'Klik menu "Logout" untuk keluar dari akun Anda dengan aman.'),
+('Bagaimana cara upgrade prioritas?', 'upgrade', 'Pilih menu Upgrade, lengkapi data dan upload dokumen yang diperlukan, lalu tunggu verifikasi dari admin.'),
+('Bagaimana cara undang teman?', 'undang', 'Gunakan fitur Undang Teman di menu utama, salin link referral Anda dan bagikan ke teman.'),
+('Bagaimana upload bukti?', 'upload', 'Pada halaman transaksi, klik Upload Bukti, pilih file gambar, lalu simpan.'),
+('Bagaimana jika saldo tidak cukup saat order tagihan?', 'saldo tidak cukup', 'Pastikan saldo Anda mencukupi sebelum melakukan pembayaran tagihan. Jika tidak cukup, lakukan top up terlebih dahulu.'),
+('Bagaimana proses tagihan oleh teller?', 'teller', 'Teller akan memproses tagihan Anda setelah Anda melakukan pembayaran dan mengupload bukti.'),
+('Bagaimana keamanan data saya?', 'keamanan', 'Data Anda dijamin aman dan terenkripsi sesuai standar keamanan perbankan.'); 
