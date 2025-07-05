@@ -239,6 +239,17 @@ $profile_photo = $user_data['profile_photo'] ?? '';
     </style>
 </head>
 <body>
+<script>
+(function() {
+  try {
+    var tema = localStorage.getItem('tema') || 'light';
+    if (tema === 'dark') {
+      document.documentElement.classList.add('dark-theme');
+      document.body.classList.add('dark-theme');
+    }
+  } catch(e) {}
+})();
+</script>
 <nav class="main-navbar">
     <div class="navbar-content">
         <div class="navbar-logo">

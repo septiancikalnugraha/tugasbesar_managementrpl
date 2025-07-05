@@ -809,3 +809,58 @@
 2025-07-05 09:04:27 - Request Method: GET
 2025-07-05 09:04:27 - User ID: 3, Method: GET
 2025-07-05 09:04:27 - GET request for user_id: 3
+2025-07-05 14:09:10 - Request Method: GET
+2025-07-05 14:09:10 - User ID: 3, Method: GET
+2025-07-05 14:09:10 - GET request for user_id: 3
+2025-07-05 14:09:13 - Request Method: GET
+2025-07-05 14:09:13 - User ID: 3, Method: GET
+2025-07-05 14:09:13 - GET request for user_id: 3
+2025-07-05 14:09:17 - Request Method: GET
+2025-07-05 14:09:17 - User ID: 3, Method: GET
+2025-07-05 14:09:17 - GET request for user_id: 3
+2025-07-05 14:09:39 - Request Method: GET
+2025-07-05 14:09:39 - User ID: 3, Method: GET
+2025-07-05 14:09:39 - GET request for user_id: 3
+2025-07-05 14:44:33 - Request Method: GET
+2025-07-05 14:44:33 - User ID: 3, Method: GET
+2025-07-05 14:44:33 - GET request for user_id: 3
+2025-07-05 14:44:35 - Request Method: GET
+2025-07-05 14:44:35 - User ID: 3, Method: GET
+2025-07-05 14:44:35 - GET request for user_id: 3
+2025-07-05 14:59:00 - Request Method: POST
+2025-07-05 14:59:00 - User ID: 3, Method: POST
+2025-07-05 14:59:00 - POST Data: jenis=data, keterangan=0667767676, nominal=10000
+2025-07-05 14:59:04 - Request Method: GET
+2025-07-05 14:59:04 - User ID: 3, Method: GET
+2025-07-05 14:59:04 - GET request for user_id: 3
+2025-07-05 14:59:09 - Request Method: GET
+2025-07-05 14:59:09 - User ID: 3, Method: GET
+2025-07-05 14:59:09 - GET request for user_id: 3
+2025-07-05 14:59:21 - Request Method: PATCH
+2025-07-05 14:59:21 - User ID: 3, Method: PATCH
+2025-07-05 14:59:21 - PATCH request for tagihan_id: 3
+2025-07-05 14:59:21 - Request Method: GET
+2025-07-05 14:59:21 - User ID: 3, Method: GET
+2025-07-05 14:59:21 - GET request for user_id: 3
+2025-07-05 14:59:23 - Request Method: PUT
+2025-07-05 14:59:23 - User ID: 3, Method: PUT
+2025-07-05 14:59:23 - PUT request for tagihan_id: 3
+2025-07-05 14:59:23 - Request Method: GET
+2025-07-05 14:59:23 - User ID: 3, Method: GET
+2025-07-05 14:59:23 - GET request for user_id: 3
+2025-07-05 14:59:25 - Request Method: GET
+2025-07-05 14:59:25 - User ID: 3, Method: GET
+2025-07-05 14:59:25 - GET request for user_id: 3
+2025-07-05 14:59:57 - Request Method: GET
+2025-07-05 14:59:57 - User ID: 3, Method: GET
+2025-07-05 14:59:57 - GET request for user_id: 3
+2025-07-05 16:05:27 - Request Method: GET
+2025-07-05 16:05:27 - User ID: 3, Method: GET
+2025-07-05 16:05:27 - GET request for user_id: 3
+2025-07-05 16:05:33 - General Error: SQLSTATE[HY000]: General error: 2006 MySQL server has gone away
+2025-07-05 16:05:33 - Request Method: GET
+2025-07-05 16:05:33 - User ID: 3, Method: GET
+2025-07-05 16:05:37 - General Error: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+2025-07-05 17:10:02 - Request Method: GET
+2025-07-05 17:10:02 - User ID: 3, Method: GET
+2025-07-05 17:10:02 - GET request for user_id: 3

@@ -21,6 +21,7 @@ body.dark-theme {
     background: #181c24 !important;
     color: #e3e7ed !important;
 }
+
 body.dark-theme .main-navbar,
 body.dark-theme .dashboard-section,
 body.dark-theme .sidebar,
@@ -30,22 +31,27 @@ body.dark-theme .profile-section-card {
     background: #232a36 !important;
     color: #e3e7ed !important;
 }
+
 body.dark-theme .settings-item:hover {
     background: #232a36 !important;
 }
+
 body.dark-theme .sidebar {
     box-shadow: 4px 0 20px rgba(0,0,0,0.25) !important;
 }
+
 body.dark-theme .navbar-logo,
 body.dark-theme .sidebar-name,
 body.dark-theme .sidebar-role {
     color: #e3e7ed !important;
 }
+
 body.dark-theme .btn,
 body.dark-theme .btn-primary {
     background: #1976d2 !important;
     color: #fff !important;
 }
+
 body.dark-theme .dashboard-section {
     box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
 }
@@ -54,15 +60,18 @@ body.dark-theme #modal-bahasa-tema > div {
     background: #232a36 !important;
     color: #e3e7ed !important;
 }
+
 body.dark-theme #modal-bahasa-tema select,
 body.dark-theme #modal-bahasa-tema button {
     background: #181c24 !important;
     color: #e3e7ed !important;
     border: 1.5px solid #444 !important;
 }
+
 body.dark-theme #modal-bahasa-tema label {
     color: #e3e7ed !important;
 }
+
 body.dark-theme #modal-bahasa-tema #close-modal-bahasa-tema {
     color: #e3e7ed !important;
 }
@@ -1545,4 +1554,91 @@ body.dark-theme [style*="color: #222"],
 body.dark-theme [style*="color:#1976d2"],
 body.dark-theme [style*="color: #1976d2"] {
     color: #e3e7ed !important;
+}
+
+body.dark-theme,
+.dark-theme,
+.dark-theme * {
+  color: #e3e7ed !important;
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme h4,
+.dark-theme h5,
+.dark-theme h6 {
+  color: #90caf9 !important;
+}
+
+.dark-theme a,
+.dark-theme a:visited {
+  color: #90caf9 !important;
+}
+
+.dark-theme a:hover {
+  color: #fff !important;
+}
+
+.dark-theme label,
+.dark-theme .sidebar-role,
+.dark-theme .footer-note {
+  color: #b0bec5 !important;
+}
+
+.dark-theme .sidebar-name {
+  color: #fff !important;
+}
+
+.dark-theme .settings-item span {
+  color: #e3e7ed !important;
+}
+
+.dark-theme .settings-item i,
+.dark-theme .sidebar i {
+  color: #90caf9 !important;
+}
+
+.dark-theme .settings-item.active,
+.dark-theme .settings-item:active {
+  color: #fff !important;
+}
+
+.dark-theme .modal-content h3 {
+  color: #90caf9 !important;
+}
+
+.dark-theme .modal-content label {
+  color: #b0bec5 !important;
+}
+
+.dark-theme .modal-content input,
+.dark-theme .modal-content select,
+.dark-theme .modal-content textarea {
+  color: #e3e7ed !important;
+  background: #232a36 !important;
+  border: 1.5px solid #444a57 !important;
+}
+
+.dark-theme .modal-content button {
+  color: #fff !important;
+}
+
+.dark-theme #password-error,
+.dark-theme #email-hp-error {
+  color: #ff5252 !important;
+}
+
+.dark-theme .sidebar-logout a {
+  color: #ff5252 !important;
+}
+
+.dark-theme .dashboard-section .dashboard-card,
+.dark-theme .dashboard-card,
+.dark-theme .dashboard-card * {
+  color: #fff !important;
+}
+
+.dark-theme .dashboard-card i {
+  color: #fff !important;
 }

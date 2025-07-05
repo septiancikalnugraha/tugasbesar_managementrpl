@@ -26,8 +26,11 @@ function getInitials($name) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Pengaturan - Bank FTI</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .navbar-content {
@@ -84,6 +87,17 @@ function getInitials($name) {
     </style>
 </head>
 <body>
+<script>
+(function() {
+  try {
+    var tema = localStorage.getItem('tema') || 'light';
+    if (tema === 'dark') {
+      document.documentElement.classList.add('dark-theme');
+      document.body.classList.add('dark-theme');
+    }
+  } catch(e) {}
+})();
+</script>
 <nav class="main-navbar">
     <div class="navbar-content">
         <div class="navbar-logo">
@@ -164,12 +178,12 @@ function getInitials($name) {
                         <span>Profil Saya</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                    <a href="#" class="settings-item">
+                    <a href="#" class="settings-item" id="btn-ubah-password">
                         <i class="fas fa-key"></i>
                         <span>Ubah Password</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                    <a href="#" class="settings-item">
+                    <a href="#" class="settings-item" id="btn-ubah-email-hp">
                         <i class="fas fa-envelope"></i>
                         <span>Ubah Email / No. HP</span>
                         <i class="fas fa-chevron-right"></i>
@@ -261,25 +275,288 @@ function getInitials($name) {
   </div>
 </div>
 
+<!-- Modal Ubah Password -->
+<div id="modal-ubah-password" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:2rem 2.5rem;border-radius:18px;max-width:400px;width:90vw;box-shadow:0 8px 32px rgba(25,118,210,0.13);position:relative;">
+    <button id="close-modal-ubah-password" style="position:absolute;top:12px;right:18px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;">&times;</button>
+    <h3 style="margin-bottom:1.5rem;color:#1976d2;font-weight:700;">Ubah Password</h3>
+    <form id="form-ubah-password">
+      <div style="margin-bottom:1.2rem;">
+        <label for="password-lama" style="font-weight:600;display:block;margin-bottom:0.4rem;">Password Lama</label>
+        <input type="password" id="password-lama" name="password_lama" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <label for="password-baru" style="font-weight:600;display:block;margin-bottom:0.4rem;">Password Baru</label>
+        <input type="password" id="password-baru" name="password_baru" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <label for="konfirmasi-password" style="font-weight:600;display:block;margin-bottom:0.4rem;">Konfirmasi Password Baru</label>
+        <input type="password" id="konfirmasi-password" name="konfirmasi_password" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div id="password-error" style="color:#d32f2f;font-size:0.9rem;margin-bottom:1rem;display:none;"></div>
+      <button type="submit" style="width:100%;background:#1976d2;color:#fff;border:none;padding:0.8rem;border-radius:8px;font-weight:700;font-size:1.08rem;cursor:pointer;">Ubah Password</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Ubah Email / No. HP -->
+<div id="modal-ubah-email-hp" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:2rem 2.5rem;border-radius:18px;max-width:400px;width:90vw;box-shadow:0 8px 32px rgba(25,118,210,0.13);position:relative;">
+    <button id="close-modal-ubah-email-hp" style="position:absolute;top:12px;right:18px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;">&times;</button>
+    <h3 style="margin-bottom:1.5rem;color:#1976d2;font-weight:700;">Ubah Email / No. HP</h3>
+    <form id="form-ubah-email-hp">
+      <div style="margin-bottom:1.2rem;">
+        <label for="nama-baru" style="font-weight:600;display:block;margin-bottom:0.4rem;">Nama Baru</label>
+        <input type="text" id="nama-baru" name="nama_baru" value="<?= htmlspecialchars($user_data['full_name'] ?? '') ?>" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <label for="email-baru" style="font-weight:600;display:block;margin-bottom:0.4rem;">Email Baru</label>
+        <input type="email" id="email-baru" name="email_baru" value="<?= htmlspecialchars($user_data['email'] ?? '') ?>" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <label for="no-hp-baru" style="font-weight:600;display:block;margin-bottom:0.4rem;">No. HP Baru</label>
+        <input type="tel" id="no-hp-baru" name="no_hp_baru" value="<?= htmlspecialchars($user_data['phone'] ?? '') ?>" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <label for="password-konfirmasi" style="font-weight:600;display:block;margin-bottom:0.4rem;">Password untuk Konfirmasi</label>
+        <input type="password" id="password-konfirmasi" name="password_konfirmasi" required style="width:100%;padding:0.8rem;border-radius:8px;border:1.5px solid #e3e7ed;font-size:1rem;">
+      </div>
+      <div id="email-hp-error" style="color:#d32f2f;font-size:0.9rem;margin-bottom:1rem;display:none;"></div>
+      <button type="submit" style="width:100%;background:#1976d2;color:#fff;border:none;padding:0.8rem;border-radius:8px;font-weight:700;font-size:1.08rem;cursor:pointer;">Simpan Perubahan</button>
+    </form>
+  </div>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Tampilkan modal saat klik menu Bahasa & Tema
-  document.querySelectorAll('.settings-item').forEach(function(item) {
-    if (item.textContent.includes('Bahasa') || item.textContent.includes('Language')) {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('modal-bahasa-tema').style.display = 'flex';
-      });
+// Fungsi untuk membuka modal
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex';
+    } else {
+        console.error('Modal not found:', modalId);
     }
-  });
-  document.getElementById('close-modal-bahasa-tema').onclick = function() {
-    document.getElementById('modal-bahasa-tema').style.display = 'none';
+}
+
+// Fungsi untuk menutup modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, setting up event listeners...');
+    
+    // Tampilkan modal saat klik menu Bahasa & Tema
+    document.querySelectorAll('.settings-item').forEach(function(item) {
+        if (item.textContent.includes('Bahasa') || item.textContent.includes('Language')) {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal('modal-bahasa-tema');
+            });
+        }
+    });
+    
+    // Tampilkan modal saat klik menu Ubah Password
+    const btnUbahPassword = document.getElementById('btn-ubah-password');
+    if (btnUbahPassword) {
+        btnUbahPassword.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('modal-ubah-password');
+            // Reset form
+            const form = document.getElementById('form-ubah-password');
+            if (form) form.reset();
+            const errorDiv = document.getElementById('password-error');
+            if (errorDiv) errorDiv.style.display = 'none';
+        });
+    } else {
+        console.error('Button Ubah Password not found');
+    }
+    
+    // Tampilkan modal saat klik menu Ubah Email / No. HP
+    const btnUbahEmailHp = document.getElementById('btn-ubah-email-hp');
+    if (btnUbahEmailHp) {
+        btnUbahEmailHp.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal('modal-ubah-email-hp');
+            // Reset form
+            const form = document.getElementById('form-ubah-email-hp');
+            if (form) form.reset();
+            const errorDiv = document.getElementById('email-hp-error');
+            if (errorDiv) errorDiv.style.display = 'none';
+        });
+    } else {
+        console.error('Button Ubah Email/HP not found');
+    }
+  
+  // Close modal Bahasa & Tema
+  const closeBtnBahasa = document.getElementById('close-modal-bahasa-tema');
+  if (closeBtnBahasa) {
+    closeBtnBahasa.onclick = function() {
+      closeModal('modal-bahasa-tema');
+    };
+  }
+  
+  // Close modal Ubah Password
+  const closeBtnPassword = document.getElementById('close-modal-ubah-password');
+  if (closeBtnPassword) {
+    closeBtnPassword.onclick = function() {
+      closeModal('modal-ubah-password');
+    };
+  }
+  
+  // Close modal Ubah Email / No. HP
+  const closeBtnEmailHp = document.getElementById('close-modal-ubah-email-hp');
+  if (closeBtnEmailHp) {
+    closeBtnEmailHp.onclick = function() {
+      closeModal('modal-ubah-email-hp');
+    };
+  }
+  
+  // Close modals when clicking outside
+  window.onclick = function(event) {
+    const modals = ['modal-bahasa-tema', 'modal-ubah-password', 'modal-ubah-email-hp'];
+    modals.forEach(function(modalId) {
+      const modal = document.getElementById(modalId);
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
   };
+  
+  // Handle form submission for Ubah Password
+  document.getElementById('form-ubah-password').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const passwordLama = document.getElementById('password-lama').value;
+    const passwordBaru = document.getElementById('password-baru').value;
+    const konfirmasiPassword = document.getElementById('konfirmasi-password').value;
+    const errorDiv = document.getElementById('password-error');
+    
+    // Reset error
+    errorDiv.style.display = 'none';
+    
+    // Validation
+    if (passwordBaru !== konfirmasiPassword) {
+      errorDiv.textContent = 'Konfirmasi password tidak cocok!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    if (passwordBaru.length < 6) {
+      errorDiv.textContent = 'Password baru minimal 6 karakter!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    // Kirim data ke server via AJAX
+    const formData = new FormData();
+    formData.append('password_lama', passwordLama);
+    formData.append('password_baru', passwordBaru);
+    formData.append('konfirmasi_password', konfirmasiPassword);
+    
+    fetch('../update_password.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Password berhasil diubah!');
+        document.getElementById('modal-ubah-password').style.display = 'none';
+        document.getElementById('form-ubah-password').reset();
+      } else {
+        errorDiv.textContent = data.message || 'Gagal update password!';
+        errorDiv.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      errorDiv.textContent = 'Terjadi kesalahan koneksi!';
+      errorDiv.style.display = 'block';
+    });
+  });
+  
+  // Handle form submission for Ubah Email / No. HP
+  document.getElementById('form-ubah-email-hp').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const namaBaru = document.getElementById('nama-baru').value;
+    const emailBaru = document.getElementById('email-baru').value;
+    const noHpBaru = document.getElementById('no-hp-baru').value;
+    const passwordKonfirmasi = document.getElementById('password-konfirmasi').value;
+    const errorDiv = document.getElementById('email-hp-error');
+    
+    // Reset error
+    errorDiv.style.display = 'none';
+    
+    // Validation
+    if (!namaBaru || !emailBaru || !noHpBaru || !passwordKonfirmasi) {
+      errorDiv.textContent = 'Semua field harus diisi!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailBaru)) {
+      errorDiv.textContent = 'Format email tidak valid!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,13}$/;
+    if (!phoneRegex.test(noHpBaru.replace(/\s/g, ''))) {
+      errorDiv.textContent = 'Format nomor HP tidak valid!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    // Nama validation (opsional: min 2 karakter)
+    if (namaBaru.length < 2) {
+      errorDiv.textContent = 'Nama minimal 2 karakter!';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    // Kirim data ke server via AJAX
+    const formData = new FormData();
+    formData.append('nama_baru', namaBaru);
+    formData.append('email_baru', emailBaru);
+    formData.append('no_hp_baru', noHpBaru);
+    formData.append('password_konfirmasi', passwordKonfirmasi);
+    fetch('../update_profile.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update tampilan nama, email & no HP di profil jika ada
+        const nameField = document.querySelector('.sidebar-profile .sidebar-name');
+        if (nameField) nameField.textContent = data.name;
+        const emailField = document.querySelector('.sidebar-profile .sidebar-email');
+        if (emailField) emailField.textContent = data.email;
+        const phoneField = document.querySelector('.sidebar-profile .sidebar-phone');
+        if (phoneField) phoneField.textContent = data.phone;
+        alert('Profil berhasil diubah!');
+        document.getElementById('modal-ubah-email-hp').style.display = 'none';
+        document.getElementById('form-ubah-email-hp').reset();
+        window.location.reload();
+      } else {
+        errorDiv.textContent = data.message || 'Gagal update profil!';
+        errorDiv.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      errorDiv.textContent = 'Terjadi kesalahan koneksi!';
+      errorDiv.style.display = 'block';
+    });
+  });
+  
   // Load preferensi dari localStorage
   const bahasa = localStorage.getItem('bahasa') || 'id';
   const tema = localStorage.getItem('tema') || 'light';
   document.getElementById('select-bahasa').value = bahasa;
   document.getElementById('select-tema').value = tema;
+  
   // Simpan preferensi
   document.getElementById('simpan-bahasa-tema').onclick = function() {
     localStorage.setItem('bahasa', document.getElementById('select-bahasa').value);

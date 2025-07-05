@@ -115,3 +115,9 @@
 {"user_id":3,"user_name":"Septian Cikal Nugraha","user_email":"septian@gmail.com","account_number":"+62 301233002259","balance":"0.00","role":"nasabah","last_login":"2025-07-05 08:10:46"}
 {"user_id":3,"user_name":"Septian Cikal Nugraha","user_email":"septian@gmail.com","account_number":"+62 301233002259","balance":"40000.00","role":"nasabah","last_login":"2025-07-05 08:46:36"}
 {"user_id":3,"user_name":"Septian Cikal Nugraha","user_email":"septian@gmail.com","account_number":"+62 301233002259","balance":"40000.00","role":"nasabah","last_login":"2025-07-05 08:46:36"}
+{"user_id":5,"user_name":"rahmat","user_email":"rahmat@gmail.com","account_number":"+62 301800447884","balance":"0.00","role":"nasabah","last_login":"2025-07-05 15:10:32"}
+{"user_id":5,"user_name":"rahmat","user_email":"rahmat@gmail.com","account_number":"+62 301800447884","balance":"0.00","role":"nasabah","last_login":"2025-07-05 15:10:32"}
+{"user_id":4,"user_name":"andhika","user_email":"andhika@gmail.com","account_number":"+62 301277879334","balance":"0.00","role":"nasabah","last_login":"2025-07-05 17:25:16"}
+{"user_id":4,"user_name":"andhika","user_email":"andhika@gmail.com","account_number":"+62 301277879334","balance":"0.00","role":"nasabah","last_login":"2025-07-05 17:25:16"}
+{"user_id":3,"user_name":"Septian Cikal Nugraha","user_email":"septiann@gmail.com","account_number":"+62 301233002259","balance":"0.00","role":"nasabah","last_login":"2025-07-05 18:33:03"}
+{"user_id":3,"user_name":"Septian Cikal Nugraha","user_email":"septiann@gmail.com","account_number":"+62 301233002259","balance":"0.00","role":"nasabah","last_login":"2025-07-05 18:33:03"}

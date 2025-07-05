@@ -894,6 +894,16 @@ $gender = $user_data['gender'] ?? ($_SESSION['gender'] ?? '');
 <script src="assets/js/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+(function() {
+  try {
+    var tema = localStorage.getItem('tema') || 'light';
+    if (tema === 'dark') {
+      document.documentElement.classList.add('dark-theme');
+      document.body.classList.add('dark-theme');
+    }
+  } catch(e) {}
+})();
+
 let ratingTargetId = null;
 let ratingTargetType = null;
 let selectedRating = 0;
