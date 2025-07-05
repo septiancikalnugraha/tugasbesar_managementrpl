@@ -850,7 +850,7 @@ $gender = $user_data['gender'] ?? ($_SESSION['gender'] ?? '');
       <div style="background:#fff;border-radius:16px;max-width:400px;width:90vw;padding:2.2rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
         <div style='font-size:2.1rem;color:#1976d2;margin-bottom:0.7rem;'><i class='fa fa-star'></i></div>
         <div style='font-size:1.25rem;font-weight:700;color:#1976d2;margin-bottom:0.5rem;'>Upgrade ke Nasabah Prioritas</div>
-        <div style='color:#444;margin-bottom:1.2rem;'>Silakan transfer <b>Rp 50.000</b> ke rekening teller berikut untuk upgrade:<br><br><b>FTI00000002 a.n. Teller Bank</b><br><br>Setelah transfer, klik tombol <b>Upgrade</b> di bawah untuk melanjutkan proses otomatis.</div>
+        <div style='color:#444;margin-bottom:1.2rem;'>Silakan transfer <b>Rp 25.000</b> ke rekening teller berikut untuk upgrade:<br><br><b>+62 30100000002 a.n. Teller Bank</b><br><br>Setelah transfer, klik tombol <b>Upgrade</b> di bawah untuk melanjutkan proses otomatis.</div>
         <button id="btn-upgrade-bayar" style="width:100%;padding:0.8rem 0;font-size:1.05rem;border-radius:8px;background:#1976d2;color:#fff;font-weight:700;border:none;cursor:pointer;">Upgrade</button>
         <button onclick="document.getElementById('upgrade-modal').style.display='none'" style="width:100%;padding:0.7rem 0;font-size:1rem;border-radius:8px;background:#eee;color:#1976d2;font-weight:600;border:none;cursor:pointer;margin-top:0.7rem;">Batal</button>
         <div id="upgrade-status" style="margin-top:1rem;font-size:1.05rem;color:#1976d2;"></div>
@@ -1155,14 +1155,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (bayarBtn) {
         bayarBtn.onclick = function() {
             document.getElementById('upgrade-modal').style.display = 'none';
-            // Buka popup transfer otomatis ke rekening FTI00000002
-            showTransferPopup('FTI00000002');
+            // Buka popup transfer otomatis ke rekening +62 30100000002
+            showTransferPopup('+62 30100000002');
             setTimeout(function() {
                 // Isi nominal otomatis jika form sudah muncul
                 var inputRek = document.querySelector('#transfer-form input[name=account_number]');
                 var inputAmount = document.querySelector('#transfer-form input[name=amount]');
-                if (inputRek) inputRek.value = 'FTI00000002';
-                if (inputAmount) inputAmount.value = 50000;
+                if (inputRek) inputRek.value = '+62 30100000002';
+                if (inputAmount) inputAmount.value = 25000;
             }, 400);
         };
     }

@@ -1,7 +1,12 @@
 <?php
 session_start();
 if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    // Redirect berdasarkan role
+    if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller') {
+        header('Location: dashboard_petugas.php');
+    } else {
+        header('Location: dashboard.php');
+    }
     exit;
 }
 require_once '../includes/auth.php';
@@ -10,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new Auth();
     $login = $auth->login($_POST['email'], $_POST['password']);
     if ($login['success']) {
-        header('Location: dashboard.php');
+        // Redirect berdasarkan role setelah login
+        if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller') {
+            header('Location: dashboard_petugas.php');
+        } else {
+            header('Location: dashboard.php');
+        }
         exit;
     } else {
         $message = $login['message'];

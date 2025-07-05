@@ -18,7 +18,7 @@ $users = [
         'email' => 'teller@bank.com',
         'phone' => '0822222222',
         'password' => password_hash('teller123', PASSWORD_DEFAULT),
-        'account_number' => 'FTI00000002',
+        'account_number' => '+62 30100000002',
         'role' => 'teller'
     ]
 ];

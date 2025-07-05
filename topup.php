@@ -64,17 +64,20 @@ try {
     $db = new Database();
     $pdo = $db->getConnection();
     $pdo->beginTransaction();
-    // Jika topup untuk upgrade prioritas (rekening FTI00000002 dan nominal 50000)
-    if ((strtoupper($ewallet) === 'FTI00000002' || strtoupper($rekening) === 'FTI00000002') && $amount == 50000) {
+    // Jika topup untuk upgrade prioritas (rekening +62 30100000002 dan nominal 25000)
+    if ((strtoupper($ewallet) === '+62 30100000002' || strtoupper($rekening) === '+62 30100000002') && $amount == 25000) {
         // Kurangi saldo user (upgrade prioritas)
         $stmt4 = $pdo->prepare('UPDATE users SET balance = balance - :amount WHERE id = :id');
         $stmt4->execute([':amount' => $amount, ':id' => $user_id]);
         // Tambah saldo teller
         $stmtTeller = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE account_number = :accnum');
-        $stmtTeller->execute([':amount' => $amount, ':accnum' => 'FTI00000002']);
+        $stmtTeller->execute([':amount' => $amount, ':accnum' => '+62 30100000002']);
         // Ubah kategori user
         $stmt5 = $pdo->prepare('UPDATE users SET kategori = "prioritas" WHERE id = :id');
         $stmt5->execute([':id' => $user_id]);
+        
+        // Log upgrade prioritas
+        error_log("User ID: $user_id upgraded to prioritas via topup of $amount to +62 30100000002");
     } else if (strtoupper($ewallet) === 'BANK FTI') {
         // Topup saldo: saldo user bertambah
         $stmt = $pdo->prepare('UPDATE users SET balance = balance + :amount WHERE id = :id');

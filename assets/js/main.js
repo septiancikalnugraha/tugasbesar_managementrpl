@@ -130,4 +130,87 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 600);
         });
     });
+
+    // --- Theme & Language Switcher ---
+    (function() {
+        // Dictionary untuk multi-bahasa (ID/EN)
+        const dict = {
+            id: {
+                'Profil Saya': 'Profil Saya',
+                'Ubah Password': 'Ubah Password',
+                'Ubah Email / No. HP': 'Ubah Email / No. HP',
+                'Pengaturan Notifikasi': 'Pengaturan Notifikasi',
+                'Keamanan Akun': 'Keamanan Akun',
+                'Bahasa & Tema': 'Bahasa & Tema',
+                'Rekening Favorit': 'Rekening Favorit',
+                'E-Wallet Terkait': 'E-Wallet Terkait',
+                'Privasi & Data': 'Privasi & Data',
+                'Hapus Akun': 'Hapus Akun',
+                'Pusat Bantuan': 'Pusat Bantuan',
+                'Chat dengan Bank FTI': 'Chat dengan Bank FTI',
+                'Beri Masukan': 'Beri Masukan',
+                'Terang': 'Terang',
+                'Gelap': 'Gelap',
+                'Bahasa': 'Bahasa',
+                'Tema': 'Tema',
+                'Simpan': 'Simpan',
+                'Pengaturan': 'Pengaturan',
+            },
+            en: {
+                'Profil Saya': 'My Profile',
+                'Ubah Password': 'Change Password',
+                'Ubah Email / No. HP': 'Change Email / Phone',
+                'Pengaturan Notifikasi': 'Notification Settings',
+                'Keamanan Akun': 'Account Security',
+                'Bahasa & Tema': 'Language & Theme',
+                'Rekening Favorit': 'Favorite Accounts',
+                'E-Wallet Terkait': 'Linked E-Wallets',
+                'Privasi & Data': 'Privacy & Data',
+                'Hapus Akun': 'Delete Account',
+                'Pusat Bantuan': 'Help Center',
+                'Chat dengan Bank FTI': 'Chat with Bank FTI',
+                'Beri Masukan': 'Feedback',
+                'Terang': 'Light',
+                'Gelap': 'Dark',
+                'Bahasa': 'Language',
+                'Tema': 'Theme',
+                'Simpan': 'Save',
+                'Pengaturan': 'Settings',
+            }
+        };
+        // Apply theme
+        const tema = localStorage.getItem('tema') || 'light';
+        if (tema === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.documentElement.style.background = '#181c24';
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.documentElement.style.background = '';
+        }
+        // Apply language
+        const bahasa = localStorage.getItem('bahasa') || 'id';
+        document.documentElement.lang = bahasa;
+        // Ganti label menu pengaturan
+        if (document.querySelector('.settings-menu')) {
+            document.querySelectorAll('.settings-item span').forEach(function(span) {
+                const text = span.textContent.trim();
+                if (dict[bahasa][text]) span.textContent = dict[bahasa][text];
+            });
+            // Ganti judul pengaturan
+            const pengaturanTitle = document.querySelector('.main-content .dashboard-section > div[style*="font-size:1.3rem"]');
+            if (pengaturanTitle && dict[bahasa]['Pengaturan']) pengaturanTitle.textContent = dict[bahasa]['Pengaturan'];
+        }
+        // Ganti label modal Bahasa & Tema
+        const modal = document.getElementById('modal-bahasa-tema');
+        if (modal) {
+            modal.querySelector('h3').textContent = dict[bahasa]['Bahasa & Tema'];
+            modal.querySelector('label[for="select-bahasa"]').textContent = dict[bahasa]['Bahasa'];
+            modal.querySelector('label[for="select-tema"]').textContent = dict[bahasa]['Tema'];
+            modal.querySelector('#simpan-bahasa-tema').textContent = dict[bahasa]['Simpan'];
+            // Ganti opsi tema
+            const temaSelect = modal.querySelector('#select-tema');
+            temaSelect.options[0].text = dict[bahasa]['Terang'];
+            temaSelect.options[1].text = dict[bahasa]['Gelap'];
+        }
+    })();
 });

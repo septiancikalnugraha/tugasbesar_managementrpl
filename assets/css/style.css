@@ -17,6 +17,56 @@ body {
     padding: 0;
 }
 
+body.dark-theme {
+    background: #181c24 !important;
+    color: #e3e7ed !important;
+}
+body.dark-theme .main-navbar,
+body.dark-theme .dashboard-section,
+body.dark-theme .sidebar,
+body.dark-theme .settings-item,
+body.dark-theme .profile-main-card,
+body.dark-theme .profile-section-card {
+    background: #232a36 !important;
+    color: #e3e7ed !important;
+}
+body.dark-theme .settings-item:hover {
+    background: #232a36 !important;
+}
+body.dark-theme .sidebar {
+    box-shadow: 4px 0 20px rgba(0,0,0,0.25) !important;
+}
+body.dark-theme .navbar-logo,
+body.dark-theme .sidebar-name,
+body.dark-theme .sidebar-role {
+    color: #e3e7ed !important;
+}
+body.dark-theme .btn,
+body.dark-theme .btn-primary {
+    background: #1976d2 !important;
+    color: #fff !important;
+}
+body.dark-theme .dashboard-section {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
+}
+
+body.dark-theme #modal-bahasa-tema > div {
+    background: #232a36 !important;
+    color: #e3e7ed !important;
+}
+body.dark-theme #modal-bahasa-tema select,
+body.dark-theme #modal-bahasa-tema button {
+    background: #181c24 !important;
+    color: #e3e7ed !important;
+    border: 1.5px solid #444 !important;
+}
+body.dark-theme #modal-bahasa-tema label {
+    color: #e3e7ed !important;
+}
+body.dark-theme #modal-bahasa-tema #close-modal-bahasa-tema {
+    color: #e3e7ed !important;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -864,7 +914,7 @@ html {
     padding: 1rem 0;
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 2001 !important;
 }
 
 .navbar-content {
@@ -921,10 +971,10 @@ html {
     color: #fff;
     box-shadow: 4px 0 20px rgba(25, 118, 210, 0.15);
     position: fixed;
-    top: 80px;
+    top: 80px !important;
     left: 0;
     padding: 0;
-    z-index: 2000;
+    z-index: 100 !important;
     transition: all 0.3s ease;
     overflow-y: auto;
 }
@@ -1039,17 +1089,10 @@ html {
         min-height: calc(100vh - 120px);
     }
     .sidebar {
-        flex-direction: row;
-        align-items: center;
-        height: auto;
-        width: 100%;
-        min-width: unset;
-        padding: 1rem;
-        z-index: 2000;
-        box-shadow: 0 4px 20px rgba(26, 35, 126, 0.2);
         position: relative;
         top: 0;
-        left: 0;
+        width: 100%;
+        z-index: 100;
     }
     .sidebar-profile {
         margin: 0;
@@ -1422,4 +1465,84 @@ html {
         border-radius: 0;
         margin: 0 auto;
     }
+}
+
+body.dark-theme,
+body.dark-theme .dashboard-layout,
+body.dark-theme .main-content,
+body.dark-theme .dashboard-section,
+body.dark-theme .dashboard-card,
+body.dark-theme .profile-main-card,
+body.dark-theme .profile-section-card,
+body.dark-theme .account-info-card,
+body.dark-theme .action-btn,
+body.dark-theme .settings-item,
+body.dark-theme .sidebar,
+body.dark-theme .sidebar-profile,
+body.dark-theme .sidebar-avatar,
+body.dark-theme .navbar,
+body.dark-theme .main-navbar,
+body.dark-theme .footer,
+body.dark-theme .dashboard-footer,
+body.dark-theme #modal-bahasa-tema > div {
+    background: #181c24 !important;
+    color: #e3e7ed !important;
+    border-color: #444 !important;
+}
+body.dark-theme .sidebar ul li a,
+body.dark-theme .sidebar ul li a.active,
+body.dark-theme .sidebar ul li a:hover {
+    background: #232a36 !important;
+    color: #e3e7ed !important;
+    border-color: #444 !important;
+}
+body.dark-theme .sidebar-logout a {
+    background: linear-gradient(135deg, #b71c1c 0%, #8d1919 100%) !important;
+    color: #fff !important;
+}
+body.dark-theme .btn,
+body.dark-theme .btn-primary,
+body.dark-theme .action-btn {
+    background: #1976d2 !important;
+    color: #fff !important;
+    border: none !important;
+}
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+    background: #232a36 !important;
+    color: #e3e7ed !important;
+    border: 1.5px solid #444 !important;
+}
+body.dark-theme .alert {
+    background: #232a36 !important;
+    color: #ff9800 !important;
+    border-color: #444 !important;
+}
+body.dark-theme .navbar-logo,
+body.dark-theme .sidebar-name,
+body.dark-theme .sidebar-role {
+    color: #e3e7ed !important;
+}
+body.dark-theme .fa,
+body.dark-theme .fas,
+body.dark-theme .far {
+    color: #e3e7ed !important;
+}
+/* Override inline style pada card/section/modal */
+body.dark-theme [style*="background:#fff"],
+body.dark-theme [style*="background: #fff"],
+body.dark-theme [style*="background: rgb(255,255,255)"],
+body.dark-theme [style*="background:rgba(255,255,255"],
+body.dark-theme [style*="background: #f4f6f8"],
+body.dark-theme [style*="background:#f4f6f8"] {
+    background: #181c24 !important;
+    color: #e3e7ed !important;
+    border-color: #444 !important;
+}
+body.dark-theme [style*="color:#222"],
+body.dark-theme [style*="color: #222"],
+body.dark-theme [style*="color:#1976d2"],
+body.dark-theme [style*="color: #1976d2"] {
+    color: #e3e7ed !important;
 }

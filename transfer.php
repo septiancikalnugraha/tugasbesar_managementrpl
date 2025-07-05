@@ -98,10 +98,13 @@ try {
     $stmt6 = $pdo->prepare('INSERT INTO transfer_history (from_user, to_user, receiver_id, amount, note, transfer_date, rating, review, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())');
     $stmt6->execute([$user_id, $to_user_id, $receiver_id, $amount, $note, $date, $rating, $review]);
     $transfer_id = $pdo->lastInsertId();
-    // Jika transfer upgrade prioritas (ke FTI00000002 dan 50000)
-    if (strtoupper($receiver['account_number']) === 'FTI00000002' && $amount == 50000) {
+    // Jika transfer upgrade prioritas (ke +62 30100000002 dan 25000)
+    if (strtoupper($receiver['account_number']) === '+62 30100000002' && $amount == 25000) {
         $stmt7 = $pdo->prepare('UPDATE users SET kategori = "prioritas" WHERE id = ?');
         $stmt7->execute([$user_id]);
+        
+        // Log upgrade prioritas
+        error_log("User ID: $user_id upgraded to prioritas via transfer of $amount to +62 30100000002");
     }
     // Ambil saldo terbaru
     $stmt8 = $pdo->prepare('SELECT balance FROM users WHERE id = ?');

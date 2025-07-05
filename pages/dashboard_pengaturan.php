@@ -165,33 +165,48 @@ function getInitials($name) {
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
+                        <i class="fas fa-key"></i>
+                        <span>Ubah Password</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="#" class="settings-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Ubah Email / No. HP</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="#" class="settings-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Pengaturan Notifikasi</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="#" class="settings-item">
                         <i class="fas fa-shield-alt"></i>
                         <span>Keamanan Akun</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-file-alt"></i>
-                        <span>e-Statement</span>
+                        <i class="fas fa-language"></i>
+                        <span>Bahasa & Tema</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>Pengaturan Limit dan Pembayaran</span>
+                        <i class="fas fa-star"></i>
+                        <span>Rekening Favorit</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-bolt"></i>
-                        <span>Pengaturan BI-FAST</span>
+                        <i class="fas fa-wallet"></i>
+                        <span>E-Wallet Terkait</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-cog"></i>
-                        <span>Pengaturan Umum</span>
+                        <i class="fas fa-user-secret"></i>
+                        <span>Privasi & Data</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Undang Teman</span>
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Hapus Akun</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
@@ -205,12 +220,7 @@ function getInitials($name) {
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Lokasi SeaBank</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-star"></i>
+                        <i class="fas fa-comment-dots"></i>
                         <span>Beri Masukan</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
@@ -227,5 +237,57 @@ function getInitials($name) {
         </p>
     </div>
 </footer>
+
+<!-- Modal Bahasa & Tema -->
+<div id="modal-bahasa-tema" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:2rem 2.5rem;border-radius:18px;max-width:350px;width:90vw;box-shadow:0 8px 32px rgba(25,118,210,0.13);position:relative;">
+    <button id="close-modal-bahasa-tema" style="position:absolute;top:12px;right:18px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;">&times;</button>
+    <h3 style="margin-bottom:1.2rem;color:#1976d2;font-weight:700;">Bahasa & Tema</h3>
+    <div style="margin-bottom:1.2rem;">
+      <label for="select-bahasa" style="font-weight:600;">Bahasa</label>
+      <select id="select-bahasa" style="width:100%;padding:0.6rem;margin-top:0.4rem;border-radius:8px;border:1.5px solid #e3e7ed;">
+        <option value="id">Bahasa Indonesia</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    <div>
+      <label for="select-tema" style="font-weight:600;">Tema</label>
+      <select id="select-tema" style="width:100%;padding:0.6rem;margin-top:0.4rem;border-radius:8px;border:1.5px solid #e3e7ed;">
+        <option value="light">Terang</option>
+        <option value="dark">Gelap</option>
+      </select>
+    </div>
+    <button id="simpan-bahasa-tema" style="margin-top:1.5rem;width:100%;background:#1976d2;color:#fff;border:none;padding:0.8rem;border-radius:8px;font-weight:700;font-size:1.08rem;cursor:pointer;">Simpan</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Tampilkan modal saat klik menu Bahasa & Tema
+  document.querySelectorAll('.settings-item').forEach(function(item) {
+    if (item.textContent.includes('Bahasa') || item.textContent.includes('Language')) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('modal-bahasa-tema').style.display = 'flex';
+      });
+    }
+  });
+  document.getElementById('close-modal-bahasa-tema').onclick = function() {
+    document.getElementById('modal-bahasa-tema').style.display = 'none';
+  };
+  // Load preferensi dari localStorage
+  const bahasa = localStorage.getItem('bahasa') || 'id';
+  const tema = localStorage.getItem('tema') || 'light';
+  document.getElementById('select-bahasa').value = bahasa;
+  document.getElementById('select-tema').value = tema;
+  // Simpan preferensi
+  document.getElementById('simpan-bahasa-tema').onclick = function() {
+    localStorage.setItem('bahasa', document.getElementById('select-bahasa').value);
+    localStorage.setItem('tema', document.getElementById('select-tema').value);
+    document.getElementById('modal-bahasa-tema').style.display = 'none';
+    window.location.reload();
+  };
+});
+</script>
 </body>
 </html> 

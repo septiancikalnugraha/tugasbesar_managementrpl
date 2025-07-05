@@ -767,3 +767,45 @@
 2025-06-30 23:58:15 - Request Method: GET
 2025-06-30 23:58:15 - User ID: 54, Method: GET
 2025-06-30 23:58:15 - GET request for user_id: 54
+2025-07-05 08:13:36 - Request Method: POST
+2025-07-05 08:13:36 - User ID: 3, Method: POST
+2025-07-05 08:13:36 - POST Data: jenis=data, keterangan=0812234567890, nominal=10000
+2025-07-05 08:13:36 - Request Method: PATCH
+2025-07-05 08:13:36 - User ID: 3, Method: PATCH
+2025-07-05 08:13:36 - PATCH request for tagihan_id: 1
+2025-07-05 08:13:36 - Request Method: PUT
+2025-07-05 08:13:36 - User ID: 3, Method: PUT
+2025-07-05 08:13:36 - PUT request for tagihan_id: 1
+2025-07-05 08:13:36 - Request Method: GET
+2025-07-05 08:13:36 - User ID: 3, Method: GET
+2025-07-05 08:13:36 - GET request for user_id: 3
+2025-07-05 08:13:36 - Request Method: GET
+2025-07-05 08:13:36 - User ID: 3, Method: GET
+2025-07-05 08:13:36 - GET request for user_id: 3
+2025-07-05 08:13:53 - Request Method: GET
+2025-07-05 08:13:53 - User ID: 3, Method: GET
+2025-07-05 08:13:53 - GET request for user_id: 3
+2025-07-05 09:03:46 - Request Method: GET
+2025-07-05 09:03:46 - User ID: 3, Method: GET
+2025-07-05 09:03:46 - GET request for user_id: 3
+2025-07-05 09:03:47 - Request Method: GET
+2025-07-05 09:03:47 - User ID: 3, Method: GET
+2025-07-05 09:03:47 - GET request for user_id: 3
+2025-07-05 09:04:22 - Request Method: POST
+2025-07-05 09:04:22 - User ID: 3, Method: POST
+2025-07-05 09:04:22 - POST Data: jenis=gplay, keterangan=selvadoran21@gmail.com, nominal=10000
+2025-07-05 09:04:22 - Request Method: PATCH
+2025-07-05 09:04:22 - User ID: 3, Method: PATCH
+2025-07-05 09:04:22 - PATCH request for tagihan_id: 2
+2025-07-05 09:04:22 - Request Method: PUT
+2025-07-05 09:04:22 - User ID: 3, Method: PUT
+2025-07-05 09:04:22 - PUT request for tagihan_id: 2
+2025-07-05 09:04:22 - Request Method: GET
+2025-07-05 09:04:22 - User ID: 3, Method: GET
+2025-07-05 09:04:22 - GET request for user_id: 3
+2025-07-05 09:04:22 - Request Method: GET
+2025-07-05 09:04:22 - User ID: 3, Method: GET
+2025-07-05 09:04:22 - GET request for user_id: 3
+2025-07-05 09:04:27 - Request Method: GET
+2025-07-05 09:04:27 - User ID: 3, Method: GET
+2025-07-05 09:04:27 - GET request for user_id: 3
