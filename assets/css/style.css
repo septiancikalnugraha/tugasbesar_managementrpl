@@ -1642,3 +1642,27 @@ body.dark-theme,
 .dark-theme .dashboard-card i {
   color: #fff !important;
 }
+
+.favorite-icon {
+  display: inline-block !important;
+  vertical-align: middle;
+  font-size: 1.25rem !important;
+  color: #FFD600;
+  margin-left: 6px;
+  margin-right: 2px;
+  transition: color 0.18s;
+}
+.favorite-icon .fa-star {
+  color: #FFD600 !important;
+}
+.favorite-icon .fa-star-o {
+  color: #bbb !important;
+}
+.favorite-icon .fa-fallback {
+  display: none;
+  font-size: 1.25rem;
+  color: #FFD600;
+}
+/* Fallback jika Font Awesome gagal */
+.favorite-icon.no-fa .fa { display: none !important; }
+.favorite-icon.no-fa .fa-fallback { display: inline !important; }

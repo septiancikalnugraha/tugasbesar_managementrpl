@@ -2,7 +2,7 @@
 session_start();
 if (isset($_SESSION['user_id'])) {
     // Redirect berdasarkan role
-    if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller') {
+    if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller' || $_SESSION['role'] === 'admin') {
         header('Location: dashboard_petugas.php');
     } else {
         header('Location: dashboard.php');
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = $auth->login($_POST['email'], $_POST['password']);
     if ($login['success']) {
         // Redirect berdasarkan role setelah login
-        if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller') {
+        if ($_SESSION['role'] === 'owner' || $_SESSION['role'] === 'teller' || $_SESSION['role'] === 'admin') {
             header('Location: dashboard_petugas.php');
         } else {
             header('Location: dashboard.php');

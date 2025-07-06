@@ -22,10 +22,11 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Insert owner dan teller dengan hash password valid hasil password_hash PHP
+-- Insert owner, teller, dan admin dengan hash password valid hasil password_hash PHP
 INSERT INTO users (full_name, email, phone, password, account_number, role, gender, birth_date, provinsi, kota, kategori) VALUES
 ('Owner Bank', 'owner@bank.com', '0811111111', '$2y$10$wH6Qw6Qw6Qw6Qw6Qw6Qw6uQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6', '+62 30100000001', 'owner', 'Laki-laki', '1990-01-01', 'DKI Jakarta', 'Jakarta Pusat', 'prioritas'),
-('Teller Bank', 'teller@bank.com', '0822222222', '$2y$10$wH6Qw6Qw6Qw6Qw6Qw6Qw6uQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6', '+62 30100000002', 'teller', 'Perempuan', '1995-01-01', 'Jawa Barat', 'Bandung', 'prioritas');
+('Teller Bank', 'teller@bank.com', '0822222222', '$2y$10$eImiTXuWVxfM37uY4JANjQWQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6', '+62 30100000002', 'teller', 'Perempuan', '1995-01-01', 'Jawa Barat', 'Bandung', 'prioritas'),
+('Admin Bank', 'admin@bank.com', '0833333333', '$2y$10$u1Qw6Qw6Qw6Qw6Qw6Qw6uQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6', '+62 30100000003', 'admin', 'Laki-laki', '1992-02-02', 'Jawa Tengah', 'Semarang', 'prioritas');
 
 -- Tabel untuk riwayat top up
 CREATE TABLE IF NOT EXISTS topup_history (
@@ -77,4 +78,8 @@ CREATE TABLE IF NOT EXISTS tagihan (
     status ENUM('Draft','Belum Lunas','Lunas') DEFAULT 'Draft',
     waktu DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
-); 
+);
+
+-- Keterangan:
+-- Hash password teller: '$2y$10$eImiTXuWVxfM37uY4JANjQWQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6' adalah hasil dari password_hash('teller123', PASSWORD_DEFAULT)
+-- Hash password admin:  '$2y$10$u1Qw6Qw6Qw6Qw6Qw6Qw6uQw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6Qw6' adalah hasil dari password_hash('admin123', PASSWORD_DEFAULT) 

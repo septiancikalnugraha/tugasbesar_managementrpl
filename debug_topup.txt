@@ -60,3 +60,4 @@
 {"ewallet":"BANK FTI","rekening":"+62 301800447884","amount":"50000"}
 {"ewallet":"BANK FTI","rekening":"+62 301277879334","amount":"50000"}
 {"ewallet":"BANK FTI","rekening":"+62 301233002259","amount":"20000"}
+{"ewallet":"BANK FTI","rekening":"+62 301233002259","amount":"20000"}

@@ -18,6 +18,11 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+// Redirect jika role bukan nasabah
+if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['owner', 'teller', 'admin'])) {
+    header('Location: dashboard_petugas.php');
+    exit;
+}
 
 require_once '../includes/auth.php';
 
@@ -64,6 +69,7 @@ $gender = $user_data['gender'] ?? ($_SESSION['gender'] ?? '');
     <title>Dashboard - Bank FTI</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* --- Dashboard Main Components Modern UI --- */
         .welcome-header {
@@ -1007,7 +1013,7 @@ function submitTransfer(event) {
     });
 }
 function loadReceivers() {
-  fetch('../get_receivers.php')
+  fetch('get_receivers.php')
     .then(res => res.json())
     .then(data => {
       const receiverList = document.getElementById('receiver-list');
@@ -1021,9 +1027,31 @@ function loadReceivers() {
             <div style="font-weight:600;color:#222;">${receiver.name}</div>
             <div style="color:#666;font-size:0.9rem;">${receiver.account_number}</div>
           </div>
-          <button onclick="event.stopPropagation();deleteReceiver(${receiver.id})" style="background:none;border:none;color:#f44336;cursor:pointer;font-size:1.1rem;">×</button>
+          <div style="display:flex;align-items:center;gap:0.7rem;">
+            <span class="favorite-icon" data-id="${receiver.id}" style="cursor:pointer;color:${receiver.is_favorite==1?'#FFD600':'#bbb'};font-size:1.3rem;">
+              <i class="${receiver.is_favorite==1 ? 'fas' : 'far'} fa-star"></i>
+            </span>
+            <button onclick="event.stopPropagation();deleteReceiver(${receiver.id})" style="background:none;border:none;color:#f44336;cursor:pointer;font-size:1.1rem;">×</button>
+          </div>
         </div>
       `).join('');
+      // Tambahkan event listener toggle favorit
+      document.querySelectorAll('.favorite-icon').forEach(function(star) {
+        star.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var id = this.getAttribute('data-id');
+          fetch('../toggle_favorite_receiver.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'receiver_id=' + encodeURIComponent(id)
+          })
+          .then(res => res.json())
+          .then(data => {
+            loadReceivers();
+            if (typeof renderFavoritListModal === 'function') renderFavoritListModal();
+          });
+        });
+      });
     })
     .catch(() => {
       document.getElementById('receiver-list').innerHTML = '<div style="text-align:center;color:#888;padding:1rem;">Gagal memuat daftar penerima.</div>';

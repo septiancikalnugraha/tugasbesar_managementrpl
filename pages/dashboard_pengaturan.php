@@ -189,58 +189,41 @@ function getInitials($name) {
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-bell"></i>
-                        <span>Pengaturan Notifikasi</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Keamanan Akun</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
                         <i class="fas fa-language"></i>
                         <span>Bahasa & Tema</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                    <a href="#" class="settings-item">
+                    <div id="favorit-card" class="settings-item" tabindex="0" style="cursor:pointer;">
                         <i class="fas fa-star"></i>
                         <span>Rekening Favorit</span>
                         <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-wallet"></i>
-                        <span>E-Wallet Terkait</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-user-secret"></i>
-                        <span>Privasi & Data</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-trash-alt"></i>
-                        <span>Hapus Akun</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                    <a href="#" class="settings-item">
-                        <i class="fas fa-question-circle"></i>
-                        <span>Pusat Bantuan</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
+                    </div>
                     <a href="chat_bankfti.php" class="settings-item">
                         <i class="fas fa-comments"></i>
                         <span>Chat dengan Bank FTI</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
+                    <div class="settings-item" style="cursor:default;">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Device yang Digunakan:<br><span style='font-size:0.93em;color:#1976d2;font-weight:500;'><?= htmlspecialchars($_SERVER['HTTP_USER_AGENT'] ?? '-') ?></span></span>
+                    </div>
                     <a href="#" class="settings-item">
-                        <i class="fas fa-comment-dots"></i>
-                        <span>Beri Masukan</span>
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Hapus Akun</span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>
         </div>
+        <!-- Rekening Favorit -->
+        <div id="favorit-modal" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);align-items:center;justify-content:center;">
+          <div style="background:#fff;padding:2rem 2.5rem;border-radius:18px;max-width:420px;width:90vw;box-shadow:0 8px 32px rgba(25,118,210,0.13);position:relative;">
+            <button id="close-favorit-modal" style="position:absolute;top:12px;right:18px;background:none;border:none;font-size:1.3rem;color:#1976d2;cursor:pointer;">&times;</button>
+            <h3 style="margin-bottom:1.2rem;color:#1976d2;font-weight:700;">Rekening Favorit</h3>
+            <div id="favorit-list-modal"></div>
+          </div>
+        </div>
+        <!-- END: Rekening Favorit -->
     </main>
 </div>
 <footer class="footer dashboard-footer">
@@ -564,6 +547,75 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modal-bahasa-tema').style.display = 'none';
     window.location.reload();
   };
+
+  // Modal popup rekening favorit
+  var favoritCard = document.getElementById('favorit-card');
+  var favoritModal = document.getElementById('favorit-modal');
+  var closeFavoritModalBtn = document.getElementById('close-favorit-modal');
+  if (!favoritCard) console.error('Elemen #favorit-card tidak ditemukan di DOM!');
+  if (!favoritModal) console.error('Elemen #favorit-modal tidak ditemukan di DOM!');
+  if (!closeFavoritModalBtn) console.error('Elemen #close-favorit-modal tidak ditemukan di DOM!');
+  if (favoritCard && favoritModal && closeFavoritModalBtn) {
+    favoritCard.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Favorit card diklik!');
+      favoritModal.style.display = 'flex';
+      renderFavoritListModal();
+    });
+    closeFavoritModalBtn.addEventListener('click', function() {
+      favoritModal.style.display = 'none';
+    });
+    favoritModal.addEventListener('click', function(e) {
+      if (e.target === favoritModal) favoritModal.style.display = 'none';
+    });
+  }
+  // Fetch dan render rekening favorit ke dalam modal
+  function renderFavoritListModal() {
+    fetch('get_receivers.php')
+        .then(res => res.json())
+        .then(data => {
+            console.log('Data rekening favorit:', data);
+            const list = data.filter(r => r.is_favorite == 1);
+            const container = document.getElementById('favorit-list-modal');
+            if(list.length === 0) {
+                container.innerHTML = '<div style="padding:1.2rem 1rem;color:#888;font-size:1.08rem;background:#fafbfc;border-radius:12px;">Belum ada rekening favorit.</div>';
+                return;
+            }
+            container.innerHTML = list.map(r => `
+                <div style="display:flex;align-items:center;gap:1.1rem;background:#fafbfc;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem;">
+                    <span class="favorite-icon" data-id="${r.id}" style="cursor:pointer;color:${r.is_favorite==1?'#FFD600':'#bbb'};font-size:1.3rem;margin-right:0.7rem;">
+                        <i class="fa${r.is_favorite==1?'-solid':'-regular'} fa-star"></i>
+                    </span>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;font-size:1.08rem;">${r.name}</div>
+                        <div style="color:#555;font-size:0.98rem;">${r.account_number}</div>
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch((err) => {
+            console.error('Gagal fetch rekening favorit:', err);
+            document.getElementById('favorit-list-modal').innerHTML = '<div style="padding:1.2rem 1rem;color:#d32f2f;font-size:1.08rem;background:#fafbfc;border-radius:12px;">Gagal memuat data rekening favorit.</div>';
+        });
+  }
+
+  // Tambahkan event listener setelah render
+  document.querySelectorAll('.favorite-icon').forEach(function(star) {
+    star.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = this.getAttribute('data-id');
+      fetch('toggle_favorite_receiver.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'receiver_id=' + encodeURIComponent(id)
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Optionally, refresh list or just toggle icon
+        renderFavoritListModal();
+      });
+    });
+  });
 });
 </script>
 </body>

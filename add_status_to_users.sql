@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN status ENUM('Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif' AFTER kategori; 

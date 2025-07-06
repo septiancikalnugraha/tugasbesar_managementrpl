@@ -1,7 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['owner', 'teller'])) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
+    exit;
+}
+if (!in_array($_SESSION['role'], ['owner', 'teller', 'admin'])) {
+    // Redirect ke dashboard sesuai role
+    if ($_SESSION['role'] === 'nasabah') {
+        header('Location: dashboard.php');
+    } else {
+        header('Location: login.php');
+    }
     exit;
 }
 
@@ -228,11 +237,13 @@ try {
             margin-bottom: 2.5rem;
         }
         .petugas-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+            display: flex;
+            flex-direction: row;
             gap: 2.7rem;
             width: 100%;
             max-width: 1500px;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
         }
         .petugas-stats-card {
             background: #fff;
@@ -245,6 +256,7 @@ try {
             min-height: 160px;
             min-width: 370px;
             max-width: 500px;
+            flex: 1 1 0;
             transition: box-shadow 0.2s;
         }
         .petugas-stats-card:hover {
@@ -386,6 +398,7 @@ try {
             </div>
         </div>
         <!-- END: Statistik Box -->
+        
         <!-- Grafik Statistik -->
         <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin:2.5rem 0 0 0;">
             <div style="flex:1 1 500px;max-width:900px;background:#fff;border-radius:24px;box-shadow:0 4px 24px rgba(25,118,210,0.08);padding:2rem 2rem 1.5rem 2rem;min-width:320px;">

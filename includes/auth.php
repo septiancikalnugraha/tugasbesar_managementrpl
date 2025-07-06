@@ -62,6 +62,10 @@ class Auth {
             if (!$user) {
                 return ['success' => false, 'message' => 'User tidak ditemukan. Cek email atau nomor rekening.'];
             }
+            // Cek status nasabah
+            if ($user['role'] === 'nasabah' && isset($user['status']) && $user['status'] !== 'Aktif') {
+                return ['success' => false, 'message' => 'Akun Anda dinonaktifkan. Silakan hubungi admin.'];
+            }
             if (!password_verify($password, $user['password'])) {
                 return ['success' => false, 'message' => 'Password salah.'];
             }

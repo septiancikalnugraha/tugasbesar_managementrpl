@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['teller', 'owner'])) {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['teller', 'owner', 'admin'])) {
     header('Location: login.php');
     exit;
 }
@@ -14,7 +14,7 @@ $db = new Database();
 $pdo = $db->getConnection();
 $nasabah_list = [];
 try {
-    $stmt = $pdo->prepare("SELECT full_name, account_number, balance, kategori, last_login FROM users WHERE role = 'nasabah' ORDER BY full_name ASC");
+    $stmt = $pdo->prepare("SELECT id, full_name, account_number, balance, kategori, last_login, status FROM users WHERE role = 'nasabah' ORDER BY full_name ASC");
     $stmt->execute();
     $nasabah_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
@@ -122,6 +122,9 @@ try {
                         <th>Kategori</th>
                         <th>Status</th>
                         <th>Riwayat Login</th>
+                        <?php if ($_SESSION['role'] === 'admin'): ?>
+                        <th>Aksi</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,8 +134,19 @@ try {
                         <td><?= htmlspecialchars($nasabah['account_number']) ?></td>
                         <td>Rp <?= number_format($nasabah['balance'], 0, ',', '.') ?></td>
                         <td><?= ($nasabah['kategori'] === 'prioritas') ? '<span style="color:#1976d2;font-weight:700;">Prioritas</span>' : 'Non Prioritas' ?></td>
-                        <td class="status-active">Aktif</td>
+                        <td class="<?= $nasabah['status'] === 'Aktif' ? 'status-active' : 'status-inactive' ?>"><?= htmlspecialchars($nasabah['status']) ?></td>
                         <td><?= $nasabah['last_login'] ? date('d-m-Y H:i', strtotime($nasabah['last_login'])) : '-' ?></td>
+                        <?php if ($_SESSION['role'] === 'admin'): ?>
+                        <td>
+                            <form method="POST" action="update_nasabah_status.php" style="display:inline;">
+                                <input type="hidden" name="nasabah_id" value="<?= $nasabah['id'] ?>">
+                                <input type="hidden" name="status" value="<?= $nasabah['status'] === 'Aktif' ? 'Nonaktif' : 'Aktif' ?>">
+                                <button type="submit" style="background:<?= $nasabah['status'] === 'Aktif' ? '#d32f2f' : '#43a047' ?>;color:#fff;border:none;padding:0.4rem 0.8rem;border-radius:6px;cursor:pointer;font-weight:600;">
+                                    <?= $nasabah['status'] === 'Aktif' ? 'Nonaktifkan' : 'Aktifkan' ?>
+                                </button>
+                            </form>
+                        </td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($nasabah_list)): ?>

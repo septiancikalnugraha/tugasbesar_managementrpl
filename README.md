@@ -1,3 +1,68 @@
+# FTI M-Banking
+
+FTI M-Banking adalah aplikasi web perbankan digital modern yang dikembangkan untuk memenuhi kebutuhan transaksi keuangan secara mudah, aman, dan praktis. Aplikasi ini mendukung berbagai fitur seperti dashboard role-based (admin, teller, nasabah), landing page interaktif, integrasi e-wallet, serta keamanan data pengguna.
+
+## Fitur Utama
+- **Landing Page Modern**: Tampilan utama dengan slider horizontal (swipe/arrow) untuk menampilkan Beranda, Tentang Kami, dan Layanan.
+- **Role-based Dashboard**: Dashboard berbeda untuk admin, teller, dan nasabah.
+- **Manajemen Akun**: Pengelolaan akun, aktivasi/deaktivasi nasabah oleh admin.
+- **Transaksi & Top Up**: Fitur top up, pembayaran, dan transfer dana.
+- **Integrasi E-Wallet**: Dukungan logo dan layanan DANA, ShopeePay, LinkAja, OVO, GoPay.
+- **Keamanan**: Sistem login dengan password hash, validasi status akun, dan akses berbasis role.
+- **Responsive Design**: Tampilan optimal di desktop dan mobile.
+- **Tanpa Footer**: Tampilan fullscreen tanpa footer untuk pengalaman modern.
+
+## Instalasi & Menjalankan
+1. **Clone repository**
+   ```bash
+   git clone <repo-url>
+   cd managementrpl_bankfti
+   ```
+2. **Setup XAMPP/LAMP**
+   - Pastikan XAMPP/LAMP sudah terinstall.
+   - Letakkan folder project di `htdocs` (XAMPP) atau `www` (LAMP).
+3. **Konfigurasi Database**
+   - Import file SQL yang tersedia (misal: `add_favorite_receivers_table.sql` dan file lain jika ada) ke database MySQL Anda.
+   - Edit konfigurasi koneksi database di file PHP jika diperlukan.
+4. **Jalankan Aplikasi**
+   - Buka browser dan akses `http://localhost/managementrpl_bankfti`.
+
+## Struktur Folder
+```
+managementrpl_bankfti/
+├── assets/
+│   ├── css/
+│   └── js/
+├── image/
+├── pages/
+│   ├── dashboard.php
+│   ├── dashboard_petugas.php
+│   ├── dashboard_pengaturan.php
+│   ├── teller_pengaturan.php
+│   └── ...
+├── includes/
+│   └── footer.php (bisa diabaikan, sudah tidak digunakan)
+├── index.php
+├── README.md
+└── ...
+```
+
+## Teknologi yang Digunakan
+- **Frontend**: HTML5, CSS3, JavaScript (vanilla)
+- **Backend**: PHP 7+
+- **Database**: MySQL/MariaDB
+- **Web Server**: Apache (XAMPP/LAMP)
+
+## Kontribusi
+1. Fork repository ini.
+2. Buat branch baru untuk fitur/bugfix Anda.
+3. Lakukan perubahan dan commit.
+4. Ajukan Pull Request dengan deskripsi jelas.
+
+## Kontak & Lisensi
+- Untuk pertanyaan, silakan hubungi pengelola project.
+- Project ini untuk keperluan pembelajaran dan pengembangan internal.
+
 # 🏦 Bank FTI - Sistem Manajemen Transaksi Digital
 
 [![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
